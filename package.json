@@ -1,0 +1,19 @@
+{
+    "name": "mammoth",
+    "version": "0.1.0",
+    "author": "Michael Williamson <mike@zwobble.org>",
+    "description": "Convert Word documents to simple HTML",
+    "main": "./lib/index.js",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mwilliamson/mammoth.js.git"
+    },
+    "dependencies": {
+        "q": "~0.9.2",
+        "sax": "~0.5.2",
+        "underscore": "~1.4.4"
+    },
+    "devDependencies": {
+        "mocha": "~1.8"
+    }
+}
