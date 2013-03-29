@@ -45,6 +45,3 @@ function testData(testDataPath) {
     var fullPath = path.join(__dirname, "test-data", testDataPath);
     return q.nfcall(fs.readFile, fullPath, "utf-8");
 }
-
-function convertToHtml(docxFile) {
-}
