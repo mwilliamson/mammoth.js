@@ -11,7 +11,8 @@
     "dependencies": {
         "q": "~0.9.2",
         "sax": "~0.5.2",
-        "underscore": "~1.4.4"
+        "underscore": "~1.4.4",
+        "lop": "~0.2.5"
     },
     "devDependencies": {
         "mocha": "~1.8"
