@@ -17,6 +17,16 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('can use non-default HTML element for unstyled paragraphs', function() {
+        var document = new documents.Document([
+            paragraphOfText("Hello.")
+        ]);
+        var converter = new DocumentConverter({defaultParagraphStyle: styles.topLevelElement("h1")});
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal("<h1>Hello.</h1>", result.html);
+        });
+    });
+    
     test('text is HTML-escaped', function() {
         var document = new documents.Document([
             paragraphOfText("1 < 2")
