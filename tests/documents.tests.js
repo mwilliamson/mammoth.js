@@ -16,6 +16,16 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('text is HTML-escaped', function() {
+        var document = new documents.Document([
+            paragraphOfText("1 < 2")
+        ]);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal("<p>1 &lt; 2</p>", result.html);
+        });
+    });
+    
     test('should convert document containing multiple paragraphs to multiple p elements', function() {
         var document = new documents.Document([
             paragraphOfText("Hello."),
