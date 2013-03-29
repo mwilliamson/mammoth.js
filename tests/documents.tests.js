@@ -17,6 +17,20 @@ describe('DocumentConverter', function() {
     })
 });
 
+
+describe('DocumentConverter', function() {
+    test('should convert document containing multiple paragraphs to multiple p elements', function() {
+        var document = new documents.Document([
+            paragraphOfText("Hello."),
+            paragraphOfText("Goodbye.")
+        ]);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal("<p>Hello.</p><p>Goodbye.</p>", result.html);
+        });
+    })
+});
+
 function paragraphOfText(text) {
     var run = runOfText(text);
     return new documents.Paragraph([run]);
