@@ -15,10 +15,7 @@ describe('DocumentConverter', function() {
             assert.equal("<p>Hello.</p>", result.html);
         });
     })
-});
-
-
-describe('DocumentConverter', function() {
+    
     test('should convert document containing multiple paragraphs to multiple p elements', function() {
         var document = new documents.Document([
             paragraphOfText("Hello."),
