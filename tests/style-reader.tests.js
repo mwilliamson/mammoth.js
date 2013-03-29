@@ -26,4 +26,11 @@ describe('styleReader.read', function() {
         ])
         assert.deepEqual(styleReader.read("p.tip.help"), expected);
     });
+    
+    test('reads when element must be fresh', function() {
+        var expected = styles.elements([
+            styles.element("p", {"fresh": true})
+        ])
+        assert.deepEqual(styleReader.read("p:fresh"), expected);
+    });
 })
