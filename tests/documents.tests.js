@@ -3,6 +3,7 @@ var assert = require("assert");
 var documents = require("../lib/documents");
 var DocumentConverter = documents.DocumentConverter;
 var test = require("./testing").test;
+var styles = require("../lib/styles");
 
 
 describe('DocumentConverter', function() {
@@ -43,7 +44,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter({
             paragraphStyleMap: {
-                "Heading1": "h1"
+                "Heading1": styles.topLevelElement("h1")
             }
         });
         return converter.convertToHtml(document).then(function(result) {
