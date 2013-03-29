@@ -36,4 +36,13 @@ describe('HtmlGenerator', function() {
         generator.text("Banana");
         return assert.equal(generator.asString(), "<ul><li>Apple</li><li>Banana</li></ul>");
     });
+    
+    test('renders class attribute of elements', function() {
+        var generator = new HtmlGenerator();
+        generator.style(styles.elements([
+            styles.element("p", {"class": "tip"})
+        ]));
+        generator.text("Hello!");
+        return assert.equal(generator.asString(), '<p class="tip">Hello!</p>');
+    });
 })
