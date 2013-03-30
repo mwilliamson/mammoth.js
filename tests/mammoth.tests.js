@@ -1,10 +1,12 @@
 var assert = require("assert");
-var path = require("path");
-var fs = require("fs");
+
 var mammoth = require("../")
-var q = require("q");
-var test = require("./testing").test;
 var styles = require("../lib/styles");
+
+var testing = require("./testing");
+var test = testing.test;
+var testData = testing.testData;
+var createFakeDocxFile = testing.createFakeDocxFile;
 
 
 describe('mammoth', function() {
@@ -30,18 +32,3 @@ describe('mammoth', function() {
         });
     });
 })
-
-function createFakeDocxFile(files) {
-    function read(path) {
-        return files[path];
-    }
-    
-    return {
-        read: read
-    };
-}
-
-function testData(testDataPath) {
-    var fullPath = path.join(__dirname, "test-data", testDataPath);
-    return q.nfcall(fs.readFile, fullPath, "utf-8");
-}
