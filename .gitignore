@@ -1,1 +1,3 @@
 /node_modules
+/_build
+/static/bootstrap

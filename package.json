@@ -14,7 +14,8 @@
         "underscore": "~1.4.4",
         "lop": "~0.2.6",
         "zipfile": "~0.3.4",
-        "optimist": "~0.3.5"
+        "optimist": "~0.3.5",
+        "connect": "~2.7.3"
     },
     "devDependencies": {
         "mocha": "~1.8"
