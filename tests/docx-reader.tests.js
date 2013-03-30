@@ -25,4 +25,24 @@ describe("docx-reader", function() {
             assert.deepEqual(expectedDocument, result);
         });
     });
+    
+    test("can read paragraph styles", function() {
+        var docxFile = createFakeDocxFile({
+            "word/document.xml": testData("paragraphStyles/word/document.xml")
+        });
+        return docxReader.read(docxFile).then(function(result) {
+            var paragraph = result.children[0];
+            assert.deepEqual({styleName: "Heading1"}, paragraph.properties);
+        });
+    });
+    
+    test("paragraph properties are not included as child of paragraph", function() {
+        var docxFile = createFakeDocxFile({
+            "word/document.xml": testData("paragraphStyles/word/document.xml")
+        });
+        return docxReader.read(docxFile).then(function(result) {
+            var paragraph = result.children[0];
+            assert.equal(1, paragraph.children.length);
+        });
+    });
 });
