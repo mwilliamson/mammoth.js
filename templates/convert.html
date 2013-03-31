@@ -1,23 +1,14 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Mammoth</title>
-    <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css">
-  </head>
-  <body>
-    <div class="container">
-      <h1>Mammoth</h1>
-      <div class="row">
-        <div class="span6">
-          {documentHtml|s}
-        </div>
-        <div class="span6">
-          <div class="well">
-            <p>Uploaded document:<br /> <strong>{documentName}</strong></p>
-          </div>
-        </div>
+{>"base.html"/}
+{<body}
+  <div class="row">
+    <div class="span6">
+      {documentHtml|s}
+    </div>
+    <div class="span6">
+      <div class="well">
+        <p>Uploaded document:<br /> <strong>{documentName}</strong></p>
       </div>
     </div>
-  </body>
-</html>
+  </div>
 
+{/body}
