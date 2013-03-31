@@ -10,7 +10,7 @@ describe('styleReader.read', function() {
     });
     
     test('reads nested elements', function() {
-        assert.deepEqual(styleReader.read("ul li"), styles.elements(["ul", "li"]));
+        assert.deepEqual(styleReader.read("ul > li"), styles.elements(["ul", "li"]));
     });
     
     test('reads class on element', function() {
