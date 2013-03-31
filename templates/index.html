@@ -5,23 +5,23 @@
     <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css">
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <h1>Mammoth</h1>
-      </div>
-      <div class="row-fluid">
-        <div class="span4 well">
-          <form action="/convert" method="POST" enctype="multipart/form-data">
-            <p>
-              <label>
-                Select <code>.docx</code> file:<br>
-                <input type="file" name="document">
-              </label>
-            </p>
-            <p>
-              <input type="submit" value="Convert" class="btn">
-            </p>
-          </form>
+    <div class="container">
+      <h1>Mammoth</h1>
+      <div class="row">
+        <div class="span4">
+          <div class="well">
+            <form action="/convert" method="POST" enctype="multipart/form-data">
+              <p>
+                <label>
+                  Select <code>.docx</code> file:<br>
+                  <input type="file" name="document">
+                </label>
+              </p>
+              <p>
+                <input type="submit" value="Convert" class="btn">
+              </p>
+            </form>
+          </div>
         </div>
         <div class="span8">
         </div>
