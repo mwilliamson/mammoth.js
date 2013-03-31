@@ -15,7 +15,8 @@
         "lop": "~0.2.6",
         "zipfile": "~0.3.4",
         "optimist": "~0.3.5",
-        "connect": "~2.7.3"
+        "connect": "~2.7.3",
+        "dustjs-linkedin": "~1.2.1"
     },
     "devDependencies": {
         "mocha": "~1.8"
