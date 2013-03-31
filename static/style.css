@@ -1,0 +1,17 @@
+html {
+    overflow-y: scroll;
+}
+
+.banner {
+    background-color: #555;
+    color: #fff;
+    margin-bottom: 20px;
+}
+
+.banner a {
+    color: #fff;
+}
+
+.banner h1 {
+    font-size: 20px;
+}
