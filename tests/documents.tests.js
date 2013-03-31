@@ -63,7 +63,7 @@ describe('DocumentConverter', function() {
             paragraphOfText("Hello.", "Heading1"),
         ]);
         var converter = new DocumentConverter({
-            paragraphStyleMap: {
+            styleMap: {
                 "Heading1": styles.topLevelElement("h1")
             }
         });
@@ -77,7 +77,7 @@ describe('DocumentConverter', function() {
             paragraphOfText("Hello.", "Heading1")
         ]);
         var converter = new DocumentConverter({
-            paragraphStyleMap: {
+            styleMap: {
                 "Heading1": styles.elements(["h1", "span"])
             }
         });
