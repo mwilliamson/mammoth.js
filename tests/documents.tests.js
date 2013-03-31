@@ -17,6 +17,16 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('ignores empty paragraphs', function() {
+        var document = new documents.Document([
+            paragraphOfText("")
+        ]);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.html, "");
+        });
+    });
+    
     test('can use non-default HTML element for unstyled paragraphs', function() {
         var document = new documents.Document([
             paragraphOfText("Hello.")

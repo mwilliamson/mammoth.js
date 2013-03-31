@@ -24,6 +24,19 @@ describe('HtmlGenerator', function() {
         return assert.equal(generator.asString(), "<p><span>Hello!</span></p>");
     });
     
+    test('elements with no text are not generated', function() {
+        var generator = new HtmlGenerator();
+        generator.style(styles.elements(["p", "span"]));
+        return assert.equal(generator.asString(), "");
+    });
+    
+    test('generates empty string if text is empty string', function() {
+        var generator = new HtmlGenerator();
+        generator.style(styles.elements(["p", "span"]));
+        generator.text("")
+        return assert.equal(generator.asString(), "");
+    });
+    
     test('can leave some HTML elements for next style', function() {
         var generator = new HtmlGenerator();
         var listStyle = styles.elements([
