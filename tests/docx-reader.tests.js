@@ -124,6 +124,39 @@ describe("readElement", function() {
         assert.deepEqual(result.messages, []);
         assert.equal(null, result.value);
     });
+    
+    test("can read inline pictures", function() {
+        var drawing = new XmlElement("w:drawing", {}, [
+            new XmlElement("wp:inline", {}, [
+                new XmlElement("a:graphic", {}, [
+                    new XmlElement("a:graphicData", {}, [
+                        new XmlElement("pic:pic", {}, [
+                            new XmlElement("pic:blipFill", {}, [
+                                new XmlElement("a:blip", {"r:embed": "rId5"})
+                            ])
+                        ])
+                    ])
+                ])
+            ])
+        ]);
+        
+        var imageBuffer = new Buffer("Not an image at all!");
+        var reader = new docxReader.DocumentReader(
+            {
+                "rId5": {target: "media/hat.png"}
+            },
+            createFakeDocxFile({
+                "media/hat.png": imageBuffer
+            })
+        );
+        var result = reader.readXmlElement(drawing);
+        assert.deepEqual(result.messages, []);
+        assert.deepEqual("image", result.value.type);
+        return result.value.read()
+            .then(function(readValue) {
+                assert.equal(readValue, imageBuffer)
+            });
+    });
 });
 
 function createRunPropertiesXml(children) {
