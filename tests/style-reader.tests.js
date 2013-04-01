@@ -29,7 +29,7 @@ describe('styleReader.read', function() {
     
     test('reads when element must be fresh', function() {
         var expected = styles.elements([
-            styles.element("p", {"fresh": true})
+            styles.element("p", {}, {"fresh": true})
         ])
         assert.deepEqual(styleReader.read("p:fresh"), expected);
     });

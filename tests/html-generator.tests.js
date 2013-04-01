@@ -43,8 +43,8 @@ describe('HtmlGenerator', function() {
     test('can leave some HTML elements for next style', function() {
         var generator = new HtmlGenerator();
         var listStyle = styles.elements([
-            styles.element("ul", {fresh: false}),
-            styles.element("li", {fresh: true})
+            styles.element("ul", {}, {fresh: false}),
+            styles.element("li", {}, {fresh: true})
         ])
         generator.style(listStyle);
         generator.text("Apple");
