@@ -2,6 +2,7 @@ var assert = require("assert");
 
 var docxReader = require("../lib/docx-reader");
 var documents = require("../lib/documents");
+var XmlElement = require("../lib/xmlreader").Element;
 
 var testing = require("./testing");
 var test = testing.test;
@@ -44,5 +45,14 @@ describe("docx-reader", function() {
             var paragraph = result.children[0];
             assert.equal(1, paragraph.children.length);
         });
+    });
+});
+
+describe("readElement", function() {
+    test("reads styles from run properties", function() {
+        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
+        var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
+        var element = docxReader.readXmlElement(runPropertiesXml);
+        assert.equal(element.styleName, "Emphasis");
     });
 });
