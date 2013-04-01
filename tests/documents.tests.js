@@ -119,6 +119,18 @@ describe('DocumentConverter', function() {
             assert.equal(result.html, "<strong><em>Hello.</em></strong>");
         });
     });
+    
+    test('run styles are converted to HTML if mapping exists', function() {
+        var run = runOfText("Hello.", {styleName: "Emphasis"});
+        var converter = new DocumentConverter({
+            runStyleMap: {
+                "Emphasis": styles.elements(["strong"])
+            }
+        });
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.html, "<strong>Hello.</strong>");
+        });
+    });
 });
 
 function paragraphOfText(text, styleName) {
