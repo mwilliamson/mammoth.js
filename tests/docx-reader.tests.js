@@ -23,7 +23,7 @@ describe("docx-reader", function() {
             "word/document.xml": testData("simple/word/document.xml")
         });
         return docxReader.read(docxFile).then(function(result) {
-            assert.deepEqual(expectedDocument, result.value);
+            assert.deepEqual(expectedDocument, result.document);
         });
     });
     
@@ -32,7 +32,7 @@ describe("docx-reader", function() {
             "word/document.xml": testData("paragraphStyles/word/document.xml")
         });
         return docxReader.read(docxFile).then(function(result) {
-            var paragraph = result.value.children[0];
+            var paragraph = result.document.children[0];
             assert.deepEqual("Heading1", paragraph.properties.styleName);
         });
     });
@@ -42,7 +42,7 @@ describe("docx-reader", function() {
             "word/document.xml": testData("paragraphStyles/word/document.xml")
         });
         return docxReader.read(docxFile).then(function(result) {
-            var paragraph = result.value.children[0];
+            var paragraph = result.document.children[0];
             assert.equal(1, paragraph.children.length);
         });
     });
