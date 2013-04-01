@@ -23,10 +23,15 @@ function testData(testDataPath) {
 
 function createFakeDocxFile(files) {
     function read(path) {
-        return files[path];
+        return q.when(files[path]);
+    }
+    
+    function exists(path) {
+        return !!files[path];
     }
     
     return {
-        read: read
+        read: read,
+        exists: exists
     };
 }

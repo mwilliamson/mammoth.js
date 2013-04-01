@@ -37,48 +37,56 @@ describe("docx-reader", function() {
         });
     });
     
-    test("paragraph properties are not included as child of paragraph", function() {
+    test("hyperlink hrefs are read from relationships file", function() {
         var docxFile = createFakeDocxFile({
-            "word/document.xml": testData("paragraphStyles/word/document.xml")
+            "word/document.xml": testData("hyperlinks/word/document.xml"),
+            "word/_rels/document.xml.rels": testData("hyperlinks/word/_rels/document.xml.rels")
         });
         return docxReader.read(docxFile).then(function(result) {
             var paragraph = result.document.children[0];
             assert.equal(1, paragraph.children.length);
+            var hyperlink = paragraph.children[0];
+            assert.equal(hyperlink.href, "http://www.example.com");
+            assert.equal(hyperlink.children.length, 1);
         });
     });
 });
+
+function readXmlElement(element) {
+    return new docxReader.DocumentReader({}).readXmlElement(element);
+}
 
 describe("readElement", function() {
     test("reads styles from run properties", function() {
         var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
         var runPropertiesXml = createRunPropertiesXml([runStyleXml]);
-        var result = docxReader.readXmlElement(runPropertiesXml);
+        var result = readXmlElement(runPropertiesXml);
         assert.equal(result.value.styleName, "Emphasis");
     });
     
     test("isBold is false if bold element is not present", function() {
         var runPropertiesXml = createRunPropertiesXml([]);
-        var result = docxReader.readXmlElement(runPropertiesXml);
+        var result = readXmlElement(runPropertiesXml);
         assert.equal(result.value.isBold, false);
     });
     
     test("isBold is true if bold element is present", function() {
         var boldXml = new XmlElement("w:b");
         var runPropertiesXml = createRunPropertiesXml([boldXml]);
-        var result = docxReader.readXmlElement(runPropertiesXml);
+        var result = readXmlElement(runPropertiesXml);
         assert.equal(result.value.isBold, true);
     });
     
     test("isItalic is false if bold element is not present", function() {
         var runPropertiesXml = createRunPropertiesXml([]);
-        var result = docxReader.readXmlElement(runPropertiesXml);
+        var result = readXmlElement(runPropertiesXml);
         assert.equal(result.value.isItalic, false);
     });
     
     test("isItalic is true if bold element is present", function() {
         var italicXml = new XmlElement("w:i");
         var runPropertiesXml = createRunPropertiesXml([italicXml]);
-        var result = docxReader.readXmlElement(runPropertiesXml);
+        var result = readXmlElement(runPropertiesXml);
         assert.equal(result.value.isItalic, true);
     });
     
@@ -86,7 +94,7 @@ describe("readElement", function() {
         var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
         var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
         var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
-        var result = docxReader.readXmlElement(runXml);
+        var result = readXmlElement(runXml);
         assert.equal(result.value.properties.styleName, "Emphasis");
     });
     
@@ -94,13 +102,13 @@ describe("readElement", function() {
         var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
         var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
         var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
-        var result = docxReader.readXmlElement(runXml);
+        var result = readXmlElement(runXml);
         assert.deepEqual(result.value.children, []);
     });
     
     test("emits warning on unrecognised element", function() {
         var unrecognisedElement = new XmlElement("w:not-an-element");
-        var result = docxReader.readXmlElement(unrecognisedElement);
+        var result = readXmlElement(unrecognisedElement);
         assert.deepEqual(
             result.messages,
             [{
@@ -112,7 +120,7 @@ describe("readElement", function() {
     
     test("w:bookmarkStart is ignored without warning", function() {
         var ignoredElement = new XmlElement("w:bookmarkStart");
-        var result = docxReader.readXmlElement(ignoredElement);
+        var result = readXmlElement(ignoredElement);
         assert.deepEqual(result.messages, []);
         assert.equal(null, result.value);
     });
