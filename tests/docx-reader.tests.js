@@ -55,4 +55,20 @@ describe("readElement", function() {
         var element = docxReader.readXmlElement(runPropertiesXml);
         assert.equal(element.styleName, "Emphasis");
     });
+    
+    test("run properties are attached to run", function() {
+        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
+        var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
+        var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
+        var element = docxReader.readXmlElement(runXml);
+        assert.equal(element.properties.styleName, "Emphasis");
+    });
+    
+    test("run properties not included as child of run", function() {
+        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
+        var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
+        var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
+        var element = docxReader.readXmlElement(runXml);
+        assert.deepEqual(element.children, []);
+    });
 });
