@@ -1,4 +1,5 @@
 var assert = require("assert");
+var path = require("path");
 
 var mammoth = require("../")
 var styles = require("../lib/styles");
@@ -29,6 +30,14 @@ describe('mammoth', function() {
         });
         return converter.convertToHtml(docxFile).then(function(result) {
             assert.equal("<h1>Hello.</h1>", result.html);
+        });
+    });
+    
+    test('inline images are included in output', function() {
+        var converter = new mammoth.Converter();
+        var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+        return converter.convertToHtml(docxPath).then(function(result) {
+            assert.equal(result.html, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
         });
     });
 })

@@ -146,7 +146,7 @@ describe("readElement", function() {
                 "rId5": {target: "media/hat.png"}
             },
             createFakeDocxFile({
-                "media/hat.png": imageBuffer
+                "word/media/hat.png": imageBuffer
             })
         );
         var result = reader.readXmlElement(drawing);
