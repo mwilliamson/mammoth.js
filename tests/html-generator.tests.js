@@ -21,12 +21,14 @@ describe('HtmlGenerator', function() {
         var generator = new HtmlGenerator();
         generator.style(styles.elements(["p", "span"]));
         generator.text("Hello!");
+        generator.closeAll();
         return assert.equal(generator.asString(), "<p><span>Hello!</span></p>");
     });
     
     test('elements with no text are not generated', function() {
         var generator = new HtmlGenerator();
         generator.style(styles.elements(["p", "span"]));
+        generator.closeAll();
         return assert.equal(generator.asString(), "");
     });
     
@@ -34,6 +36,7 @@ describe('HtmlGenerator', function() {
         var generator = new HtmlGenerator();
         generator.style(styles.elements(["p", "span"]));
         generator.text("")
+        generator.closeAll();
         return assert.equal(generator.asString(), "");
     });
     
@@ -47,6 +50,7 @@ describe('HtmlGenerator', function() {
         generator.text("Apple");
         generator.style(listStyle);
         generator.text("Banana");
+        generator.closeAll();
         return assert.equal(generator.asString(), "<ul><li>Apple</li><li>Banana</li></ul>");
     });
     
@@ -56,6 +60,7 @@ describe('HtmlGenerator', function() {
             styles.element("p", {"class": "tip"})
         ]));
         generator.text("Hello!");
+        generator.closeAll();
         return assert.equal(generator.asString(), '<p class="tip">Hello!</p>');
     });
 })
