@@ -103,6 +103,22 @@ describe('DocumentConverter', function() {
             assert.equal(result.html, "<p><strong>Hello.</strong></p>");
         });
     });
+    
+    test('italic runs are wrapped in <em> tags', function() {
+        var run = runOfText("Hello.", {isItalic: true});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.html, "<em>Hello.</em>");
+        });
+    });
+    
+    test('run can be both bold and italic', function() {
+        var run = runOfText("Hello.", {isBold: true, isItalic: true});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.html, "<strong><em>Hello.</em></strong>");
+        });
+    });
 });
 
 function paragraphOfText(text, styleName) {
