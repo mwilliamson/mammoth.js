@@ -15,3 +15,7 @@ html {
 .banner h1 {
     font-size: 20px;
 }
+
+.messages .warning {
+    color: #cc6600;
+}
