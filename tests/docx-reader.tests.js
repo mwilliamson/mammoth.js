@@ -33,7 +33,7 @@ describe("docx-reader", function() {
         });
         return docxReader.read(docxFile).then(function(result) {
             var paragraph = result.children[0];
-            assert.deepEqual({styleName: "Heading1"}, paragraph.properties);
+            assert.deepEqual("Heading1", paragraph.properties.styleName);
         });
     });
     
