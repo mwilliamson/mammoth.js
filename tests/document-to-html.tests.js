@@ -131,6 +131,17 @@ describe('DocumentConverter', function() {
             assert.equal(result.html, "<strong>Hello.</strong>");
         });
     });
+    
+    test('docx hyperlink is converted to <a>', function() {
+        var hyperlink = new documents.Hyperlink(
+            [runOfText("Hello.")],
+            {href: "http://www.example.com"}
+        );
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(hyperlink).then(function(result) {
+            assert.equal(result.html, '<a href="http://www.example.com">Hello.</a>');
+        });
+    });
 });
 
 function paragraphOfText(text, styleName) {
