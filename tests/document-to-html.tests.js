@@ -1,7 +1,7 @@
 var assert = require("assert");
 
 var documents = require("../lib/documents");
-var DocumentConverter = documents.DocumentConverter;
+var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
 var test = require("./testing").test;
 var styles = require("../lib/styles");
 
