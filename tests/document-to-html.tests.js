@@ -1,4 +1,5 @@
 var assert = require("assert");
+var q = require("q");
 
 var documents = require("../lib/documents");
 var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
@@ -7,6 +8,14 @@ var styles = require("../lib/styles");
 
 
 describe('DocumentConverter', function() {
+    test('should empty document to empty string', function() {
+        var document = new documents.Document([]);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.html, "");
+        });
+    });
+    
     test('should convert document containing one paragraph to single p element', function() {
         var document = new documents.Document([
             paragraphOfText("Hello.")
@@ -140,6 +149,19 @@ describe('DocumentConverter', function() {
         var converter = new DocumentConverter();
         return converter.convertToHtml(hyperlink).then(function(result) {
             assert.equal(result.html, '<a href="http://www.example.com">Hello.</a>');
+        });
+    });
+    
+    test('images are written with data URIs', function() {
+        var imageBuffer = new Buffer("Not an image at all!");
+        var image = new documents.Image(
+            function() {
+                return q.when(imageBuffer);
+            }
+        );
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(image).then(function(result) {
+            assert.equal(result.html, '<img src="data:image/png;base64,' + imageBuffer.toString("base64") + '" />');
         });
     });
 });
