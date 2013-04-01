@@ -13,7 +13,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal("<p>Hello.</p>", result.html);
+            assert.equal(result.html, "<p>Hello.</p>");
         });
     });
     
@@ -33,7 +33,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter({defaultParagraphStyle: styles.topLevelElement("h1")});
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal("<h1>Hello.</h1>", result.html);
+            assert.equal(result.html, "<h1>Hello.</h1>");
         });
     });
     
@@ -43,7 +43,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal("<p>1 &lt; 2</p>", result.html);
+            assert.equal(result.html, "<p>1 &lt; 2</p>");
         });
     });
     
@@ -54,7 +54,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal("<p>Hello.</p><p>Goodbye.</p>", result.html);
+            assert.equal(result.html, "<p>Hello.</p><p>Goodbye.</p>");
         });
     });
     
@@ -68,7 +68,7 @@ describe('DocumentConverter', function() {
             }
         });
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal("<h1>Hello.</h1>", result.html);
+            assert.equal(result.html, "<h1>Hello.</h1>");
         });
     });
     
@@ -82,7 +82,25 @@ describe('DocumentConverter', function() {
             }
         });
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal("<h1><span>Hello.</span></h1>", result.html);
+            assert.equal(result.html, "<h1><span>Hello.</span></h1>");
+        });
+    });
+    
+    test('bold runs are wrapped in <strong> tags', function() {
+        var run = runOfText("Hello.", {isBold: true});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.html, "<strong>Hello.</strong>");
+        });
+    });
+    
+    test('bold runs can exist inside other tags', function() {
+        var run = new documents.Paragraph([
+            runOfText("Hello.", {isBold: true})
+        ]);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.html, "<p><strong>Hello.</strong></p>");
         });
     });
 });
@@ -94,7 +112,7 @@ function paragraphOfText(text, styleName) {
     });
 }
 
-function runOfText(text) {
+function runOfText(text, properties) {
     var textElement = new documents.Text(text);
-    return new documents.Run([textElement]);
+    return new documents.Run([textElement], properties);
 }
