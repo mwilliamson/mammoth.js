@@ -109,6 +109,13 @@ describe("readElement", function() {
             }]
         );
     });
+    
+    test("w:bookmarkStart is ignored without warning", function() {
+        var ignoredElement = new XmlElement("w:bookmarkStart");
+        var result = docxReader.readXmlElement(ignoredElement);
+        assert.deepEqual(result.messages, []);
+        assert.equal(null, result.value);
+    });
 });
 
 function createRunPropertiesXml(children) {
