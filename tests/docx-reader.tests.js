@@ -51,9 +51,35 @@ describe("docx-reader", function() {
 describe("readElement", function() {
     test("reads styles from run properties", function() {
         var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
-        var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
+        var runPropertiesXml = createRunPropertiesXml([runStyleXml]);
         var element = docxReader.readXmlElement(runPropertiesXml);
         assert.equal(element.styleName, "Emphasis");
+    });
+    
+    test("isBold is false if bold element is not present", function() {
+        var runPropertiesXml = createRunPropertiesXml([]);
+        var element = docxReader.readXmlElement(runPropertiesXml);
+        assert.equal(element.isBold, false);
+    });
+    
+    test("isBold is true if bold element is present", function() {
+        var boldXml = new XmlElement("w:b");
+        var runPropertiesXml = createRunPropertiesXml([boldXml]);
+        var element = docxReader.readXmlElement(runPropertiesXml);
+        assert.equal(element.isBold, true);
+    });
+    
+    test("isItalic is false if bold element is not present", function() {
+        var runPropertiesXml = createRunPropertiesXml([]);
+        var element = docxReader.readXmlElement(runPropertiesXml);
+        assert.equal(element.isItalic, false);
+    });
+    
+    test("isItalic is true if bold element is present", function() {
+        var italicXml = new XmlElement("w:i");
+        var runPropertiesXml = createRunPropertiesXml([italicXml]);
+        var element = docxReader.readXmlElement(runPropertiesXml);
+        assert.equal(element.isItalic, true);
     });
     
     test("run properties are attached to run", function() {
@@ -72,3 +98,7 @@ describe("readElement", function() {
         assert.deepEqual(element.children, []);
     });
 });
+
+function createRunPropertiesXml(children) {
+    return new XmlElement("w:rPr", {}, children);
+}
