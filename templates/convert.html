@@ -8,6 +8,13 @@
     </div>
     <div class="span6">
       <p>Uploaded document:<br /> <strong>{documentName}</strong></p>
+      
+      <ul>
+        {#messages}
+          <li class="{type}">{message}</li>
+        {/messages}
+      </ul>
+      
     </div>
   </div>
 
