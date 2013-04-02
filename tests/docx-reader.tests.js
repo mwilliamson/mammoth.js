@@ -128,6 +128,7 @@ describe("readElement", function() {
     test("can read inline pictures", function() {
         var drawing = new XmlElement("w:drawing", {}, [
             new XmlElement("wp:inline", {}, [
+                new XmlElement("wp:docPr", {descr: "It's a hat"}),
                 new XmlElement("a:graphic", {}, [
                     new XmlElement("a:graphicData", {}, [
                         new XmlElement("pic:pic", {}, [
@@ -151,7 +152,8 @@ describe("readElement", function() {
         );
         var result = reader.readXmlElement(drawing);
         assert.deepEqual(result.messages, []);
-        assert.deepEqual("image", result.value.type);
+        assert.equal("image", result.value.type);
+        assert.equal(result.value.altText, "It's a hat");
         return result.value.read()
             .then(function(readValue) {
                 assert.equal(readValue, imageBuffer)
