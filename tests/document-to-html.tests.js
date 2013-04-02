@@ -5,6 +5,7 @@ var documents = require("../lib/documents");
 var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
 var test = require("./testing").test;
 var styles = require("../lib/styles");
+var xmlreader = require("../lib/xmlreader");
 
 
 describe('DocumentConverter', function() {
@@ -163,6 +164,25 @@ describe('DocumentConverter', function() {
         return converter.convertToHtml(image).then(function(result) {
             assert.equal(result.html, '<img src="data:image/png;base64,' + imageBuffer.toString("base64") + '" />');
         });
+    });
+    
+    test('images have alt attribute if available', function() {
+        var imageBuffer = new Buffer("Not an image at all!");
+        var image = new documents.Image(
+            function() {
+                return q.when(imageBuffer);
+            },
+            "It's a hat"
+        );
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(image)
+            .then(function(result) {
+                return xmlreader.read(result.html);
+            })
+            .then(function(htmlImageElementDocument) {
+                var htmlImageElement = htmlImageElementDocument.root;
+                assert.equal(htmlImageElement.attributes.alt, "It's a hat");
+            });
     });
 });
 
