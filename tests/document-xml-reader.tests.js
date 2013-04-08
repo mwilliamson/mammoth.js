@@ -12,11 +12,17 @@ function readXmlElement(element) {
     return new DocumentXmlReader({}).readXmlElement(element);
 }
 
+function readXmlElementValue(element) {
+    var result = readXmlElement(element);
+    assert.deepEqual(result.messages, []);
+    return result.value;
+}
+
 describe("readXmlElement: ", function() {
     test("paragraph has no style if it has no properties", function() {
         var paragraphXml = new XmlElement("w:p", {}, []);
-        var result = readXmlElement(paragraphXml);
-        assert.deepEqual(result.value.properties.styleName, undefined);
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.deepEqual(paragraph.properties.styleName, undefined);
     });
     
     test("paragraph has style name read from paragraph properties if present", function() {
