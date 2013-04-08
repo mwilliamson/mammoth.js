@@ -19,7 +19,7 @@ describe('HtmlGenerator', function() {
     
     test('asString closes all elements', function() {
         var generator = new HtmlGenerator();
-        generator.style(htmlPaths.elements(["p", "span"]));
+        generator.satisfyPath(htmlPaths.elements(["p", "span"]));
         generator.text("Hello!");
         generator.closeAll();
         return assert.equal(generator.asString(), "<p><span>Hello!</span></p>");
@@ -27,14 +27,14 @@ describe('HtmlGenerator', function() {
     
     test('elements with no text are not generated', function() {
         var generator = new HtmlGenerator();
-        generator.style(htmlPaths.elements(["p", "span"]));
+        generator.satisfyPath(htmlPaths.elements(["p", "span"]));
         generator.closeAll();
         return assert.equal(generator.asString(), "");
     });
     
     test('generates empty string if text is empty string', function() {
         var generator = new HtmlGenerator();
-        generator.style(htmlPaths.elements(["p", "span"]));
+        generator.satisfyPath(htmlPaths.elements(["p", "span"]));
         generator.text("")
         generator.closeAll();
         return assert.equal(generator.asString(), "");
@@ -42,13 +42,13 @@ describe('HtmlGenerator', function() {
     
     test('can leave some HTML elements for next style', function() {
         var generator = new HtmlGenerator();
-        var listStyle = htmlPaths.elements([
+        var listPath = htmlPaths.elements([
             htmlPaths.element("ul", {}, {fresh: false}),
             htmlPaths.element("li", {}, {fresh: true})
         ])
-        generator.style(listStyle);
+        generator.satisfyPath(listPath);
         generator.text("Apple");
-        generator.style(listStyle);
+        generator.satisfyPath(listPath);
         generator.text("Banana");
         generator.closeAll();
         return assert.equal(generator.asString(), "<ul><li>Apple</li><li>Banana</li></ul>");
@@ -56,7 +56,7 @@ describe('HtmlGenerator', function() {
     
     test('renders class attribute of elements', function() {
         var generator = new HtmlGenerator();
-        generator.style(htmlPaths.elements([
+        generator.satisfyPath(htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip"})
         ]));
         generator.text("Hello!");
