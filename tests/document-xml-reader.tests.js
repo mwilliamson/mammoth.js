@@ -71,7 +71,7 @@ describe("readXmlElement: ", function() {
         var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
         var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
         var result = readXmlElement(runXml);
-        assert.equal(result.value.properties.styleName, "Emphasis");
+        assert.equal(result.value.styleName, "Emphasis");
     });
     
     test("run properties not included as child of run", function() {
