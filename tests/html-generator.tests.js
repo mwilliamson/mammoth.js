@@ -2,7 +2,7 @@ var assert = require("assert");
 var test = require("./testing").test;
 
 var HtmlGenerator = require("../lib/html-generator").HtmlGenerator;
-var styles = require("../lib/styles");
+var htmlPaths = require("../lib/html-paths");
 
 
 describe('HtmlGenerator', function() {
@@ -19,7 +19,7 @@ describe('HtmlGenerator', function() {
     
     test('asString closes all elements', function() {
         var generator = new HtmlGenerator();
-        generator.style(styles.elements(["p", "span"]));
+        generator.style(htmlPaths.elements(["p", "span"]));
         generator.text("Hello!");
         generator.closeAll();
         return assert.equal(generator.asString(), "<p><span>Hello!</span></p>");
@@ -27,14 +27,14 @@ describe('HtmlGenerator', function() {
     
     test('elements with no text are not generated', function() {
         var generator = new HtmlGenerator();
-        generator.style(styles.elements(["p", "span"]));
+        generator.style(htmlPaths.elements(["p", "span"]));
         generator.closeAll();
         return assert.equal(generator.asString(), "");
     });
     
     test('generates empty string if text is empty string', function() {
         var generator = new HtmlGenerator();
-        generator.style(styles.elements(["p", "span"]));
+        generator.style(htmlPaths.elements(["p", "span"]));
         generator.text("")
         generator.closeAll();
         return assert.equal(generator.asString(), "");
@@ -42,9 +42,9 @@ describe('HtmlGenerator', function() {
     
     test('can leave some HTML elements for next style', function() {
         var generator = new HtmlGenerator();
-        var listStyle = styles.elements([
-            styles.element("ul", {}, {fresh: false}),
-            styles.element("li", {}, {fresh: true})
+        var listStyle = htmlPaths.elements([
+            htmlPaths.element("ul", {}, {fresh: false}),
+            htmlPaths.element("li", {}, {fresh: true})
         ])
         generator.style(listStyle);
         generator.text("Apple");
@@ -56,8 +56,8 @@ describe('HtmlGenerator', function() {
     
     test('renders class attribute of elements', function() {
         var generator = new HtmlGenerator();
-        generator.style(styles.elements([
-            styles.element("p", {"class": "tip"})
+        generator.style(htmlPaths.elements([
+            htmlPaths.element("p", {"class": "tip"})
         ]));
         generator.text("Hello!");
         generator.closeAll();

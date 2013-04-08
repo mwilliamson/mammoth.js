@@ -4,7 +4,7 @@ var q = require("q");
 var documents = require("../lib/documents");
 var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
 var test = require("./testing").test;
-var styles = require("../lib/styles");
+var htmlPaths = require("../lib/html-paths");
 var xmlreader = require("../lib/xmlreader");
 
 
@@ -41,7 +41,9 @@ describe('DocumentConverter', function() {
         var document = new documents.Document([
             paragraphOfText("Hello.")
         ]);
-        var converter = new DocumentConverter({defaultParagraphStyle: styles.topLevelElement("h1")});
+        var converter = new DocumentConverter({
+            defaultParagraphStyle: htmlPaths.topLevelElement("h1")
+        });
         return converter.convertToHtml(document).then(function(result) {
             assert.equal(result.html, "<h1>Hello.</h1>");
         });
@@ -74,7 +76,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter({
             paragraphStyleMap: {
-                "Heading1": styles.topLevelElement("h1")
+                "Heading1": htmlPaths.topLevelElement("h1")
             }
         });
         return converter.convertToHtml(document).then(function(result) {
@@ -88,7 +90,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter({
             paragraphStyleMap: {
-                "Heading1": styles.elements(["h1", "span"])
+                "Heading1": htmlPaths.elements(["h1", "span"])
             }
         });
         return converter.convertToHtml(document).then(function(result) {
@@ -134,7 +136,7 @@ describe('DocumentConverter', function() {
         var run = runOfText("Hello.", {styleName: "Emphasis"});
         var converter = new DocumentConverter({
             runStyleMap: {
-                "Emphasis": styles.elements(["strong"])
+                "Emphasis": htmlPaths.elements(["strong"])
             }
         });
         return converter.convertToHtml(run).then(function(result) {

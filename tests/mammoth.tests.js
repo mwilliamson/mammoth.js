@@ -2,7 +2,7 @@ var assert = require("assert");
 var path = require("path");
 
 var mammoth = require("../")
-var styles = require("../lib/styles");
+var htmlPaths = require("../lib/html-paths");
 
 var testing = require("./testing");
 var test = testing.test;
@@ -26,7 +26,7 @@ describe('mammoth', function() {
             "word/document.xml": testData("simple/word/document.xml")
         });
         var converter = new mammoth.Converter({
-            defaultParagraphStyle: styles.topLevelElement("h1")
+            defaultParagraphStyle: htmlPaths.topLevelElement("h1")
         });
         return converter.convertToHtml(docxFile).then(function(result) {
             assert.equal("<h1>Hello.</h1>", result.html);
