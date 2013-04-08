@@ -27,16 +27,6 @@ describe("docx-reader", function() {
         });
     });
     
-    test("can read paragraph styles", function() {
-        var docxFile = createFakeDocxFile({
-            "word/document.xml": testData("paragraphStyles/word/document.xml")
-        });
-        return docxReader.read(docxFile).then(function(result) {
-            var paragraph = result.document.children[0];
-            assert.deepEqual("Heading1", paragraph.properties.styleName);
-        });
-    });
-    
     test("hyperlink hrefs are read from relationships file", function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("hyperlinks/word/document.xml"),
