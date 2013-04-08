@@ -12,7 +12,21 @@ function readXmlElement(element) {
     return new DocumentXmlReader({}).readXmlElement(element);
 }
 
-describe("readElement", function() {
+describe("readXmlElement: ", function() {
+    test("paragraph has no style if it has no properties", function() {
+        var paragraphXml = new XmlElement("w:p", {}, []);
+        var result = readXmlElement(paragraphXml);
+        assert.deepEqual(result.value.properties.styleName, undefined);
+    });
+    
+    test("paragraph has style name read from paragraph properties if present", function() {
+        var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
+        var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
+        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+        var result = readXmlElement(paragraphXml);
+        assert.deepEqual(result.value.properties.styleName, "Heading1");
+    });
+    
     test("reads styles from run properties", function() {
         var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
         var runPropertiesXml = createRunPropertiesXml([runStyleXml]);
