@@ -22,15 +22,15 @@ describe("readXmlElement: ", function() {
     test("paragraph has no style if it has no properties", function() {
         var paragraphXml = new XmlElement("w:p", {}, []);
         var paragraph = readXmlElementValue(paragraphXml);
-        assert.deepEqual(paragraph.properties.styleName, undefined);
+        assert.deepEqual(paragraph.styleName, undefined);
     });
     
     test("paragraph has style name read from paragraph properties if present", function() {
         var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
         var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
         var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-        var result = readXmlElement(paragraphXml);
-        assert.deepEqual(result.value.properties.styleName, "Heading1");
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.deepEqual(paragraph.styleName, "Heading1");
     });
     
     test("reads styles from run properties", function() {
