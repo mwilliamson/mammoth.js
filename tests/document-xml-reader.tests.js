@@ -22,7 +22,7 @@ describe("readXmlElement: ", function() {
     test("paragraph has no style if it has no properties", function() {
         var paragraphXml = new XmlElement("w:p", {}, []);
         var paragraph = readXmlElementValue(paragraphXml);
-        assert.deepEqual(paragraph.styleName, undefined);
+        assert.deepEqual(paragraph.styleName, null);
     });
     
     test("paragraph has style name read from paragraph properties if present", function() {
@@ -36,14 +36,14 @@ describe("readXmlElement: ", function() {
     test("run has no style if it has no properties", function() {
         var runXml = runWithProperties([]);
         var run = readXmlElementValue(runXml);
-        assert.equal(run.styleName, undefined);
+        assert.deepEqual(run.styleName, null);
     });
     
     test("run has style name read from run properties if present", function() {
         var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
         var runXml = runWithProperties([runStyleXml]);
         var run = readXmlElementValue(runXml);
-        assert.equal(run.styleName, "Emphasis");
+        assert.deepEqual(run.styleName, "Emphasis");
     });
     
     test("isBold is false if bold element is not present", function() {
