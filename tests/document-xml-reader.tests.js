@@ -47,37 +47,29 @@ describe("readXmlElement: ", function() {
     });
     
     test("isBold is false if bold element is not present", function() {
-        var runPropertiesXml = createRunPropertiesXml([]);
-        var result = readXmlElement(runPropertiesXml);
-        assert.equal(result.value.isBold, false);
+        var runXml = runWithProperties([]);
+        var run = readXmlElementValue(runXml);
+        assert.deepEqual(run.isBold, false);
     });
     
     test("isBold is true if bold element is present", function() {
         var boldXml = new XmlElement("w:b");
-        var runPropertiesXml = createRunPropertiesXml([boldXml]);
-        var result = readXmlElement(runPropertiesXml);
-        assert.equal(result.value.isBold, true);
+        var runXml = runWithProperties([boldXml]);
+        var run = readXmlElementValue(runXml);
+        assert.equal(run.isBold, true);
     });
     
     test("isItalic is false if bold element is not present", function() {
-        var runPropertiesXml = createRunPropertiesXml([]);
-        var result = readXmlElement(runPropertiesXml);
-        assert.equal(result.value.isItalic, false);
+        var runXml = runWithProperties([]);
+        var run = readXmlElementValue(runXml);
+        assert.deepEqual(run.isItalic, false);
     });
     
     test("isItalic is true if bold element is present", function() {
         var italicXml = new XmlElement("w:i");
-        var runPropertiesXml = createRunPropertiesXml([italicXml]);
-        var result = readXmlElement(runPropertiesXml);
-        assert.equal(result.value.isItalic, true);
-    });
-    
-    test("run properties are attached to run", function() {
-        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
-        var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
-        var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
-        var result = readXmlElement(runXml);
-        assert.equal(result.value.styleName, "Emphasis");
+        var runXml = runWithProperties([italicXml]);
+        var run = readXmlElementValue(runXml);
+        assert.equal(run.isItalic, true);
     });
     
     test("run properties not included as child of run", function() {
