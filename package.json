@@ -16,7 +16,8 @@
         "zipfile": "~0.3.4",
         "optimist": "~0.3.5",
         "connect": "~2.7.3",
-        "dustjs-linkedin": "~1.2.1"
+        "dustjs-linkedin": "~1.2.1",
+        "async": "0.2.6"
     },
     "devDependencies": {
         "mocha": "~1.8"
