@@ -1,6 +1,7 @@
 var path = require("path");
 var fs = require("fs");
 var q = require("q");
+var _ = require("underscore");
 
 exports.test = test;
 exports.testData = testData;
@@ -22,8 +23,20 @@ function testData(testDataPath) {
 }
 
 function createFakeDocxFile(files) {
-    function read(path) {
-        return q.when(files[path]);
+    function read(path, encoding) {
+        return q.when(files[path], function(buffer) {
+            if (_.isString(buffer)) {
+                buffer = new Buffer(buffer);
+            }
+            
+            if (!Buffer.isBuffer(buffer)) {
+                return q.reject(new Error("file was not a buffer"));
+            } else if (encoding) {
+                return q.when(buffer.toString(encoding));
+            } else {
+                return q.when(buffer);
+            }
+        });
     }
     
     function exists(path) {

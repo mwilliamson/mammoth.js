@@ -158,8 +158,8 @@ describe('DocumentConverter', function() {
     test('images are written with data URIs', function() {
         var imageBuffer = new Buffer("Not an image at all!");
         var image = new documents.Image(
-            function() {
-                return q.when(imageBuffer);
+            function(encoding) {
+                return q.when(imageBuffer.toString(encoding));
             }
         );
         var converter = new DocumentConverter();
