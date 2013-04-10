@@ -53,6 +53,16 @@ describe('xmlreader.read', function() {
             assert.deepEqual(result.root.name, "x:body");
         });
     })
+
+    test('namespace of attributes is mapped to prefix', function() {
+        var namespaceMap = {
+            "word": "x"
+        };
+        var xmlString = '<w:body xmlns:w="word" w:val="Hello!"/>';
+        return xmlreader.read(xmlString, namespaceMap).then(function(result) {
+            assert.deepEqual(result.root.attributes["x:val"], "Hello!");
+        });
+    })
     
     test('can find first element with name', function() {
         return xmlreader.read('<body><a/><b index="1"/><b index="2"/></body>').then(function(result) {
