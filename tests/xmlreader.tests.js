@@ -38,9 +38,19 @@ describe('xmlreader.read', function() {
         });
     })
 
-    test('should read element with namespace declaration', function() {
-        return xmlreader.read("<w:body/>").then(function(result) {
-            assert.deepEqual("w:body", result.root.name);
+    test('unmapped namespaces URIs are included in braces as prefix', function() {
+        return xmlreader.read('<w:body xmlns:w="word"/>').then(function(result) {
+            assert.deepEqual(result.root.name, "{word}:body");
+        });
+    })
+
+    test('mapped namespaces URIs are translated using map', function() {
+        var namespaceMap = {
+            "word": "x"
+        };
+        
+        return xmlreader.read('<w:body xmlns:w="word"/>', namespaceMap).then(function(result) {
+            assert.deepEqual(result.root.name, "x:body");
         });
     })
     
