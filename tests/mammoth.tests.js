@@ -14,7 +14,7 @@ describe('mammoth', function() {
     test('should convert docx containing one one paragraph to single p element', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         var converter = new mammoth.Converter();
-        return converter.convertToHtml(docxPath).then(function(result) {
+        return converter.convertToHtml({path: docxPath}).then(function(result) {
             assert.equal("<p>Walking on imported air</p>", result.html);
         });
     });
@@ -26,7 +26,7 @@ describe('mammoth', function() {
         var converter = new mammoth.Converter({
             defaultParagraphStyle: htmlPaths.topLevelElement("h1")
         });
-        return converter.convertToHtml(docxFile).then(function(result) {
+        return converter.convertToHtml({file: docxFile}).then(function(result) {
             assert.equal("<h1>Hello.</h1>", result.html);
         });
     });
@@ -34,7 +34,7 @@ describe('mammoth', function() {
     test('inline images are included in output', function() {
         var converter = new mammoth.Converter();
         var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
-        return converter.convertToHtml(docxPath).then(function(result) {
+        return converter.convertToHtml({path: docxPath}).then(function(result) {
             assert.equal(result.html, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
         });
     });

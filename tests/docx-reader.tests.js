@@ -22,7 +22,7 @@ describe("docx-reader", function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
         });
-        return docxReader.read(docxFile).then(function(result) {
+        return docxReader.read({file: docxFile}).then(function(result) {
             assert.deepEqual(expectedDocument, result.document);
         });
     });
@@ -32,7 +32,7 @@ describe("docx-reader", function() {
             "word/document.xml": testData("hyperlinks/word/document.xml"),
             "word/_rels/document.xml.rels": testData("hyperlinks/word/_rels/document.xml.rels")
         });
-        return docxReader.read(docxFile).then(function(result) {
+        return docxReader.read({file: docxFile}).then(function(result) {
             var paragraph = result.document.children[0];
             assert.equal(1, paragraph.children.length);
             var hyperlink = paragraph.children[0];
