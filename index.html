@@ -2,8 +2,8 @@
 <html>
   <head>
     <title>Mammoth</title>
-    <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <link rel="stylesheet" type="text/css" href="static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="static/style.css">
   </head>
   <body>
     <div class="banner">
@@ -13,6 +13,8 @@
     </div>
     <div class="container">
       <input id="document" type="file" />
+      <div id="output">
+      </div>
     </div>
     
     <script src="static/jszip/jszip.js"></script>
@@ -38,7 +40,7 @@
                     var arrayBuffer = loadEvent.target.result;
                     converter.convertToHtml({file: openFile(arrayBuffer)})
                         .then(function(result) {
-                            console.log(result);
+                            document.getElementById("output").innerHTML = result.html;
                         })
                         .done();
                 };
