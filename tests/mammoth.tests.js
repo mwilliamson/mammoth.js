@@ -12,12 +12,10 @@ var createFakeDocxFile = testing.createFakeDocxFile;
 
 describe('mammoth', function() {
     test('should convert docx containing one one paragraph to single p element', function() {
-        var docxFile = createFakeDocxFile({
-            "word/document.xml": testData("simple/word/document.xml")
-        });
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         var converter = new mammoth.Converter();
-        return converter.convertToHtml(docxFile).then(function(result) {
-            assert.equal("<p>Hello.</p>", result.html);
+        return converter.convertToHtml(docxPath).then(function(result) {
+            assert.equal("<p>Walking on imported air</p>", result.html);
         });
     });
     
