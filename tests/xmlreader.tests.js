@@ -76,4 +76,13 @@ describe('xmlreader.read', function() {
             assert.deepEqual("body", result.root.name);
         });
     })
+    
+    test('error if XML is badly formed', function() {
+        return xmlreader.read("<bo").then(function(result) {
+            throw new Error("Expected failure");
+        }, function(error) {
+            assert.ok(error);
+            return 1;
+        });
+    })
 });
