@@ -1,5 +1,8 @@
 var assert = require("assert");
 var path = require("path");
+var fs = require("fs");
+
+var q = require("q");
 
 var mammoth = require("../")
 var htmlPaths = require("../lib/html-paths");
@@ -16,6 +19,21 @@ describe('mammoth', function() {
         var converter = new mammoth.Converter();
         return converter.convertToHtml({path: docxPath}).then(function(result) {
             assert.equal("<p>Walking on imported air</p>", result.html);
+        });
+    });
+    
+    test('should convert Uint8Array containing one one paragraph to single p element', function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        
+        return q.nfcall(fs.readFile, docxPath).then(function(buffer) {
+            var array = new Uint8Array(buffer.length);
+            for (var i = 0; i < buffer.length; i++) {
+                array[i] = buffer[i];
+            }
+            var converter = new mammoth.Converter();
+            return converter.convertToHtml({uint8Array: array}).then(function(result) {
+                assert.equal("<p>Walking on imported air</p>", result.html);
+            });
         });
     });
     
