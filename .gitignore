@@ -1,3 +1,5 @@
 /node_modules
 /_build
 /static/bootstrap
+/static/jszip
+/bundle.js
