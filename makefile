@@ -17,5 +17,5 @@ static/jszip:
 	mkdir -p static/jszip
 	cp _build/jszip/*.js static/jszip
 	
-bundle.js:
-	node_modules/.bin/browserify lib/browser.js > bundle.js
+browser-demo/bundle.js:
+	node_modules/.bin/browserify lib/browser.js > browser-demo/bundle.js

@@ -2,4 +2,4 @@
 /_build
 /static/bootstrap
 /static/jszip
-/bundle.js
+/browser-demo/bundle.js
