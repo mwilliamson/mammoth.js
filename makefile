@@ -1,4 +1,4 @@
-.PHONY: test
+.PHONY: test bundle.js
 
 test:
 	node_modules/.bin/mocha tests
@@ -18,4 +18,4 @@ static/jszip:
 	cp _build/jszip/*.js static/jszip
 	
 bundle.js:
-	node_modules/.bin/browserify lib/browser.js --standalone MAMMOTH > bundle.js
+	node_modules/.bin/browserify lib/browser.js > bundle.js
