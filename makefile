@@ -1,4 +1,4 @@
-.PHONY: test bundle.js
+.PHONY: test browser-demo/bundle.js
 
 test:
 	node_modules/.bin/mocha tests
@@ -18,4 +18,5 @@ static/jszip:
 	cp _build/jszip/*.js static/jszip
 	
 browser-demo/bundle.js:
-	node_modules/.bin/browserify lib/browser.js > browser-demo/bundle.js
+	node_modules/.bin/node-license-sniffer . --recurse --body --js-comment > browser-demo/bundle.js
+	node_modules/.bin/browserify lib/browser.js >> browser-demo/bundle.js
