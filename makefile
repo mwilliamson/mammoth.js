@@ -24,4 +24,4 @@ browser-demo/bundle.js:
 	cat static/jszip/jszip-inflate.js >> $@
 	cat static/jszip/jszip-load.js >> $@
 	node_modules/.bin/node-license-sniffer . --recurse --body --js-comment >> $@
-	node_modules/.bin/browserify lib/browser.js >> $@
+	node_modules/.bin/browserify lib/browser.js --standalone mammoth >> $@
