@@ -85,7 +85,7 @@ describe('DocumentConverter', function() {
         });
     });
     
-    test('warning is emitted if style is unrecognised', function() {
+    test('warning is emitted if paragraph style is unrecognised', function() {
         var document = new documents.Document([
             paragraphOfText("Hello.", "Heading1"),
         ]);
@@ -152,6 +152,14 @@ describe('DocumentConverter', function() {
         });
         return converter.convertToHtml(run).then(function(result) {
             assert.equal(result.value, "<strong>Hello.</strong>");
+        });
+    });
+    
+    test('warning is emitted if run style is unrecognised', function() {
+        var run = runOfText("Hello.", {styleName: "Emphasis"});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.deepEqual(result.messages, [results.warning("Unrecognised run style: Emphasis")]);
         });
     });
     
