@@ -6,6 +6,7 @@ var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
 var test = require("./testing").test;
 var htmlPaths = require("../lib/html-paths");
 var xmlreader = require("../lib/xmlreader");
+var results = require("../lib/results");
 
 
 describe('DocumentConverter', function() {
@@ -13,7 +14,7 @@ describe('DocumentConverter', function() {
         var document = new documents.Document([]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.html, "");
+            assert.equal(result.value, "");
         });
     });
     
@@ -23,7 +24,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.html, "<p>Hello.</p>");
+            assert.equal(result.value, "<p>Hello.</p>");
         });
     });
     
@@ -33,7 +34,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.html, "");
+            assert.equal(result.value, "");
         });
     });
     
@@ -45,7 +46,7 @@ describe('DocumentConverter', function() {
             defaultParagraphStyle: htmlPaths.topLevelElement("h1")
         });
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.html, "<h1>Hello.</h1>");
+            assert.equal(result.value, "<h1>Hello.</h1>");
         });
     });
     
@@ -55,7 +56,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.html, "<p>1 &lt; 2</p>");
+            assert.equal(result.value, "<p>1 &lt; 2</p>");
         });
     });
     
@@ -66,7 +67,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.html, "<p>Hello.</p><p>Goodbye.</p>");
+            assert.equal(result.value, "<p>Hello.</p><p>Goodbye.</p>");
         });
     });
     
@@ -80,7 +81,7 @@ describe('DocumentConverter', function() {
             }
         });
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.html, "<h1>Hello.</h1>");
+            assert.equal(result.value, "<h1>Hello.</h1>");
         });
     });
     
@@ -94,7 +95,7 @@ describe('DocumentConverter', function() {
             }
         });
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.html, "<h1><span>Hello.</span></h1>");
+            assert.equal(result.value, "<h1><span>Hello.</span></h1>");
         });
     });
     
@@ -102,7 +103,7 @@ describe('DocumentConverter', function() {
         var run = runOfText("Hello.", {isBold: true});
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.html, "<strong>Hello.</strong>");
+            assert.equal(result.value, "<strong>Hello.</strong>");
         });
     });
     
@@ -112,7 +113,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.html, "<p><strong>Hello.</strong></p>");
+            assert.equal(result.value, "<p><strong>Hello.</strong></p>");
         });
     });
     
@@ -120,7 +121,7 @@ describe('DocumentConverter', function() {
         var run = runOfText("Hello.", {isItalic: true});
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.html, "<em>Hello.</em>");
+            assert.equal(result.value, "<em>Hello.</em>");
         });
     });
     
@@ -128,7 +129,7 @@ describe('DocumentConverter', function() {
         var run = runOfText("Hello.", {isBold: true, isItalic: true});
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.html, "<strong><em>Hello.</em></strong>");
+            assert.equal(result.value, "<strong><em>Hello.</em></strong>");
         });
     });
     
@@ -140,7 +141,7 @@ describe('DocumentConverter', function() {
             }
         });
         return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.html, "<strong>Hello.</strong>");
+            assert.equal(result.value, "<strong>Hello.</strong>");
         });
     });
     
@@ -151,7 +152,7 @@ describe('DocumentConverter', function() {
         );
         var converter = new DocumentConverter();
         return converter.convertToHtml(hyperlink).then(function(result) {
-            assert.equal(result.html, '<a href="http://www.example.com">Hello.</a>');
+            assert.equal(result.value, '<a href="http://www.example.com">Hello.</a>');
         });
     });
     
@@ -164,7 +165,7 @@ describe('DocumentConverter', function() {
         );
         var converter = new DocumentConverter();
         return converter.convertToHtml(image).then(function(result) {
-            assert.equal(result.html, '<img src="data:image/png;base64,' + imageBuffer.toString("base64") + '" />');
+            assert.equal(result.value, '<img src="data:image/png;base64,' + imageBuffer.toString("base64") + '" />');
         });
     });
     
@@ -179,7 +180,7 @@ describe('DocumentConverter', function() {
         var converter = new DocumentConverter();
         return converter.convertToHtml(image)
             .then(function(result) {
-                return xmlreader.read(result.html);
+                return xmlreader.read(result.value);
             })
             .then(function(htmlImageElementDocument) {
                 var htmlImageElement = htmlImageElementDocument.root;

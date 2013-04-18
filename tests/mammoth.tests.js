@@ -18,7 +18,7 @@ describe('mammoth', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         var converter = new mammoth.Converter();
         return converter.convertToHtml({path: docxPath}).then(function(result) {
-            assert.equal("<p>Walking on imported air</p>", result.html);
+            assert.equal("<p>Walking on imported air</p>", result.value);
         });
     });
     
@@ -32,7 +32,7 @@ describe('mammoth', function() {
             }
             var converter = new mammoth.Converter();
             return converter.convertToHtml({uint8Array: array}).then(function(result) {
-                assert.equal("<p>Walking on imported air</p>", result.html);
+                assert.equal("<p>Walking on imported air</p>", result.value);
             });
         });
     });
@@ -45,7 +45,7 @@ describe('mammoth', function() {
             defaultParagraphStyle: htmlPaths.topLevelElement("h1")
         });
         return converter.convertToHtml({file: docxFile}).then(function(result) {
-            assert.equal("<h1>Hello.</h1>", result.html);
+            assert.equal("<h1>Hello.</h1>", result.value);
         });
     });
     
@@ -53,7 +53,7 @@ describe('mammoth', function() {
         var converter = new mammoth.Converter();
         var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
         return converter.convertToHtml({path: docxPath}).then(function(result) {
-            assert.equal(result.html, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
+            assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
         });
     });
 })

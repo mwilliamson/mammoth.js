@@ -2,7 +2,7 @@
     mammoth.fileInput(
         document.getElementById("document"),
         function(result) {
-            document.getElementById("output").innerHTML = result.html;
+            document.getElementById("output").innerHTML = result.value;
             
             var messageHtml = result.messages.map(function(message) {
                 return '<li class="' + message.type + '">' + escapeHtml(message.message) + "</li>";
