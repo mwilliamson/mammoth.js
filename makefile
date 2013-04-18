@@ -18,5 +18,10 @@ static/jszip:
 	cp _build/jszip/*.js static/jszip
 	
 browser-demo/bundle.js:
-	node_modules/.bin/node-license-sniffer . --recurse --body --js-comment > browser-demo/bundle.js
-	node_modules/.bin/browserify lib/browser.js >> browser-demo/bundle.js
+	rm $@
+	cat static/jszip/jszip.js >> $@
+	cat static/jszip/jszip-deflate.js >> $@
+	cat static/jszip/jszip-inflate.js >> $@
+	cat static/jszip/jszip-load.js >> $@
+	node_modules/.bin/node-license-sniffer . --recurse --body --js-comment >> $@
+	node_modules/.bin/browserify lib/browser.js >> $@
