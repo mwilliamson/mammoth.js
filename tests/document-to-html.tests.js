@@ -85,6 +85,16 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('warning is emitted if style is unrecognised', function() {
+        var document = new documents.Document([
+            paragraphOfText("Hello.", "Heading1"),
+        ]);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(document).then(function(result) {
+            assert.deepEqual(result.messages, [results.warning("Unrecognised paragraph style: Heading1")]);
+        });
+    });
+    
     test('can use stacked styles to generate nested HTML elements', function() {
         var document = new documents.Document([
             paragraphOfText("Hello.", "Heading1")

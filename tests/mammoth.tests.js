@@ -18,7 +18,8 @@ describe('mammoth', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         var converter = new mammoth.Converter();
         return converter.convertToHtml({path: docxPath}).then(function(result) {
-            assert.equal("<p>Walking on imported air</p>", result.value);
+            assert.equal(result.value, "<p>Walking on imported air</p>");
+            assert.deepEqual(result.messages, []);
         });
     });
     
