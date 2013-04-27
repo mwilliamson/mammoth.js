@@ -96,7 +96,7 @@ describe("readXmlElement: ", function() {
         var ignoredElement = new XmlElement("w:bookmarkStart");
         var result = readXmlElement(ignoredElement);
         assert.deepEqual(result.messages, []);
-        assert.equal(null, result.value);
+        assert.deepEqual([], result.value);
     });
     
     test("can read inline pictures", function() {
@@ -126,12 +126,22 @@ describe("readXmlElement: ", function() {
         );
         var result = reader.readXmlElement(drawing);
         assert.deepEqual(result.messages, []);
-        assert.equal("image", result.value.type);
-        assert.equal(result.value.altText, "It's a hat");
-        return result.value.read()
+        var element = single(result.value);
+        assert.equal("image", element.type);
+        assert.equal(element.altText, "It's a hat");
+        return element.read()
             .then(function(readValue) {
                 assert.equal(readValue, imageBuffer)
             });
+    });
+    
+    test("no elements created if image cannot be found in w:drawing", function() {
+        var drawing = new XmlElement("w:drawing", {}, []);
+        
+        var reader = new DocumentXmlReader();
+        var result = reader.readXmlElement(drawing);
+        assert.deepEqual(result.messages, []);
+        assert.deepEqual(result.value, []);
     });
 });
 
@@ -141,4 +151,12 @@ function runWithProperties(children) {
 
 function createRunPropertiesXml(children) {
     return new XmlElement("w:rPr", {}, children);
+}
+
+function single(array) {
+    if (array.length === 1) {
+        return array[0];
+    } else {
+        throw new Error("Array has " + array.length + " elements");
+    }
 }
