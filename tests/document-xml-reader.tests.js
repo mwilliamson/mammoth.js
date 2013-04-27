@@ -100,20 +100,11 @@ describe("readXmlElement: ", function() {
     });
     
     test("can read inline pictures", function() {
-        var drawing = new XmlElement("w:drawing", {}, [
-            new XmlElement("wp:inline", {}, [
-                new XmlElement("wp:docPr", {descr: "It's a hat"}),
-                new XmlElement("a:graphic", {}, [
-                    new XmlElement("a:graphicData", {}, [
-                        new XmlElement("pic:pic", {}, [
-                            new XmlElement("pic:blipFill", {}, [
-                                new XmlElement("a:blip", {"r:embed": "rId5"})
-                            ])
-                        ])
-                    ])
-                ])
-            ])
-        ]);
+        var drawing = createInlineImage({
+            relationshipId: "rId5",
+            description: "It's a hat"
+        });
+            
         
         var imageBuffer = new Buffer("Not an image at all!");
         var reader = new DocumentXmlReader(
@@ -211,4 +202,21 @@ function single(array) {
     } else {
         throw new Error("Array has " + array.length + " elements");
     }
+}
+
+function createInlineImage(options) {
+    return new XmlElement("w:drawing", {}, [
+        new XmlElement("wp:inline", {}, [
+            new XmlElement("wp:docPr", {descr: options.description}),
+            new XmlElement("a:graphic", {}, [
+                new XmlElement("a:graphicData", {}, [
+                    new XmlElement("pic:pic", {}, [
+                        new XmlElement("pic:blipFill", {}, [
+                            new XmlElement("a:blip", {"r:embed": options.relationshipId})
+                        ])
+                    ])
+                ])
+            ])
+        ])
+    ]);
 }
