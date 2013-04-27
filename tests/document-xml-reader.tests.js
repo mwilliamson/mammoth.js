@@ -18,6 +18,12 @@ function readXmlElementValue(element) {
     return result.value;
 }
 
+var fakeContentTypes = {
+    findContentType: function(path) {
+        return "<content-type: " + path + ">";
+    }
+};
+
 describe("readXmlElement: ", function() {
     test("paragraph has no style if it has no properties", function() {
         var paragraphXml = new XmlElement("w:p", {}, []);
@@ -104,13 +110,13 @@ describe("readXmlElement: ", function() {
             relationshipId: "rId5",
             description: "It's a hat"
         });
-            
         
         var imageBuffer = new Buffer("Not an image at all!");
         var reader = new DocumentXmlReader(
             {
                 "rId5": {target: "media/hat.png"}
             },
+            fakeContentTypes,
             createFakeDocxFile({
                 "word/media/hat.png": imageBuffer
             })
@@ -120,9 +126,10 @@ describe("readXmlElement: ", function() {
         var element = single(result.value);
         assert.equal("image", element.type);
         assert.equal(element.altText, "It's a hat");
+        assert.equal(element.contentType, "<content-type: word/media/hat.png>");
         return element.read()
             .then(function(readValue) {
-                assert.equal(readValue, imageBuffer)
+                assert.equal(readValue, imageBuffer);
             });
     });
     
@@ -147,6 +154,7 @@ describe("readXmlElement: ", function() {
             {
                 "rId5": {target: "media/hat.png"}
             },
+            fakeContentTypes,
             createFakeDocxFile({
                 "word/media/hat.png": imageBuffer
             })

@@ -176,11 +176,11 @@ describe('DocumentConverter', function() {
     
     test('images are written with data URIs', function() {
         var imageBuffer = new Buffer("Not an image at all!");
-        var image = new documents.Image(
-            function(encoding) {
+        var image = new documents.Image({
+            readImage: function(encoding) {
                 return q.when(imageBuffer.toString(encoding));
             }
-        );
+        });
         var converter = new DocumentConverter();
         return converter.convertToHtml(image).then(function(result) {
             assert.equal(result.value, '<img src="data:image/png;base64,' + imageBuffer.toString("base64") + '" />');
@@ -189,12 +189,12 @@ describe('DocumentConverter', function() {
     
     test('images have alt attribute if available', function() {
         var imageBuffer = new Buffer("Not an image at all!");
-        var image = new documents.Image(
-            function() {
+        var image = new documents.Image({
+            readImage: function() {
                 return q.when(imageBuffer);
             },
-            "It's a hat"
-        );
+            altText: "It's a hat"
+        });
         var converter = new DocumentConverter();
         return converter.convertToHtml(image)
             .then(function(result) {
