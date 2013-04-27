@@ -143,6 +143,15 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.messages, []);
         assert.deepEqual(result.value, []);
     });
+    
+    test("no elements created if image cannot be found in wp:inline", function() {
+        var drawing = new XmlElement("wp:inline", {}, []);
+        
+        var reader = new DocumentXmlReader();
+        var result = reader.readXmlElement(drawing);
+        assert.deepEqual(result.messages, []);
+        assert.deepEqual(result.value, []);
+    });
 });
 
 function runWithProperties(children) {
