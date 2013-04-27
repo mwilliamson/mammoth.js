@@ -188,6 +188,13 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.messages, []);
         assert.deepEqual(result.value, []);
     });
+    
+    test("children of w:ins are converted normally", function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var insXml = new XmlElement("w:ins", {}, [runXml]);
+        var result = readXmlElement(insXml);
+        assert.deepEqual(result.value[0].type, "run");
+    });
 });
 
 function runWithProperties(children) {
