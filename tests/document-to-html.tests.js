@@ -179,7 +179,8 @@ describe('DocumentConverter', function() {
         var image = new documents.Image({
             readImage: function(encoding) {
                 return q.when(imageBuffer.toString(encoding));
-            }
+            },
+            contentType: "image/png"
         });
         var converter = new DocumentConverter();
         return converter.convertToHtml(image).then(function(result) {
