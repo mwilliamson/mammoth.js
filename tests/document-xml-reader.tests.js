@@ -135,6 +135,42 @@ describe("readXmlElement: ", function() {
             });
     });
     
+    test("can read anchored pictures", function() {
+        var drawing = new XmlElement("w:drawing", {}, [
+            new XmlElement("wp:anchor", {}, [
+                new XmlElement("wp:docPr", {descr: "It's a hat"}),
+                new XmlElement("a:graphic", {}, [
+                    new XmlElement("a:graphicData", {}, [
+                        new XmlElement("pic:pic", {}, [
+                            new XmlElement("pic:blipFill", {}, [
+                                new XmlElement("a:blip", {"r:embed": "rId5"})
+                            ])
+                        ])
+                    ])
+                ])
+            ])
+        ]);
+        
+        var imageBuffer = new Buffer("Not an image at all!");
+        var reader = new DocumentXmlReader(
+            {
+                "rId5": {target: "media/hat.png"}
+            },
+            createFakeDocxFile({
+                "word/media/hat.png": imageBuffer
+            })
+        );
+        var result = reader.readXmlElement(drawing);
+        assert.deepEqual(result.messages, []);
+        var element = single(result.value);
+        assert.equal("image", element.type);
+        assert.equal(element.altText, "It's a hat");
+        return element.read()
+            .then(function(readValue) {
+                assert.equal(readValue, imageBuffer)
+            });
+    });
+    
     test("no elements created if image cannot be found in w:drawing", function() {
         var drawing = new XmlElement("w:drawing", {}, []);
         
