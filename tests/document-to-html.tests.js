@@ -206,6 +206,27 @@ describe('DocumentConverter', function() {
                 assert.equal(htmlImageElement.attributes.alt, "It's a hat");
             });
     });
+    
+    test('can add custom handler for images', function() {
+        var imageBuffer = new Buffer("Not an image at all!");
+        var image = new documents.Image({
+            readImage: function(encoding) {
+                return q.when(imageBuffer.toString(encoding));
+            },
+            contentType: "image/png"
+        });
+        var converter = new DocumentConverter({
+            convertImage: function(element, html, messages, callback) {
+                element.read("utf8").then(function(altText) {;
+                    html.selfClosing(htmlPaths.element("img", {alt: altText}));
+                    callback();
+                });
+            }
+        });
+        return converter.convertToHtml(image).then(function(result) {
+            assert.equal(result.value, '<img alt="Not an image at all!" />');
+        });
+    });
 });
 
 function paragraphOfText(text, styleName) {
