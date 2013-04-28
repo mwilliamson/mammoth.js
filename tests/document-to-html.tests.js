@@ -217,7 +217,7 @@ describe('DocumentConverter', function() {
         });
         var converter = new DocumentConverter({
             convertImage: function(element, html, messages, callback) {
-                element.read("utf8").then(function(altText) {;
+                element.read("utf8").then(function(altText) {
                     html.selfClosing(htmlPaths.element("img", {alt: altText}));
                     callback();
                 });
