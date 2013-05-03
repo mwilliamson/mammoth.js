@@ -57,4 +57,12 @@ describe('mammoth', function() {
             assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
         });
     });
+    
+    test('simple list is converted to list elements', function() {
+        var converter = new mammoth.Converter(mammoth.standardOptions);
+        var docxPath = path.join(__dirname, "test-data/simple-list.docx");
+        return converter.convertToHtml({path: docxPath}).then(function(result) {
+            assert.equal(result.value, '<ul><li>Apple</li><li>Banana</li></ul>');
+        });
+    });
 })
