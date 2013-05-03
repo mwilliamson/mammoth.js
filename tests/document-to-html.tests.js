@@ -153,9 +153,12 @@ describe('DocumentConverter', function() {
     test('run styles are converted to HTML if mapping exists', function() {
         var run = runOfText("Hello.", {styleName: "Emphasis"});
         var converter = new DocumentConverter({
-            runStyleMap: {
-                "Emphasis": htmlPaths.elements(["strong"])
-            }
+            styleMap: [
+                {
+                    from: documentMatchers.run("Emphasis"),
+                    to: htmlPaths.elements(["strong"])
+                }
+            ]
         });
         return converter.convertToHtml(run).then(function(result) {
             assert.equal(result.value, "<strong>Hello.</strong>");
