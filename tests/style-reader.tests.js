@@ -51,4 +51,11 @@ describe("styleReader.readDocumentMatcher", function() {
             documentMatchers.paragraph("Heading1")
         );
     });
+    
+    test("reads plain run", function() {
+        assert.deepEqual(
+            readDocumentMatcher("r"),
+            documentMatchers.run()
+        );
+    });
 });
