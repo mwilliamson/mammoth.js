@@ -1,10 +1,12 @@
 var assert = require("assert");
 var htmlPaths = require("../lib/html-paths");
+var documentMatchers = require("../lib/document-matchers");
 var styleReader = require("../lib/style-reader");
 var test = require("./testing").test;
 
 
 var readHtmlPath = styleReader.readHtmlPath;
+var readDocumentMatcher = styleReader.readDocumentMatcher;
 
 
 describe('styleReader.readHtmlPath', function() {
@@ -36,4 +38,10 @@ describe('styleReader.readHtmlPath', function() {
         ])
         assert.deepEqual(readHtmlPath("p:fresh"), expected);
     });
-})
+});
+
+describe("styleReader.readDocumentMatcher", function() {
+    test("reads plain paragraph", function() {
+        assert.deepEqual(readDocumentMatcher("p"), documentMatchers.paragraph());
+    });
+});
