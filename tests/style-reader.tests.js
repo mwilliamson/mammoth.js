@@ -7,6 +7,7 @@ var test = require("./testing").test;
 
 var readHtmlPath = styleReader.readHtmlPath;
 var readDocumentMatcher = styleReader.readDocumentMatcher;
+var readStyle = styleReader.readStyle;
 
 
 describe('styleReader.readHtmlPath', function() {
@@ -56,6 +57,18 @@ describe("styleReader.readDocumentMatcher", function() {
         assert.deepEqual(
             readDocumentMatcher("r"),
             documentMatchers.run()
+        );
+    });
+});
+
+describe("styleReader.read", function() {
+    test("document matcher is mapped to HTML path using arrow", function() {
+        assert.deepEqual(
+            readStyle("p => h1"),
+            {
+                from: documentMatchers.paragraph(),
+                to: htmlPaths.elements(["h1"])
+            }
         );
     });
 });
