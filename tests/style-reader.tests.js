@@ -44,4 +44,11 @@ describe("styleReader.readDocumentMatcher", function() {
     test("reads plain paragraph", function() {
         assert.deepEqual(readDocumentMatcher("p"), documentMatchers.paragraph());
     });
+    
+    test("reads paragraph with style name", function() {
+        assert.deepEqual(
+            readDocumentMatcher("p.Heading1"),
+            documentMatchers.paragraph("Heading1")
+        );
+    });
 });
