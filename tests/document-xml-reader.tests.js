@@ -39,6 +39,17 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(paragraph.styleName, "Heading1");
     });
     
+    test("paragraph has numbering properties from paragraph properties if present", function() {
+        var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+            new XmlElement("w:ilvl", {"w:val": "1"}),
+            new XmlElement("w:numId", {"w:val": "42"})
+        ]);
+        var propertiesXml = new XmlElement("w:pPr", {}, [numberingPropertiesXml]);
+        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.deepEqual(paragraph.numbering, {level: 1});
+    });
+    
     test("run has no style if it has no properties", function() {
         var runXml = runWithProperties([]);
         var run = readXmlElementValue(runXml);
