@@ -7,6 +7,7 @@ var test = require("./testing").test;
 var htmlPaths = require("../lib/html-paths");
 var xmlreader = require("../lib/xmlreader");
 var results = require("../lib/results");
+var documentMatchers = require("../lib/document-matchers");
 
 
 describe('DocumentConverter', function() {
@@ -76,9 +77,12 @@ describe('DocumentConverter', function() {
             paragraphOfText("Hello.", "Heading1"),
         ]);
         var converter = new DocumentConverter({
-            paragraphStyleMap: {
-                "Heading1": htmlPaths.topLevelElement("h1")
-            }
+            styleMap: [
+                {
+                    from: documentMatchers.paragraph("Heading1"),
+                    to: htmlPaths.topLevelElement("h1")
+                }
+            ]
         });
         return converter.convertToHtml(document).then(function(result) {
             assert.equal(result.value, "<h1>Hello.</h1>");
@@ -100,9 +104,12 @@ describe('DocumentConverter', function() {
             paragraphOfText("Hello.", "Heading1")
         ]);
         var converter = new DocumentConverter({
-            paragraphStyleMap: {
-                "Heading1": htmlPaths.elements(["h1", "span"])
-            }
+            styleMap: [
+                {
+                    from: documentMatchers.paragraph("Heading1"),
+                    to: htmlPaths.elements(["h1", "span"])
+                }
+            ]
         });
         return converter.convertToHtml(document).then(function(result) {
             assert.equal(result.value, "<h1><span>Hello.</span></h1>");
