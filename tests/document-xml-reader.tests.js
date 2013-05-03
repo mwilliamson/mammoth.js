@@ -3,6 +3,7 @@ var assert = require("assert");
 var DocumentXmlReader = require("../lib/document-xml-reader").DocumentXmlReader;
 var documents = require("../lib/documents");
 var XmlElement = require("../lib/xmlreader").Element;
+var Numbering = require("../lib/numbering-xml").Numbering;
 
 var testing = require("./testing");
 var test = testing.test;
@@ -46,8 +47,17 @@ describe("readXmlElement: ", function() {
         ]);
         var propertiesXml = new XmlElement("w:pPr", {}, [numberingPropertiesXml]);
         var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-        var paragraph = readXmlElementValue(paragraphXml);
-        assert.deepEqual(paragraph.numbering, {level: 1});
+        
+        var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+        
+        var reader = new DocumentXmlReader(
+            {},
+            null,
+            null,
+            numbering
+        );
+        var paragraph = reader.readXmlElement(paragraphXml).value;
+        assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
     });
     
     test("run has no style if it has no properties", function() {
