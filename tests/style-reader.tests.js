@@ -53,6 +53,13 @@ describe("styleReader.readDocumentMatcher", function() {
         );
     });
     
+    test("reads p:ordered-list(1) as ordered list with index of 0", function() {
+        assert.deepEqual(
+            readDocumentMatcher("p:ordered-list(1)"),
+            documentMatchers.paragraph().orderedList(0)
+        );
+    });
+    
     test("reads plain run", function() {
         assert.deepEqual(
             readDocumentMatcher("r"),
