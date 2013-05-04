@@ -15,6 +15,15 @@ describe('styleReader.readHtmlPath', function() {
         assert.deepEqual(readHtmlPath("p"), htmlPaths.elements(["p"]));
     });
     
+    test('reads choice of elements', function() {
+        assert.deepEqual(
+            readHtmlPath("ul|ol"),
+            htmlPaths.elements([
+                htmlPaths.element(["ul", "ol"])
+            ])
+        );
+    });
+    
     test('reads nested elements', function() {
         assert.deepEqual(readHtmlPath("ul > li"), htmlPaths.elements(["ul", "li"]));
     });
