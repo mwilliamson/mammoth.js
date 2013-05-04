@@ -60,6 +60,13 @@ describe("styleReader.readDocumentMatcher", function() {
         );
     });
     
+    test("reads p:unordered-list(1) as unordered list with index of 0", function() {
+        assert.deepEqual(
+            readDocumentMatcher("p:unordered-list(1)"),
+            documentMatchers.paragraph().unorderedList(0)
+        );
+    });
+    
     test("reads plain run", function() {
         assert.deepEqual(
             readDocumentMatcher("r"),
