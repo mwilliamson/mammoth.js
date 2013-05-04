@@ -33,6 +33,11 @@ describe("document-matchers", function() {
         assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: false}})));
         assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true}})));
     });
+    
+    test("matchers for lists with index 0 do not match elements that are not lists", function() {
+        var matcher = documentMatchers.paragraph().orderedList(0);
+        assert.ok(!matcher.matches(new Paragraph()));
+    });
 });
 
 function paragraphWithStyle(styleName) {
