@@ -42,8 +42,25 @@ var style = mammoth.style;
 var options = {
     styleMap: [
         style("p.Heading1 => h1"),
-        style("p.Heading2 => h2"),
+        style("p.Heading2 => h2")
     ]
+};
+var result = mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+```
+
+To extend the standard style map:
+
+```javascript
+var mammoth = require("mammoth");
+var style = mammoth.style;
+
+var customStyles = [
+    style("p.AsideHeading => div.aside > h2:fresh"),
+    style("p.AsideText => div.aside > p:fresh")
+];
+
+var options = {
+    styleMap: customStyles.concat(mammoth.standardOptions)
 };
 var result = mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
