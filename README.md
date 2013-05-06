@@ -11,7 +11,7 @@ rather than attempting to exactly copy the styling (font, text size, colour, etc
 
 There's a large mismatch between the structure used by .docx and the structure of HTML,
 meaning that the conversion is unlikely to be perfect for more complicated documents.
-Mammoth works best if you only use styles to semenatically mark up your document.
+Mammoth works best if you only use styles to semantically mark up your document.
 
 ## Installation
 
