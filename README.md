@@ -60,7 +60,7 @@ var customStyles = [
 ];
 
 var options = {
-    styleMap: customStyles.concat(mammoth.standardOptions)
+    styleMap: customStyles.concat(mammoth.standardOptions.styleMap)
 };
 var result = mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
