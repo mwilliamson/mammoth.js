@@ -3,6 +3,7 @@
     "version": "0.1.0",
     "author": "Michael Williamson <mike@zwobble.org>",
     "description": "Convert Word documents to simple HTML",
+    "keywords": ["docx", "html", "office", "word"],
     "main": "./lib/index.js",
     "repository": {
         "type": "git",
