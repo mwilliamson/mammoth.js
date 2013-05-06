@@ -237,6 +237,18 @@ describe('DocumentConverter', function() {
             assert.equal(result.value, '<img alt="Not an image at all!" />');
         });
     });
+    
+    test('long documents do not cause stack overflow', function() {
+        var paragraphs = [];
+        for (var i = 0; i < 1000; i++) {
+            paragraphs.push(paragraphOfText("Hello."));
+        }
+        var document = new documents.Document(paragraphs);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.value.indexOf("<p>Hello.</p>"), 0);
+        });
+    });
 });
 
 function paragraphOfText(text, styleName) {
