@@ -105,8 +105,6 @@ In this case, styles similar to `AsideHeading => div.aside > h2:fresh` and
 
 ### Document element matchers
 
-Suppose
-
 #### Paragraphs and runs
 
 Match any paragraph:
