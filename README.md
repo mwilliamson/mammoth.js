@@ -42,7 +42,7 @@ var style = mammoth.style;
 var options = {
     styleMap: [
         style("p.Heading1 => h1"),
-        style("p.Heading1 => h1"),
+        style("p.Heading2 => h2"),
     ]
 };
 var result = mammoth.convertToHtml({path: "path/to/document.docx"}, options);
