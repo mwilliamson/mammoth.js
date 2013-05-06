@@ -71,7 +71,7 @@ describe('mammoth', function() {
     });
     
     test('simple list is converted to list elements', function() {
-        var converter = new mammoth.Converter(mammoth.standardOptions);
+        var converter = new mammoth.Converter();
         var docxPath = path.join(__dirname, "test-data/simple-list.docx");
         return converter.convertToHtml({path: docxPath}).then(function(result) {
             assert.equal(result.value, '<ul><li>Apple</li><li>Banana</li></ul>');
