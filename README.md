@@ -68,6 +68,7 @@ var result = mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ## Writing styles
 
 A style has two parts:
+
 * On the left, before the arrow, is the document element matcher.
 * On the right, after the arrow, is the HTML path.
 
@@ -75,7 +76,36 @@ When converting each paragraph,
 Mammoth finds the first style where the document element matcher matches the current paragraph.
 Mammoth then ensures the HTML path is satisfied.
 
+### Freshness
+
+When writing styles, it's helpful to understand Mammoth's notion of freshness.
+When generating, Mammoth will only close an HTML element when necessary.
+Otherwise, elements are reused.
+
+For instance, suppose one of the specified styles is `p.Heading1 => h1`.
+If Mammoth encounters a .docx paragraphs with the style `Heading1`,
+the .docx paragraph is converted to a `h1` element with the same text.
+If the next .docx paragraph also has the style `Heading1`,
+then the text of that paragraph will be appended to the *existing* `h1` element,
+rather than creating a new `h1` element.
+
+In most cases, you'll probably want to generate a new `h1` element instead.
+You can specify this by using the `:fresh` modifier:
+
+`p.Heading1 => h1:fresh`
+
+The two consective `Heading1` .docx paragraphs will then be converted to two separate `h1` elements.
+
+Reusing elements is useful in generating more complicated HTML structures.
+For instance, suppose your .docx contains asides.
+Each aside might have a heading and some body text,
+which should be contained within a single `div.aside` element.
+In this case, styles similar to `AsideHeading => div.aside > h2:fresh` and
+`AsideText => div.aside > p:fresh` might be helpful.
+
 ### Document element matchers
+
+Suppose
 
 #### Paragraphs and runs
 
