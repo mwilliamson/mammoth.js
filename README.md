@@ -24,9 +24,11 @@ To convert an existing .docx file to HTML, use `mammoth.convertToHtml`:
 ```javascript
 var mammoth = require("mammoth");
 
-var result = mammoth.convertToHtml({path: "path/to/document.docx"});
-var html = result.value; // The generated HTML
-var messages = result.messages; // Any messages, such as warnings during conversion
+mammoth.convertToHtml({path: "path/to/document.docx"})
+    .then(function(result){
+        var html = result.value; // The generated HTML
+        var messages = result.messages; // Any messages, such as warnings during conversion
+    });
 ```
 
 By default,
@@ -45,7 +47,7 @@ var options = {
         style("p.Heading2 => h2")
     ]
 };
-var result = mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
 
 To extend the standard style map:
@@ -62,7 +64,7 @@ var customStyles = [
 var options = {
     styleMap: customStyles.concat(mammoth.standardOptions.styleMap)
 };
-var result = mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
 
 ## Writing styles
