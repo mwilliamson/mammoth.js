@@ -19,6 +19,13 @@ Mammoth works best if you only use styles to semantically mark up your document.
     
 ## Usage
 
+### Web interface
+
+The easiest way to try out mammoth is to use the demo web server.
+You can start it up by running `node lib/web.js` from the project directory.
+
+### API
+
 To convert an existing .docx file to HTML, use `mammoth.convertToHtml`:
 
 ```javascript
