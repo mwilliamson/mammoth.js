@@ -107,6 +107,12 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value.children, []);
     });
     
+    test("w:tab is read as document tab element", function() {
+        var tabXml = new XmlElement("w:tab");
+        var result = readXmlElement(tabXml);
+        assert.deepEqual(result.value, new documents.Tab());
+    });
+    
     test("emits warning on unrecognised element", function() {
         var unrecognisedElement = new XmlElement("w:not-an-element");
         var result = readXmlElement(unrecognisedElement);
