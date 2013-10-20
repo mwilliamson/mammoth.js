@@ -102,8 +102,8 @@ Reusing elements is useful in generating more complicated HTML structures.
 For instance, suppose your .docx contains asides.
 Each aside might have a heading and some body text,
 which should be contained within a single `div.aside` element.
-In this case, styles similar to `AsideHeading => div.aside > h2:fresh` and
-`AsideText => div.aside > p:fresh` might be helpful.
+In this case, styles similar to `p.AsideHeading => div.aside > h2:fresh` and
+`p.AsideText => div.aside > p:fresh` might be helpful.
 
 ### Document element matchers
 
