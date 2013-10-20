@@ -133,7 +133,7 @@ p.Heading1
 
 #### Single elements
 
-The simplest HTML path is to specify single element.
+The simplest HTML path is to specify a single element.
 For instance, to specify an `h1` element:
 
 ```
