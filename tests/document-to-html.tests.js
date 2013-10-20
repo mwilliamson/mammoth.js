@@ -184,6 +184,14 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('docx tab is converted to tab in HTML', function() {
+        var tab = new documents.Tab();
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(tab).then(function(result) {
+            assert.equal(result.value, "\t");
+        });
+    });
+    
     test('images are written with data URIs', function() {
         var imageBuffer = new Buffer("Not an image at all!");
         var image = new documents.Image({
