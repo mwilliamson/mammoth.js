@@ -28,6 +28,9 @@
         "license-sniffer": "~0.1.0",
         "duck": "~0.1.11"
     },
+    "scripts": {
+        "test": "mocha tests"
+    },
     "licenses": [
         {
             "type": "BSD",
