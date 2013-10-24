@@ -27,5 +27,11 @@
         "browserify": "~2.12.0",
         "license-sniffer": "~0.1.0",
         "duck": "~0.1.11"
-    }
+    },
+    "licenses": [
+        {
+            "type": "BSD",
+            "url": "http://opensource.org/licenses/BSD-2-Clause"
+        }
+    ]
 }
