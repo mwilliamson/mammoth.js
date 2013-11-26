@@ -9,8 +9,9 @@ var testing = require("./testing");
 var test = testing.test;
 var createFakeDocxFile = testing.createFakeDocxFile;
 
-function readXmlElement(element) {
-    return new DocumentXmlReader({}).readXmlElement(element);
+function readXmlElement(element, options) {
+    options = options || {}
+    return new DocumentXmlReader(options.relationships || {}).readXmlElement(element);
 }
 
 function readXmlElementValue(element) {
@@ -220,6 +221,17 @@ describe("readXmlElement: ", function() {
         var insXml = new XmlElement("w:ins", {}, [runXml]);
         var result = readXmlElement(insXml);
         assert.deepEqual(result.value[0].type, "run");
+    });
+    
+    test("w:hyperlink is read as document hyperlink if it has a relationship ID", function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
+        var relationships = {
+            "r42": {target: "http://example.com"}
+        };
+        var result = readXmlElement(hyperlinkXml, {relationships: relationships});
+        assert.deepEqual(result.value.href, "http://example.com");
+        assert.deepEqual(result.value.children[0].type, "run");
     });
 });
 
