@@ -233,6 +233,13 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value.href, "http://example.com");
         assert.deepEqual(result.value.children[0].type, "run");
     });
+    
+    test("w:hyperlink is ignored if it does not have a relationship ID", function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
+        var result = readXmlElement(hyperlinkXml);
+        assert.deepEqual(result.value[0].type, "run");
+    });
 });
 
 function runWithProperties(children) {
