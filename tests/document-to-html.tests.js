@@ -39,18 +39,6 @@ describe('DocumentConverter', function() {
         });
     });
     
-    test('can use non-default HTML element for unstyled paragraphs', function() {
-        var document = new documents.Document([
-            paragraphOfText("Hello.")
-        ]);
-        var converter = new DocumentConverter({
-            defaultParagraphStyle: htmlPaths.topLevelElement("h1")
-        });
-        return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.value, "<h1>Hello.</h1>");
-        });
-    });
-    
     test('text is HTML-escaped', function() {
         var document = new documents.Document([
             paragraphOfText("1 < 2")
@@ -80,6 +68,23 @@ describe('DocumentConverter', function() {
             styleMap: [
                 {
                     from: documentMatchers.paragraph("Heading1"),
+                    to: htmlPaths.topLevelElement("h1")
+                }
+            ]
+        });
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.value, "<h1>Hello.</h1>");
+        });
+    });
+    
+    test('can use non-default HTML element for unstyled paragraphs', function() {
+        var document = new documents.Document([
+            paragraphOfText("Hello.")
+        ]);
+        var converter = new DocumentConverter({
+            styleMap: [
+                {
+                    from: documentMatchers.paragraph(),
                     to: htmlPaths.topLevelElement("h1")
                 }
             ]

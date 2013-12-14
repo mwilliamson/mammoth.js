@@ -6,6 +6,7 @@ var q = require("q");
 
 var mammoth = require("../")
 var htmlPaths = require("../lib/html-paths");
+var documentMatchers = require("../lib/document-matchers");
 
 var testing = require("./testing");
 var test = testing.test;
@@ -43,7 +44,12 @@ describe('mammoth', function() {
             "word/document.xml": testData("simple/word/document.xml")
         });
         var converter = new mammoth.Converter({
-            defaultParagraphStyle: htmlPaths.topLevelElement("h1")
+            styleMap: [
+                {
+                    from: documentMatchers.paragraph(),
+                    to: htmlPaths.topLevelElement("h1")
+                }
+            ]
         });
         return converter.convertToHtml({file: docxFile}).then(function(result) {
             assert.equal("<h1>Hello.</h1>", result.value);
@@ -55,7 +61,12 @@ describe('mammoth', function() {
             "word/document.xml": testData("simple/word/document.xml")
         });
         var options = {
-            defaultParagraphStyle: htmlPaths.topLevelElement("h1")
+            styleMap: [
+                {
+                    from: documentMatchers.paragraph(),
+                    to: htmlPaths.topLevelElement("h1")
+                }
+            ]
         };
         return mammoth.convertToHtml({file: docxFile}, options).then(function(result) {
             assert.equal("<h1>Hello.</h1>", result.value);
