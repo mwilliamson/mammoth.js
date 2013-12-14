@@ -63,4 +63,10 @@ describe('HtmlGenerator', function() {
         generator.closeAll();
         return assert.equal(generator.asString(), '<p class="tip">Hello!</p>');
     });
+    
+    test('attribute values are escaped', function() {
+        var generator = new HtmlGenerator();
+        generator.selfClosing({tagName: "br", attributes: {"data-blah": "<"}});
+        return assert.equal(generator.asString(), '<br data-blah="&lt;" />');
+    });
 })
