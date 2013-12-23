@@ -223,6 +223,13 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value[0].type, "run");
     });
     
+    test("children of w:smartTag are converted normally", function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var smartTagXml = new XmlElement("w:smartTag", {}, [runXml]);
+        var result = readXmlElement(smartTagXml);
+        assert.deepEqual(result.value[0].type, "run");
+    });
+    
     test("w:hyperlink is read as document hyperlink if it has a relationship ID", function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
