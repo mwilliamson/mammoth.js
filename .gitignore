@@ -3,3 +3,4 @@
 /static/bootstrap
 /static/jszip
 /browser-demo/bundle.js
+/browser-demo/bundle.min.js
