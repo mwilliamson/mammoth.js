@@ -35,6 +35,9 @@
     "duck": "~0.1.11",
     "uglify-js": "~2.4.8"
   },
+  "browser": {
+    "./lib/unzip.js": "./browser/unzip.js"
+  },
   "scripts": {
     "test": "mocha tests"
   },
