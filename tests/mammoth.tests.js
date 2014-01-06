@@ -23,20 +23,6 @@ describe('mammoth', function() {
         });
     });
     
-    test('should convert Uint8Array containing one paragraph to single p element', function() {
-        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
-        
-        return q.nfcall(fs.readFile, docxPath).then(function(buffer) {
-            var array = new Uint8Array(buffer.length);
-            for (var i = 0; i < buffer.length; i++) {
-                array[i] = buffer[i];
-            }
-            return mammoth.convertToHtml({uint8Array: array}).then(function(result) {
-                assert.equal("<p>Walking on imported air</p>", result.value);
-            });
-        });
-    });
-    
     test('options are passed to document converter when creating Converter', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
