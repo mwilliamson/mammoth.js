@@ -23,12 +23,24 @@ describe('mammoth', function() {
         });
     });
     
-    test('options are passed to document converter when creating Converter', function() {
+    test('style map can be expressed as string', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
         });
         var options = {
             styleMap: "p => h1"
+        };
+        return mammoth.convertToHtml({file: docxFile}, options).then(function(result) {
+            assert.equal("<h1>Hello.</h1>", result.value);
+        });
+    });
+    
+    test('style map can be expressed as array of styles', function() {
+        var docxFile = createFakeDocxFile({
+            "word/document.xml": testData("simple/word/document.xml")
+        });
+        var options = {
+            styleMap: [mammoth.style("p => h1")]
         };
         return mammoth.convertToHtml({file: docxFile}, options).then(function(result) {
             assert.equal("<h1>Hello.</h1>", result.value);
