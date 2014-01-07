@@ -100,6 +100,11 @@ Converts the source document to HTML.
    each element is expected to be the result of a call to `mammoth.style`.
    See "Writing styles" for a reference to the syntax for styles.
 
+** `includeDefaultStyleMap`: by default,
+   the style map passed in `styleMap` is combined with the default style map.
+   To stop using the default style map altogether,
+   set `options.includeDefaultStyleMap` to `false`.
+
 * Returns a promise containing a result.
   This result has the following properties:
 
