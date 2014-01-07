@@ -29,6 +29,8 @@ To see an example, run `make setup` and open `browser-demo/index.html` in a web 
 
 ### Library
 
+#### Basic conversion
+
 To convert an existing .docx file to HTML, use `mammoth.convertToHtml`:
 
 ```javascript
@@ -41,11 +43,16 @@ mammoth.convertToHtml({path: "path/to/document.docx"})
     });
 ```
 
+### Custom styles
+
 By default,
 Mammoth maps some common .docx styles to HTML elements.
 For instance,
 a paragraph with the style `Heading1` is converted to a `h1` element.
-You can pass in a custom map for styles by passing an options object as a second argument to `convertToHtml`:
+You can pass in a custom map for styles by passing an options object with a `styleMap` property as a second argument to `convertToHtml`.
+A description of the syntax for styles can be found in the section "Writing styles".
+For instance, if paragraphs with the style `SectionTitle` should be converted to `h1` elements,
+and paragraphs with the style `SubSectionTitle` should be converted to `h2` elements:
 
 ```javascript
 var mammoth = require("mammoth");
@@ -53,8 +60,8 @@ var style = mammoth.style;
 
 var options = {
     styleMap: [
-        style("p.Heading1 => h1"),
-        style("p.Heading2 => h2")
+        style("p.SectionTitle => h1:fresh"),
+        style("p.SubSectionTitle => h2:fresh")
     ]
 };
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
