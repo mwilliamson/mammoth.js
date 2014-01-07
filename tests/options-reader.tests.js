@@ -23,7 +23,7 @@ describe('readOptions', function() {
         assert.deepEqual(standardOptions.styleMap, options.styleMap.slice(1));
     });
     
-    it('custom style mappings are ignored if includeDefaultStyleMap is false', function() {
+    it('default style mappings are ignored if includeDefaultStyleMap is false', function() {
         var options = readOptions({
             styleMap: "p.SectionTitle => h2",
             includeDefaultStyleMap: false
