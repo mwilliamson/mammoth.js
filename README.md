@@ -83,8 +83,18 @@ mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 
 Converts the source document to HTML.
 
-* `input` should be an object describing the source document.
+* `input`: an object describing the source document.
   To read the file found at `path`, pass in `{path: path}`.
+  
+* `options` (optional): options for the conversion.
+  May have the following properties:
+  
+** `styleMap`: controls the mapping of Word styles to HTML.
+   If `options.styleMap` is a string,
+   each non-blank line is treated as a separate style mapping.
+   If `options.styleMap` is an array,
+   each element is expected to be the result of a call to `mammoth.style`.
+   See "Writing styles" for a reference to the syntax for styles.
 
 * Returns a promise containing a result.
   This result has the following properties:
@@ -92,6 +102,10 @@ Converts the source document to HTML.
 ** `value`: the generated HTML
 
 ** `messages`: any messages, such as errors and warnings, generated during the conversion
+
+#### `mammoth.style(string)`
+
+Creates a style using the passed string.
 
 #### Messages
 
