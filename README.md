@@ -93,24 +93,24 @@ Converts the source document to HTML.
 * `options` (optional): options for the conversion.
   May have the following properties:
   
-** `styleMap`: controls the mapping of Word styles to HTML.
-   If `options.styleMap` is a string,
-   each non-blank line is treated as a separate style mapping.
-   If `options.styleMap` is an array,
-   each element is expected to be the result of a call to `mammoth.styleMapping`.
-   See "Writing style maps" for a reference to the syntax for style maps.
+  * `styleMap`: controls the mapping of Word styles to HTML.
+     If `options.styleMap` is a string,
+     each non-blank line is treated as a separate style mapping.
+     If `options.styleMap` is an array,
+     each element is expected to be the result of a call to `mammoth.styleMapping`.
+     See "Writing style maps" for a reference to the syntax for style maps.
 
-** `includeDefaultStyleMap`: by default,
-   the style map passed in `styleMap` is combined with the default style map.
-   To stop using the default style map altogether,
-   set `options.includeDefaultStyleMap` to `false`.
+  * `includeDefaultStyleMap`: by default,
+     the style map passed in `styleMap` is combined with the default style map.
+     To stop using the default style map altogether,
+     set `options.includeDefaultStyleMap` to `false`.
 
 * Returns a promise containing a result.
   This result has the following properties:
 
-** `value`: the generated HTML
+  * `value`: the generated HTML
 
-** `messages`: any messages, such as errors and warnings, generated during the conversion
+  * `messages`: any messages, such as errors and warnings, generated during the conversion
 
 #### `mammoth.styleMapping(string)`
 
