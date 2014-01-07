@@ -27,7 +27,7 @@ You can start it up by running `node lib/web.js` from the project directory.
 Browserify can be used to run Mammoth in the browser.
 To see an example, run `make setup` and open `browser-demo/index.html` in a web browser.
 
-### API
+### Library
 
 To convert an existing .docx file to HTML, use `mammoth.convertToHtml`:
 
@@ -76,6 +76,30 @@ var options = {
 };
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
+
+### API
+
+#### `mammoth.convertToHtml(input, options)`
+
+Converts the source document to HTML.
+
+* `input` should be an object describing the source document.
+  To read the file found at `path`, pass in `{path: path}`.
+
+* Returns a promise containing a result.
+  This result has the following properties:
+
+** `value`: the generated HTML
+
+** `messages`: any messages, such as errors and warnings, generated during the conversion
+
+#### Messages
+
+Each message has the following properties:
+
+* `type`: a string representing the type of the message, such as `"warning"`
+
+* `message`: a string containing the actual message
 
 ## Writing styles
 
