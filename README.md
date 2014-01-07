@@ -78,7 +78,6 @@ var options = {
         style("p.SubSectionTitle => h2:fresh")
     ],
     includeDefaultStyleMap: false
-    
 };
 ```
 
