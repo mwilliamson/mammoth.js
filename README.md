@@ -126,7 +126,7 @@ Each message has the following properties:
 
 ## Writing style maps
 
-A style map is made up of a number of style mappings.
+A style map is made up of a number of style mappings separated by new lines.
 
 A style mapping has two parts:
 
