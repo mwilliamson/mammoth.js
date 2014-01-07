@@ -40,7 +40,7 @@ describe('mammoth', function() {
             "word/document.xml": testData("simple/word/document.xml")
         });
         var options = {
-            styleMap: [mammoth.style("p => h1")]
+            styleMap: [mammoth.styleMapping("p => h1")]
         };
         return mammoth.convertToHtml({file: docxFile}, options).then(function(result) {
             assert.equal("<h1>Hello.</h1>", result.value);

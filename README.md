@@ -56,12 +56,12 @@ and paragraphs with the style `SubSectionTitle` should be converted to `h2` elem
 
 ```javascript
 var mammoth = require("mammoth");
-var style = mammoth.style;
+var styleMapping = mammoth.styleMapping;
 
 var options = {
     styleMap: [
-        style("p.SectionTitle => h1:fresh"),
-        style("p.SubSectionTitle => h2:fresh")
+        styleMapping("p.SectionTitle => h1:fresh"),
+        styleMapping("p.SubSectionTitle => h2:fresh")
     ]
 };
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
@@ -74,8 +74,8 @@ set `options.includeDefaultStyleMap` to `false`:
 ```javascript
 var options = {
     styleMap: [
-        style("p.SectionTitle => h1:fresh"),
-        style("p.SubSectionTitle => h2:fresh")
+        styleMapping("p.SectionTitle => h1:fresh"),
+        styleMapping("p.SubSectionTitle => h2:fresh")
     ],
     includeDefaultStyleMap: false
 };
@@ -97,7 +97,7 @@ Converts the source document to HTML.
    If `options.styleMap` is a string,
    each non-blank line is treated as a separate style mapping.
    If `options.styleMap` is an array,
-   each element is expected to be the result of a call to `mammoth.style`.
+   each element is expected to be the result of a call to `mammoth.styleMapping`.
    See "Writing style maps" for a reference to the syntax for style maps.
 
 ** `includeDefaultStyleMap`: by default,
@@ -112,9 +112,9 @@ Converts the source document to HTML.
 
 ** `messages`: any messages, such as errors and warnings, generated during the conversion
 
-#### `mammoth.style(string)`
+#### `mammoth.styleMapping(string)`
 
-Creates a style using the passed string.
+Creates a style mapping using the passed string.
 
 #### Messages
 
