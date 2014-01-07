@@ -67,32 +67,19 @@ var options = {
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
 
-To more easily support style mappings stored in text files,
-`styleMap` can also be a string.
-Each non-blank line is treated as a separate style mapping:
+User-defined style mappings are used in preference to the default style mappings.
+To stop using the default style mappings altogether,
+set `options.includeDefaultStyleMap` to `false`:
 
 ```javascript
 var options = {
-    styleMap: "p.SectionTitle => h1:fresh\n" +
-        "p.SubSectionTitle => h2:fresh"
+    styleMap: [
+        style("p.SectionTitle => h1:fresh"),
+        style("p.SubSectionTitle => h2:fresh")
+    ],
+    includeDefaultStyleMap: false
+    
 };
-```
-
-To extend the standard style map:
-
-```javascript
-var mammoth = require("mammoth");
-var style = mammoth.style;
-
-var customStyles = [
-    style("p.AsideHeading => div.aside > h2:fresh"),
-    style("p.AsideText => div.aside > p:fresh")
-];
-
-var options = {
-    styleMap: customStyles.concat(mammoth.standardOptions.styleMap)
-};
-mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
 
 ### API
