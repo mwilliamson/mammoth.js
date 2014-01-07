@@ -1,39 +1,57 @@
 var assert = require("assert");
 
-var StyleApplicator = require("../lib/style-applicator").StyleApplicator;
 var documents = require("../lib/documents");
 
 var testing = require("./testing");
 var test = testing.test;
-var testData = testing.testData;
+var style = require("../lib/style-reader").readStyle;
 
 
 describe("style-applicator", function() {
-    test("can process styleless document with single, center-aligned paragraph", function() {
+    test("can use custom documentTransform to process styleless center-aligned paragraph into h2.centerAlign", function() {
         var testOptions = {
-            styleMap: [],
-            styleApplicator: {
-                alignment: true
-            }
+            styleMap: [
+                style("p.centerAligned => h2.sectionHeader:fresh")
+            ],
+            transformDocument: transformDocument
         };
         var testDocument = documents.Document([
             documents.Paragraph([
                 documents.Run([
-                    documents.Text("Test document with centered paragraph.")
+                    documents.Text("Test.")
                 ])
             ], {alignment: 'center'})
         ]);
         var expectedDocument = documents.Document([
             documents.Paragraph([
                 documents.Run([
-                    documents.Text("Test document with centered paragraph.")
+                    documents.Text("Test.")
                 ])
             ], {styleName: 'centerAligned', alignment: 'center'})
         ]);
 
-        var styleApplicator = new StyleApplicator(testOptions);
-        return styleApplicator.processDocumentStyles(testDocument).then(function(result) {
-            assert.deepEqual(expectedDocument, result);
-        });
+        assert.deepEqual(expectedDocument, transformDocument(testDocument));
     });
 });
+
+function transformDocument(document) {
+    if (document.children) {
+        for (var i = 0; i < document.children.length; i++) {
+            var element = document.children[i];
+            switch (element.type) {
+                case 'paragraph':
+                    document.children[i] = processParagraphStyles(document.children[i]);
+                    break;
+            }
+        }
+    }
+    return document;
+}
+function processParagraphStyles(element) {
+    if (!element.styleName) {
+        if (element.alignment) {
+            element.styleName = element.alignment+"Aligned";
+        }
+    }
+    return element;
+}
