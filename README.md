@@ -24,6 +24,9 @@ Mammoth works best if you only use styles to semantically mark up your document.
 The easiest way to try out mammoth is to use the demo web server.
 You can start it up by running `node lib/web.js` from the project directory.
 
+Browserify can be used to run Mammoth in the browser.
+To see an example, run `make setup` and open `browser-demo/index.html` in a web browser.
+
 ### API
 
 To convert an existing .docx file to HTML, use `mammoth.convertToHtml`:
