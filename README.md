@@ -43,14 +43,14 @@ mammoth.convertToHtml({path: "path/to/document.docx"})
     });
 ```
 
-### Custom styles
+### Custom style map
 
 By default,
 Mammoth maps some common .docx styles to HTML elements.
 For instance,
 a paragraph with the style `Heading1` is converted to a `h1` element.
 You can pass in a custom map for styles by passing an options object with a `styleMap` property as a second argument to `convertToHtml`.
-A description of the syntax for styles can be found in the section "Writing styles".
+A description of the syntax for style maps can be found in the section "Writing style maps".
 For instance, if paragraphs with the style `SectionTitle` should be converted to `h1` elements,
 and paragraphs with the style `SubSectionTitle` should be converted to `h2` elements:
 
@@ -98,7 +98,7 @@ Converts the source document to HTML.
    each non-blank line is treated as a separate style mapping.
    If `options.styleMap` is an array,
    each element is expected to be the result of a call to `mammoth.style`.
-   See "Writing styles" for a reference to the syntax for styles.
+   See "Writing style maps" for a reference to the syntax for style maps.
 
 ** `includeDefaultStyleMap`: by default,
    the style map passed in `styleMap` is combined with the default style map.
@@ -124,25 +124,27 @@ Each message has the following properties:
 
 * `message`: a string containing the actual message
 
-## Writing styles
+## Writing style maps
 
-A style has two parts:
+A style map is made up of a number of style mappings.
+
+A style mapping has two parts:
 
 * On the left, before the arrow, is the document element matcher.
 * On the right, after the arrow, is the HTML path.
 
 When converting each paragraph,
-Mammoth finds the first style where the document element matcher matches the current paragraph.
+Mammoth finds the first style mapping where the document element matcher matches the current paragraph.
 Mammoth then ensures the HTML path is satisfied.
 
 ### Freshness
 
-When writing styles, it's helpful to understand Mammoth's notion of freshness.
+When writing style mappings, it's helpful to understand Mammoth's notion of freshness.
 When generating, Mammoth will only close an HTML element when necessary.
 Otherwise, elements are reused.
 
-For instance, suppose one of the specified styles is `p.Heading1 => h1`.
-If Mammoth encounters a .docx paragraphs with the style `Heading1`,
+For instance, suppose one of the specified style mappings is `p.Heading1 => h1`.
+If Mammoth encounters a .docx paragraph with the style `Heading1`,
 the .docx paragraph is converted to a `h1` element with the same text.
 If the next .docx paragraph also has the style `Heading1`,
 then the text of that paragraph will be appended to the *existing* `h1` element,
@@ -159,7 +161,7 @@ Reusing elements is useful in generating more complicated HTML structures.
 For instance, suppose your .docx contains asides.
 Each aside might have a heading and some body text,
 which should be contained within a single `div.aside` element.
-In this case, styles similar to `p.AsideHeading => div.aside > h2:fresh` and
+In this case, style mappings similar to `p.AsideHeading => div.aside > h2:fresh` and
 `p.AsideText => div.aside > p:fresh` might be helpful.
 
 ### Document element matchers
