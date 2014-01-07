@@ -3,7 +3,7 @@
 test:
 	node_modules/.bin/mocha tests
 
-setup: static/bootstrap static/jszip
+setup: static/bootstrap static/jszip browser-demo/bundle.min.js
 	
 static/bootstrap:
 	mkdir -p _build/bootstrap
