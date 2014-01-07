@@ -41,6 +41,14 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(paragraph.styleName, "Heading1");
     });
     
+    test("paragraph has justification read from paragraph properties if present", function() {
+        var justificationXml = new XmlElement("w:jc", {"w:val": "center"}, []);
+        var propertiesXml = new XmlElement("w:pPr", {}, [justificationXml]);
+        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.deepEqual(paragraph.alignment, "center");
+    });
+    
     test("paragraph has numbering properties from paragraph properties if present", function() {
         var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
             new XmlElement("w:ilvl", {"w:val": "1"}),
