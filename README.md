@@ -92,6 +92,32 @@ var options = {
 };
 ```
 
+### Document transforms
+
+Mammoth allows a document to be transformed before it is converted.
+For instance,
+suppose that document has not been semantically marked up,
+but you know that any centre-aligned paragraph should be a heading.
+You can use the `transformDocument` argument to modify the document appropriately:
+
+```javascript
+function transformElement(element) {
+  if (element.children) {
+      element.children.forEach(transformElement);
+  }
+  if (element.type === "paragraph") {
+      if (element.alignment === "center" && !element.styleName) {
+          element.styleName = "Heading2";
+      }
+  }
+  return element;
+}
+
+var options = {
+    transformDocument: transformElement
+};
+```
+
 ### API
 
 #### `mammoth.convertToHtml(input, options)`
@@ -115,6 +141,9 @@ Converts the source document to HTML.
      the style map passed in `styleMap` is combined with the default style map.
      To stop using the default style map altogether,
      set `options.includeDefaultStyleMap` to `false`.
+  
+  * `transformDocument`: if set,
+    this function is applied to the document read from the docx file before the conversion to HTML.
 
 * Returns a promise containing a result.
   This result has the following properties:
