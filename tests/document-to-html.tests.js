@@ -1,5 +1,5 @@
 var assert = require("assert");
-var q = require("q");
+var promises = require("../lib/promises");
 
 var documents = require("../lib/documents");
 var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
@@ -201,7 +201,7 @@ describe('DocumentConverter', function() {
         var imageBuffer = new Buffer("Not an image at all!");
         var image = new documents.Image({
             readImage: function(encoding) {
-                return q.when(imageBuffer.toString(encoding));
+                return promises.when(imageBuffer.toString(encoding));
             },
             contentType: "image/png"
         });
@@ -215,7 +215,7 @@ describe('DocumentConverter', function() {
         var imageBuffer = new Buffer("Not an image at all!");
         var image = new documents.Image({
             readImage: function() {
-                return q.when(imageBuffer);
+                return promises.when(imageBuffer);
             },
             altText: "It's a hat"
         });
@@ -234,7 +234,7 @@ describe('DocumentConverter', function() {
         var imageBuffer = new Buffer("Not an image at all!");
         var image = new documents.Image({
             readImage: function(encoding) {
-                return q.when(imageBuffer.toString(encoding));
+                return promises.when(imageBuffer.toString(encoding));
             },
             contentType: "image/png"
         });

@@ -1,6 +1,6 @@
 var path = require("path");
 var fs = require("fs");
-var q = require("q");
+var promises = require("../lib/promises");
 var _ = require("underscore");
 
 exports.test = test;
@@ -11,7 +11,7 @@ exports.createFakeDocxFile = createFakeDocxFile;
 function test(name, func) {
     it(name, function(done) {
         var result = func();
-        q.when(result).then(function() {
+        promises.when(result).then(function() {
             done()
         }).done();
     });
@@ -19,22 +19,22 @@ function test(name, func) {
 
 function testData(testDataPath) {
     var fullPath = path.join(__dirname, "test-data", testDataPath);
-    return q.nfcall(fs.readFile, fullPath, "utf-8");
+    return promises.nfcall(fs.readFile, fullPath, "utf-8");
 }
 
 function createFakeDocxFile(files) {
     function read(path, encoding) {
-        return q.when(files[path], function(buffer) {
+        return promises.when(files[path], function(buffer) {
             if (_.isString(buffer)) {
                 buffer = new Buffer(buffer);
             }
             
             if (!Buffer.isBuffer(buffer)) {
-                return q.reject(new Error("file was not a buffer"));
+                return promises.reject(new Error("file was not a buffer"));
             } else if (encoding) {
-                return q.when(buffer.toString(encoding));
+                return promises.when(buffer.toString(encoding));
             } else {
-                return q.when(buffer);
+                return promises.when(buffer);
             }
         });
     }

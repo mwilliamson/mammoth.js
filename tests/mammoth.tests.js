@@ -2,7 +2,7 @@ var assert = require("assert");
 var path = require("path");
 var fs = require("fs");
 
-var q = require("q");
+var promises = require("../lib/promises");
 
 var mammoth = require("../")
 var htmlPaths = require("../lib/html-paths");
