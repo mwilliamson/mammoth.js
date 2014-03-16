@@ -126,7 +126,10 @@ var options = {
 Converts the source document to HTML.
 
 * `input`: an object describing the source document.
-  To read the file found at `path`, pass in `{path: path}`.
+  While running on node.js,
+  to read the file found at `path`, pass in `{path: path}`.
+  While running in the browser,
+  to read the file stored in an array buffer, pass in `{arrayBuffer: arrayBuffer}`.
   
 * `options` (optional): options for the conversion.
   May have the following properties:
