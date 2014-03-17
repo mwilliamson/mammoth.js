@@ -44,6 +44,8 @@ mammoth.convertToHtml({path: "path/to/document.docx"})
     .done();
 ```
 
+Note that `mammoth.convertToHtml` returns a [promise](http://promises-aplus.github.io/promises-spec/).
+
 ### Custom style map
 
 By default,
