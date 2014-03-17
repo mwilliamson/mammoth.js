@@ -25,8 +25,7 @@
     "dustjs-linkedin": "~1.2.1",
     "async": "~0.2.6",
     "buffers": "~0.1.1",
-    "stream-buffers": "~0.2.4",
-    "xtend": "~2.1.2"
+    "stream-buffers": "~0.2.4"
   },
   "devDependencies": {
     "mocha": "~1.8",
