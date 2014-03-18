@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+var optimist = require("optimist");
+var main = require("../lib/main");
+
+main(optimist.argv);

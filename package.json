@@ -38,6 +38,9 @@
   "browser": {
     "./lib/unzip.js": "./browser/unzip.js"
   },
+  "bin": {
+    "mammoth": "bin/mammoth"
+  },
   "scripts": {
     "test": "mocha tests --recursive"
   },
