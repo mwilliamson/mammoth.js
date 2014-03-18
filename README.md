@@ -26,6 +26,15 @@ You can start it up by running `node lib/web.js` from the project directory.
 
 Browserify can be used to run Mammoth in the browser.
 To see an example, run `make setup` and open `browser-demo/index.html` in a web browser.
+    
+### CLI
+
+You can convert docx files by passing the path to the docx file and the output file.
+For instance:
+
+    mammoth document.docx output.html
+
+If no output file is specified, output is written to stdout instead.
 
 ### Library
 
