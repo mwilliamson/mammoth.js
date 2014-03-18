@@ -16,7 +16,7 @@ var args = require("nomnom")
         type: "string",
         help: "Output directory for generated HTML and images. Images will be stored in separate files. Takes precedence over output-path."
     })
-    .option("--style-map", {
+    .option("style-map", {
         type: "string",
         help: "File containg a style map."
     })
