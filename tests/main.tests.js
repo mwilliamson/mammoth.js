@@ -27,6 +27,13 @@ describe("CLI", function() {
             });
         });
     });
+    
+    test("inline images are included in output if writing to single file", function() {
+        return runMammoth(testPath("tiny-picture.docx")).then(function(result) {
+            assert.equal(result.stderrOutput, "")
+            assert.equal(result.output, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>')
+        });
+    });
 });
 
 function runMammoth() {
