@@ -20,12 +20,12 @@
     "underscore": "~1.4.4",
     "lop": "~0.2.8",
     "unzip": "~0.1.7",
-    "optimist": "~0.3.5",
     "connect": "~2.7.3",
     "dustjs-linkedin": "~1.2.1",
     "async": "~0.2.6",
     "buffers": "~0.1.1",
-    "stream-buffers": "~0.2.4"
+    "stream-buffers": "~0.2.4",
+    "nomnom": "~1.6.2"
   },
   "devDependencies": {
     "mocha": "~1.8",

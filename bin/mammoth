@@ -1,6 +1,18 @@
 #!/usr/bin/env node
 
-var optimist = require("optimist");
+var args = require("nomnom")
+    .option("docx-path", {
+        position: 0,
+        required: true,
+        type: "string",
+        help: "Path to the .docx file to convert."
+    })
+    .option("output-path", {
+        position: 1,
+        type: "string",
+        help: "Output path for the generated HTML. Output is written to stdout if not set."
+    })
+    .parse();
 var main = require("../lib/main");
 
-main(optimist.argv);
+main(args);
