@@ -23,18 +23,34 @@ describe("CLI", function() {
             return runMammoth(testPath("single-paragraph.docx"), outputPath).then(function(result) {
                 assert.equal(result.stderrOutput, "")
                 assert.equal(result.output, "")
-                assert.equal(fs.readFileSync(outputPath), "<p>Walking on imported air</p>");
+                assert.equal(fs.readFileSync(outputPath, "utf8"), "<p>Walking on imported air</p>");
             });
         });
     });
     
+    var imageBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=";
+    
     test("inline images are included in output if writing to single file", function() {
         return runMammoth(testPath("tiny-picture.docx")).then(function(result) {
             assert.equal(result.stderrOutput, "")
-            assert.equal(result.output, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>')
+            assert.equal(result.output, '<p><img src="data:image/png;base64,' + imageBase64 + '" /></p>')
+        });
+    });
+    
+    test("images are written to separate files if output dir is set", function() {
+        return createTempDir().then(function(tempDir) {
+            var outputPath = path.join(tempDir, "tiny-picture.html");
+            var imagePath = path.join(tempDir, "1.png");
+            return runMammoth(testPath("tiny-picture.docx"), "--output-dir", tempDir).then(function(result) {
+                assert.equal(result.stderrOutput, "")
+                assert.equal(result.output, "")
+                assert.equal(fs.readFileSync(outputPath, "utf8"), '<p><img src="1.png" /></p>');
+                assert.equal(fs.readFileSync(imagePath, "base64"), imageBase64);
+            });
         });
     });
 });
+
 
 function runMammoth() {
     var args = Array.prototype.slice.call(arguments, 0);
