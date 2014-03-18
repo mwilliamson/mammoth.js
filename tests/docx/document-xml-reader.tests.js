@@ -1,11 +1,11 @@
 var assert = require("assert");
 
-var DocumentXmlReader = require("../lib/document-xml-reader").DocumentXmlReader;
-var documents = require("../lib/documents");
-var XmlElement = require("../lib/xmlreader").Element;
-var Numbering = require("../lib/numbering-xml").Numbering;
+var DocumentXmlReader = require("../../lib/docx/document-xml-reader").DocumentXmlReader;
+var documents = require("../../lib/documents");
+var XmlElement = require("../../lib/xmlreader").Element;
+var Numbering = require("../../lib/docx/numbering-xml").Numbering;
 
-var testing = require("./testing");
+var testing = require("../testing");
 var test = testing.test;
 var createFakeDocxFile = testing.createFakeDocxFile;
 

@@ -1,8 +1,8 @@
 var assert = require("assert");
 
-var readContentTypesFromXml = require("../lib/content-types-reader").readContentTypesFromXml;
-var XmlElement = require("../lib/xmlreader").Element;
-var test = require("./testing").test;
+var readContentTypesFromXml = require("../../lib/docx/content-types-reader").readContentTypesFromXml;
+var XmlElement = require("../../lib/xmlreader").Element;
+var test = require("../testing").test;
 
 
 describe('readContentTypesFromXml', function() {

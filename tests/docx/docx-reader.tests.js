@@ -1,10 +1,10 @@
 var assert = require("assert");
 
-var docxReader = require("../lib/docx-reader");
-var documents = require("../lib/documents");
-var XmlElement = require("../lib/xmlreader").Element;
+var docxReader = require("../../lib/docx/docx-reader");
+var documents = require("../../lib/documents");
+var XmlElement = require("../../lib/xmlreader").Element;
 
-var testing = require("./testing");
+var testing = require("../testing");
 var test = testing.test;
 var testData = testing.testData;
 var createFakeDocxFile = testing.createFakeDocxFile;

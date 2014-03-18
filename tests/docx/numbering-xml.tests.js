@@ -2,9 +2,9 @@ var assert = require("assert");
 
 var duck = require("duck");
 
-var readNumberingXml = require("../lib/numbering-xml").readNumberingXml;
-var XmlElement = require("../lib/xmlreader").Element;
-var test = require("./testing").test;
+var readNumberingXml = require("../../lib/docx/numbering-xml").readNumberingXml;
+var XmlElement = require("../../lib/xmlreader").Element;
+var test = require("../testing").test;
 
 
 describe('readNumberingXml', function() {

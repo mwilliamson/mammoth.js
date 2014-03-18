@@ -38,7 +38,7 @@
     "./lib/unzip.js": "./browser/unzip.js"
   },
   "scripts": {
-    "test": "mocha tests"
+    "test": "mocha tests --recursive"
   },
   "licenses": [
     {
