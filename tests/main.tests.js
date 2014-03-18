@@ -49,6 +49,17 @@ describe("CLI", function() {
             });
         });
     });
+    
+    test("style map is used if set", function() {
+        return createTempDir().then(function(tempDir) {
+            var styleMapPath = path.join(tempDir, "style-map");
+            fs.writeFileSync(styleMapPath, "p => span:fresh");
+            return runMammoth(testPath("single-paragraph.docx"), "--style-map", styleMapPath).then(function(result) {
+                assert.equal(result.stderrOutput, "")
+                assert.equal(result.output, "<span>Walking on imported air</span>")
+            });
+        });
+    });
 });
 
 
