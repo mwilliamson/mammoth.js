@@ -4,6 +4,7 @@ var promises = require("../lib/promises");
 var _ = require("underscore");
 
 exports.test = test;
+exports.testPath = testPath;
 exports.testData = testData;
 exports.createFakeDocxFile = createFakeDocxFile;
 
@@ -17,8 +18,12 @@ function test(name, func) {
     });
 }
 
+function testPath(filename) {
+    return path.join(__dirname, "test-data", filename);
+}
+
 function testData(testDataPath) {
-    var fullPath = path.join(__dirname, "test-data", testDataPath);
+    var fullPath = testPath(testDataPath);
     return promises.nfcall(fs.readFile, fullPath, "utf-8");
 }
 
