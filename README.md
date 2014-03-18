@@ -45,6 +45,18 @@ For instance:
 
     mammoth document.docx --output-dir=output-dir
 
+#### Styles
+
+A custom style map can be read from a file using `--style-map`.
+For instance:
+
+    mammoth document.docx output.html --style-map=custom-style-map
+    
+Where `custom-style-map` looks something like:
+
+    p.AsideHeading => div.aside > h2:fresh
+    p.AsideText => div.aside > p:fresh
+
 ### Library
 
 #### Basic conversion
