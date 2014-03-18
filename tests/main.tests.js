@@ -1,5 +1,9 @@
 var assert = require("assert");
 var child_process = require("child_process");
+var path = require("path");
+var fs = require("fs");
+
+var temp = require('temp').track();
 
 var promises = require("../lib/promises");
 var test = require("./testing").test;
@@ -10,6 +14,17 @@ describe("CLI", function() {
         return runMammoth(testPath("single-paragraph.docx")).then(function(result) {
             assert.equal(result.stderrOutput, "")
             assert.equal(result.output, "<p>Walking on imported air</p>")
+        });
+    });
+    
+    test("HTML is written to file if output file is set", function() {
+        return createTempDir().then(function(tempDir) {
+            var outputPath = path.join(tempDir, "output.html");
+            return runMammoth(testPath("single-paragraph.docx"), outputPath).then(function(result) {
+                assert.equal(result.stderrOutput, "")
+                assert.equal(result.output, "")
+                assert.equal(fs.readFileSync(outputPath), "<p>Walking on imported air</p>");
+            });
         });
     });
 });
@@ -28,4 +43,8 @@ function runMammoth() {
     });
     
     return deferred.promise;
+}
+
+function createTempDir() {
+    return promises.nfcall(temp.mkdir, null);
 }
