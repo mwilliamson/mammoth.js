@@ -45,6 +45,8 @@ For instance:
 
     mammoth document.docx --output-dir=output-dir
 
+Existing files will be overwritten if present.
+
 #### Styles
 
 A custom style map can be read from a file using `--style-map`.
