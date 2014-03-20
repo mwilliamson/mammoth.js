@@ -153,6 +153,9 @@ var options = {
 };
 ```
 
+The return value of `transformDocument` is used during HTML generation.
+The original document (and any child elements) can be safely modified.
+
 ### API
 
 #### `mammoth.convertToHtml(input, options)`
