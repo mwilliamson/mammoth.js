@@ -1,9 +1,9 @@
-.PHONY: test browser-demo/bundle.js
+.PHONY: test mammoth.browser.js
 
 test:
 	npm test
 
-setup: static/bootstrap static/jszip browser-demo/bundle.min.js
+setup: static/bootstrap static/jszip mammoth.browser.min.js
 	
 static/bootstrap:
 	mkdir -p _build/bootstrap
@@ -17,8 +17,8 @@ static/jszip:
 	mkdir -p static/jszip
 	cp _build/jszip/*.js static/jszip
 	
-browser-demo/bundle.js:
-	rm $@
+mammoth.browser.js:
+	rm $@ -f
 	cat static/jszip/jszip.js >> $@
 	cat static/jszip/jszip-deflate.js >> $@
 	cat static/jszip/jszip-inflate.js >> $@
@@ -26,5 +26,5 @@ browser-demo/bundle.js:
 	node_modules/.bin/node-license-sniffer . --recurse --js-comment >> $@
 	node_modules/.bin/browserify lib/index.js --standalone mammoth >> $@
 
-browser-demo/bundle.min.js: browser-demo/bundle.js
-	node_modules/.bin/uglifyjs browser-demo/bundle.js -c > $@
+mammoth.browser.min.js: mammoth.browser.js
+	node_modules/.bin/uglifyjs mammoth.browser.js -c > $@

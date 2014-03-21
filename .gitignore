@@ -2,5 +2,5 @@
 /_build
 /static/bootstrap
 /static/jszip
-/browser-demo/bundle.js
-/browser-demo/bundle.min.js
+/mammoth.browser.js
+/mammoth.browser.min.js
