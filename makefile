@@ -1,7 +1,7 @@
 .PHONY: test browser-demo/bundle.js
 
 test:
-	node_modules/.bin/mocha tests
+	npm test
 
 setup: static/bootstrap static/jszip browser-demo/bundle.min.js
 	
