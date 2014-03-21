@@ -1,4 +1,4 @@
-var q = require("q");
+var promises = require("../lib/promises");
 
 exports.openZip = openZip;
 
@@ -20,9 +20,9 @@ function openArrayBuffer(arrayBuffer) {
         var array = zipFile.file(name).asUint8Array();
         var buffer = new Buffer(array);
         if (encoding) {
-            return q.when(buffer.toString(encoding));
+            return promises.when(buffer.toString(encoding));
         } else {
-            return q.when(buffer);
+            return promises.when(buffer);
         }
     }
     return {
