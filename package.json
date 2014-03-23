@@ -20,7 +20,6 @@
     "underscore": "~1.4.4",
     "lop": "~0.2.8",
     "unzip": "~0.1.7",
-    "connect": "~2.7.3",
     "async": "~0.2.6",
     "buffers": "~0.1.1",
     "stream-buffers": "~0.2.4",
