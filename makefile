@@ -1,9 +1,12 @@
-.PHONY: test mammoth.browser.js
+.PHONY: test mammoth.browser.js npm-install
 
 test:
 	npm test
 
-setup: static/jszip mammoth.browser.min.js
+setup: npm-install static/jszip mammoth.browser.min.js
+
+npm-install:
+	npm install
 
 static/jszip:
 	mkdir -p _build/jszip
