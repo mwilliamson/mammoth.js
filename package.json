@@ -15,7 +15,7 @@
     "url": "https://github.com/mwilliamson/mammoth.js.git"
   },
   "dependencies": {
-    "bluebird": "~1.0.8",
+    "bluebird": "1.1.0",
     "sax": "~0.5.2",
     "underscore": "~1.4.4",
     "lop": "~0.2.8",
@@ -33,12 +33,10 @@
     "license-sniffer": "~0.1.0",
     "duck": "~0.1.11",
     "uglify-js": "~2.4.8",
-    "temp": "~0.7.0",
-    "q": "~1.0.1"
+    "temp": "~0.7.0"
   },
   "browser": {
-    "./lib/unzip.js": "./browser/unzip.js",
-    "./lib/promises.js": "./browser/promises.js"
+    "./lib/unzip.js": "./browser/unzip.js"
   },
   "bin": {
     "mammoth": "bin/mammoth"
