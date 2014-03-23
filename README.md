@@ -13,20 +13,20 @@ There's a large mismatch between the structure used by .docx and the structure o
 meaning that the conversion is unlikely to be perfect for more complicated documents.
 Mammoth works best if you only use styles to semantically mark up your document.
 
+### Web demo
+
+The easiest way to try out mammoth is to use the web demo:
+
+* Clone this repository
+* Run `make setup`
+* Open `browser-demo/index.html` in a web browser
+
 ## Installation
 
     npm install mammoth
     
 ## Usage
 
-### Web interface
-
-The easiest way to try out mammoth is to use the demo web server.
-You can start it up by running `node lib/web.js` from the project directory.
-
-Browserify can be used to run Mammoth in the browser.
-To see an example, run `make setup` and open `browser-demo/index.html` in a web browser.
-    
 ### CLI
 
 You can convert docx files by passing the path to the docx file and the output file.
