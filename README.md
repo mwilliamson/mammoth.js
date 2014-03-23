@@ -61,6 +61,18 @@ Where `custom-style-map` looks something like:
 
 ### Library
 
+In node.js, mammoth can be required in the usual way:
+
+```javascript
+var mammoth = require("mammoth");
+```
+
+To generate a standalone JavaScript file for the browser,
+use `mammoth.browser.js` (generate using `make setup` if it is not already present).
+This uses any loaded module system.
+If no module system is found,
+`mammoth` is set as a window global.
+
 #### Basic conversion
 
 To convert an existing .docx file to HTML, use `mammoth.convertToHtml`:
