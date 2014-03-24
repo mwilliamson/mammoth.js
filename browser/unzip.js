@@ -1,3 +1,5 @@
+var JSZip = require("jszip");
+
 var promises = require("../lib/promises");
 
 exports.openZip = openZip;

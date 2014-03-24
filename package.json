@@ -23,7 +23,8 @@
     "async": "~0.2.6",
     "buffers": "~0.1.1",
     "stream-buffers": "~0.2.4",
-    "nomnom": "~1.6.2"
+    "nomnom": "~1.6.2",
+    "jszip": "~2.2.0"
   },
   "devDependencies": {
     "mocha": "~1.8",
