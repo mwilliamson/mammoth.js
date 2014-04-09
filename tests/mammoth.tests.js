@@ -87,11 +87,4 @@ describe('mammoth', function() {
             assert.equal(result.value, '<ul><li>Apple</li><li>Banana</li></ul>');
         });
     });
-    
-    test('newlines and indentation are used if prettyPrint is true', function() {
-        var docxPath = path.join(__dirname, "test-data/simple-list.docx");
-        return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
-            assert.equal(result.value, '<ul>\n  <li>Apple</li>\n  <li>Banana</li>\n</ul>');
-        });
-    });
 })
