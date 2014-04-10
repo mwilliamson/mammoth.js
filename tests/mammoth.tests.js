@@ -87,4 +87,12 @@ describe('mammoth', function() {
             assert.equal(result.value, '<ul><li>Apple</li><li>Banana</li></ul>');
         });
     });
+    
+    test('indentation is used if prettyPrint is true', function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
+            assert.equal(result.value, "<p>\n  Walking on imported air\n</p>");
+            assert.deepEqual(result.messages, []);
+        });
+    });
 })
