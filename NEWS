@@ -1,0 +1,7 @@
+# 0.2.2
+
+* Fix: exception when bad arguments are passed into unzip.openZip.
+
+# 0.2.1
+
+* Fix browserify support
