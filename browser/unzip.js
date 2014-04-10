@@ -8,7 +8,7 @@ function openZip(options) {
     if (options.arrayBuffer) {
         return openArrayBuffer(options.arrayBuffer);
     } else {
-        return q.reject(new Error("Could not find file in options"));
+        return promises.reject(new Error("Could not find file in options"));
     }
 }
 
