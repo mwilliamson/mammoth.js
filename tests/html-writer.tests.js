@@ -58,4 +58,12 @@ describe('html-writer', function() {
         writer.close("p");
         return assert.equal(writer.asString(), "<p>\n  One\n  Two\n</p>");
     });
+    
+    test('self closing elements are indented', function() {
+        var writer = htmlWriter.writer({prettyPrint: true});
+        writer.open("p");
+        writer.selfClosing("br");
+        writer.close("p");
+        return assert.equal(writer.asString(), "<p>\n  <br />\n</p>");
+    });
 })
