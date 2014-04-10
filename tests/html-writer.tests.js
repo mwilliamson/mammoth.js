@@ -50,4 +50,12 @@ describe('html-writer', function() {
         writer.close("div");
         return assert.equal(writer.asString(), "<div>\n  <div>\n    <div>\n      Hello\n    </div>\n  </div>\n</div>");
     });
+    
+    test('newlines in text are indented', function() {
+        var writer = htmlWriter.writer({prettyPrint: true});
+        writer.open("p");
+        writer.text("One\nTwo");
+        writer.close("p");
+        return assert.equal(writer.asString(), "<p>\n  One\n  Two\n</p>");
+    });
 })
