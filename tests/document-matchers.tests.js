@@ -20,7 +20,7 @@ describe("document-matchers", function() {
     });
     
     test("ordered-list(index) matches an ordered list with specified level index", function() {
-        var matcher = documentMatchers.paragraph().orderedList(1);
+        var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 1}});
         assert.ok(!matcher.matches(new Paragraph()));
         assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true}})));
         assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 0, isOrdered: true}})));
@@ -28,14 +28,14 @@ describe("document-matchers", function() {
     });
     
     test("unordered-list(index) matches an unordered list with specified level index", function() {
-        var matcher = documentMatchers.paragraph().unorderedList(1);
+        var matcher = documentMatchers.paragraph({list: {isOrdered: false, levelIndex: 1}});
         assert.ok(!matcher.matches(new Paragraph()));
         assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: false}})));
         assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true}})));
     });
     
     test("matchers for lists with index 0 do not match elements that are not lists", function() {
-        var matcher = documentMatchers.paragraph().orderedList(0);
+        var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0}});
         assert.ok(!matcher.matches(new Paragraph()));
     });
 });

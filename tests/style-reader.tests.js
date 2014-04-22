@@ -65,14 +65,14 @@ describe("styleReader.readDocumentMatcher", function() {
     test("reads p:ordered-list(1) as ordered list with index of 0", function() {
         assert.deepEqual(
             readDocumentMatcher("p:ordered-list(1)"),
-            documentMatchers.paragraph().orderedList(0)
+            documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0}})
         );
     });
     
     test("reads p:unordered-list(1) as unordered list with index of 0", function() {
         assert.deepEqual(
             readDocumentMatcher("p:unordered-list(1)"),
-            documentMatchers.paragraph().unorderedList(0)
+            documentMatchers.paragraph({list: {isOrdered: false, levelIndex: 0}})
         );
     });
     
