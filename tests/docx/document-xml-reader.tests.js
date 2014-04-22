@@ -4,6 +4,7 @@ var DocumentXmlReader = require("../../lib/docx/document-xml-reader").DocumentXm
 var documents = require("../../lib/documents");
 var XmlElement = require("../../lib/xmlreader").Element;
 var Numbering = require("../../lib/docx/numbering-xml").Numbering;
+var Styles = require("../../lib/docx/styles-reader").Styles;
 
 var testing = require("../testing");
 var test = testing.test;
@@ -14,8 +15,8 @@ function readXmlElement(element, options) {
     return new DocumentXmlReader(options).readXmlElement(element);
 }
 
-function readXmlElementValue(element) {
-    var result = readXmlElement(element);
+function readXmlElementValue(element, options) {
+    var result = readXmlElement(element, options);
     assert.deepEqual(result.messages, []);
     return result.value;
 }
@@ -33,12 +34,26 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(paragraph.styleId, null);
     });
     
-    test("paragraph has style name read from paragraph properties if present", function() {
+    test("paragraph has style ID read from paragraph properties if present", function() {
         var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
         var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
         var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-        var paragraph = readXmlElementValue(paragraphXml);
+        
+        var styles = new Styles({"Heading1": {name: "Heading 1"}}, {});
+        
+        var paragraph = readXmlElementValue(paragraphXml, {styles: styles});
         assert.deepEqual(paragraph.styleId, "Heading1");
+    });
+    
+    test("paragraph has style name read from paragraph properties and styles", function() {
+        var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
+        var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
+        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+        
+        var styles = new Styles({"Heading1": {name: "Heading 1"}}, {});
+        
+        var paragraph = readXmlElementValue(paragraphXml, {styles: styles});
+        assert.deepEqual(paragraph.styleName, "Heading 1");
     });
     
     test("paragraph has justification read from paragraph properties if present", function() {
