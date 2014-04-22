@@ -1,6 +1,8 @@
 # 0.3.0
 
-* Rename the existing concept of a "style name" to "style ID" to correspond to docx.
+* Rename the existing concept of a "style name" to "style ID" to correspond to
+  the terminology used internally in docx files. Any document transforms that
+  get or set the `styleName` property should use the `styleId` property instead.
 
 # 0.2.2
 
