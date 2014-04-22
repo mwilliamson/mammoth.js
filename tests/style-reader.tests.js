@@ -58,7 +58,7 @@ describe("styleReader.readDocumentMatcher", function() {
     test("reads paragraph with style ID", function() {
         assert.deepEqual(
             readDocumentMatcher("p.Heading1"),
-            documentMatchers.paragraph("Heading1")
+            documentMatchers.paragraph({styleId: "Heading1"})
         );
     });
     

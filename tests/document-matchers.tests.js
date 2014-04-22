@@ -6,17 +6,17 @@ var documents = require("../lib/documents");
 var Paragraph = documents.Paragraph;
 
 describe("document-matchers", function() {
-    test("paragraph with no style name matches any paragraph", function() {
+    test("paragraph with no options matches any paragraph", function() {
         var matcher = documentMatchers.paragraph();
         assert.ok(matcher.matches(new Paragraph()));
-        assert.ok(matcher.matches(paragraphWithStyle("Heading1")));
+        assert.ok(matcher.matches(paragraphWithStyleId("Heading1")));
     });
     
-    test("paragraph style name only matches paragraphs with that style", function() {
-        var matcher = documentMatchers.paragraph("Heading1");
+    test("paragraph style ID only matches paragraphs with that style ID", function() {
+        var matcher = documentMatchers.paragraph({styleId: "Heading1"});
         assert.ok(!matcher.matches(new Paragraph()));
-        assert.ok(matcher.matches(paragraphWithStyle("Heading1")));
-        assert.ok(!matcher.matches(paragraphWithStyle("Heading2")));
+        assert.ok(matcher.matches(paragraphWithStyleId("Heading1")));
+        assert.ok(!matcher.matches(paragraphWithStyleId("Heading2")));
     });
     
     test("ordered-list(index) matches an ordered list with specified level index", function() {
@@ -40,6 +40,6 @@ describe("document-matchers", function() {
     });
 });
 
-function paragraphWithStyle(styleId) {
+function paragraphWithStyleId(styleId) {
     return new Paragraph([], {styleId: styleId});
 }
