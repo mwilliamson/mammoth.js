@@ -100,7 +100,7 @@ describe('DocumentConverter', function() {
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.deepEqual(result.messages, [results.warning("Unrecognised paragraph style: 'Heading 1'")]);
+            assert.deepEqual(result.messages, [results.warning("Unrecognised paragraph style: 'Heading 1' (Style ID: Heading1)")]);
         });
     });
     
@@ -174,7 +174,7 @@ describe('DocumentConverter', function() {
         var run = runOfText("Hello.", {styleId: "Heading1Char", styleName: "Heading 1 Char"});
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
-            assert.deepEqual(result.messages, [results.warning("Unrecognised run style: 'Heading 1 Char'")]);
+            assert.deepEqual(result.messages, [results.warning("Unrecognised run style: 'Heading 1 Char' (Style ID: Heading1Char)")]);
         });
     });
     
