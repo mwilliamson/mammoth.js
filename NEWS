@@ -4,6 +4,11 @@
   the terminology used internally in docx files. Any document transforms that
   get or set the `styleName` property should use the `styleId` property instead.
 
+* Allow paragraphs and runs to be matched by style name. For instance, to match
+  a paragraph with the style name `Heading 1`:
+  
+    p[style-name='Heading 1']
+
 # 0.2.2
 
 * Fix: exception when bad arguments are passed into unzip.openZip.
