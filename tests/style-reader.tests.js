@@ -64,7 +64,7 @@ describe("styleReader.readDocumentMatcher", function() {
     
     test("reads paragraph with style name", function() {
         assert.deepEqual(
-            readDocumentMatcher("p[styleName='Heading 1']"),
+            readDocumentMatcher("p[style-name='Heading 1']"),
             documentMatchers.paragraph({styleName: "Heading 1"})
         );
     });
