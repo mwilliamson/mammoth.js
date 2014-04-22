@@ -62,12 +62,12 @@ describe('DocumentConverter', function() {
     
     test('uses style mappings to pick HTML element for docx paragraph', function() {
         var document = new documents.Document([
-            paragraphOfText("Hello.", "Heading1"),
+            paragraphOfText("Hello.", "Heading1", "Heading 1"),
         ]);
         var converter = new DocumentConverter({
             styleMap: [
                 {
-                    from: documentMatchers.paragraph("Heading1"),
+                    from: documentMatchers.paragraph({styleName: "Heading 1"}),
                     to: htmlPaths.topLevelElement("h1")
                 }
             ]
@@ -96,22 +96,22 @@ describe('DocumentConverter', function() {
     
     test('warning is emitted if paragraph style is unrecognised', function() {
         var document = new documents.Document([
-            paragraphOfText("Hello.", "Heading1"),
+            paragraphOfText("Hello.", "Heading1", "Heading 1"),
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            assert.deepEqual(result.messages, [results.warning("Unrecognised paragraph style: Heading1")]);
+            assert.deepEqual(result.messages, [results.warning("Unrecognised paragraph style: 'Heading 1'")]);
         });
     });
     
     test('can use stacked styles to generate nested HTML elements', function() {
         var document = new documents.Document([
-            paragraphOfText("Hello.", "Heading1")
+            paragraphOfText("Hello.")
         ]);
         var converter = new DocumentConverter({
             styleMap: [
                 {
-                    from: documentMatchers.paragraph("Heading1"),
+                    from: documentMatchers.paragraph(),
                     to: htmlPaths.elements(["h1", "span"])
                 }
             ]
@@ -264,10 +264,11 @@ describe('DocumentConverter', function() {
     });
 });
 
-function paragraphOfText(text, styleId) {
+function paragraphOfText(text, styleId, styleName) {
     var run = runOfText(text);
     return new documents.Paragraph([run], {
-        styleId: styleId
+        styleId: styleId,
+        styleName: styleName
     });
 }
 
