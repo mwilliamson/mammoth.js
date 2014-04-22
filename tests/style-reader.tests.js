@@ -55,7 +55,7 @@ describe("styleReader.readDocumentMatcher", function() {
         assert.deepEqual(readDocumentMatcher("p"), documentMatchers.paragraph());
     });
     
-    test("reads paragraph with style name", function() {
+    test("reads paragraph with style ID", function() {
         assert.deepEqual(
             readDocumentMatcher("p.Heading1"),
             documentMatchers.paragraph("Heading1")
