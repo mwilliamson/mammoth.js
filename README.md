@@ -273,6 +273,17 @@ Match any run:
 r
 ```
 
+To match a paragraph or run with a specific style,
+you can reference the style by name.
+This is the style name that is displayed in Microsoft Word or LibreOffice.
+For instance, to match a paragraph with the style name `Heading 1`:
+
+```
+p[name='Heading1']
+```
+
+Styles can also be referenced by style ID.
+This is the ID used internally in the .docx file.
 To match a paragraph or run with a specific style ID,
 append a dot followed by the style ID.
 For instance, to match a paragraph with the style `Heading1`:
