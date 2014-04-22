@@ -62,6 +62,13 @@ describe("styleReader.readDocumentMatcher", function() {
         );
     });
     
+    test("reads paragraph with style name", function() {
+        assert.deepEqual(
+            readDocumentMatcher("p[name='Heading 1']"),
+            documentMatchers.paragraph({styleName: "Heading 1"})
+        );
+    });
+    
     test("reads p:ordered-list(1) as ordered list with index of 0", function() {
         assert.deepEqual(
             readDocumentMatcher("p:ordered-list(1)"),
