@@ -6,7 +6,7 @@ and convert them to HTML.
 Mammoth aims to produce simple and clean HTML by using semantic information in the document,
 and ignoring other details.
 For instance,
-Mammoth converts any paragraph with the style `Heading1` to `h1` elements,
+Mammoth converts any paragraph with the style ID `Heading1` to `h1` elements,
 rather than attempting to exactly copy the styling (font, text size, colour, etc.) of the heading.
 
 There's a large mismatch between the structure used by .docx and the structure of HTML,
@@ -95,11 +95,11 @@ Note that `mammoth.convertToHtml` returns a [promise](http://promises-aplus.gith
 By default,
 Mammoth maps some common .docx styles to HTML elements.
 For instance,
-a paragraph with the style `Heading1` is converted to a `h1` element.
+a paragraph with the style ID `Heading1` is converted to a `h1` element.
 You can pass in a custom map for styles by passing an options object with a `styleMap` property as a second argument to `convertToHtml`.
 A description of the syntax for style maps can be found in the section "Writing style maps".
-For instance, if paragraphs with the style `SectionTitle` should be converted to `h1` elements,
-and paragraphs with the style `SubSectionTitle` should be converted to `h2` elements:
+For instance, if paragraphs with the style ID `SectionTitle` should be converted to `h1` elements,
+and paragraphs with the style ID `SubSectionTitle` should be converted to `h2` elements:
 
 ```javascript
 var mammoth = require("mammoth");
@@ -153,8 +153,8 @@ function transformElement(element) {
       element.children.forEach(transformElement);
   }
   if (element.type === "paragraph") {
-      if (element.alignment === "center" && !element.styleName) {
-          element.styleName = "Heading2";
+      if (element.alignment === "center" && !element.styleId) {
+          element.styleId = "Heading2";
       }
   }
   return element;
@@ -237,9 +237,9 @@ When generating, Mammoth will only close an HTML element when necessary.
 Otherwise, elements are reused.
 
 For instance, suppose one of the specified style mappings is `p.Heading1 => h1`.
-If Mammoth encounters a .docx paragraph with the style `Heading1`,
+If Mammoth encounters a .docx paragraph with the style ID `Heading1`,
 the .docx paragraph is converted to a `h1` element with the same text.
-If the next .docx paragraph also has the style `Heading1`,
+If the next .docx paragraph also has the style ID `Heading1`,
 then the text of that paragraph will be appended to the *existing* `h1` element,
 rather than creating a new `h1` element.
 
@@ -273,8 +273,8 @@ Match any run:
 r
 ```
 
-To match a paragraph or run with a specific style name,
-append a dot followed by the style name.
+To match a paragraph or run with a specific style ID,
+append a dot followed by the style ID.
 For instance, to match a paragraph with the style `Heading1`:
 
 ```
