@@ -279,7 +279,7 @@ This is the style name that is displayed in Microsoft Word or LibreOffice.
 For instance, to match a paragraph with the style name `Heading 1`:
 
 ```
-p[name='Heading1']
+p[style-name='Heading 1']
 ```
 
 Styles can also be referenced by style ID.
