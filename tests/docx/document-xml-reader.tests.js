@@ -11,7 +11,7 @@ var createFakeDocxFile = testing.createFakeDocxFile;
 
 function readXmlElement(element, options) {
     options = options || {}
-    return new DocumentXmlReader(options.relationships || {}).readXmlElement(element);
+    return new DocumentXmlReader(options).readXmlElement(element);
 }
 
 function readXmlElementValue(element) {
@@ -59,12 +59,9 @@ describe("readXmlElement: ", function() {
         
         var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
         
-        var reader = new DocumentXmlReader(
-            {},
-            null,
-            null,
-            numbering
-        );
+        var reader = new DocumentXmlReader({
+            numbering: numbering
+        });
         var paragraph = reader.readXmlElement(paragraphXml).value;
         assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
     });
@@ -148,15 +145,15 @@ describe("readXmlElement: ", function() {
         });
         
         var imageBuffer = new Buffer("Not an image at all!");
-        var reader = new DocumentXmlReader(
-            {
+        var reader = new DocumentXmlReader({
+            relationships: {
                 "rId5": {target: "media/hat.png"}
             },
-            fakeContentTypes,
-            createFakeDocxFile({
+            contentTypes: fakeContentTypes,
+            docxFile: createFakeDocxFile({
                 "word/media/hat.png": imageBuffer
             })
-        );
+        });
         var result = reader.readXmlElement(drawing);
         assert.deepEqual(result.messages, []);
         var element = single(result.value);
@@ -186,15 +183,15 @@ describe("readXmlElement: ", function() {
         ]);
         
         var imageBuffer = new Buffer("Not an image at all!");
-        var reader = new DocumentXmlReader(
-            {
+        var reader = new DocumentXmlReader({
+            relationships: {
                 "rId5": {target: "media/hat.png"}
             },
-            fakeContentTypes,
-            createFakeDocxFile({
+            contentTypes: fakeContentTypes,
+            docxFile: createFakeDocxFile({
                 "word/media/hat.png": imageBuffer
             })
-        );
+        });
         var result = reader.readXmlElement(drawing);
         assert.deepEqual(result.messages, []);
         var element = single(result.value);
@@ -209,7 +206,7 @@ describe("readXmlElement: ", function() {
     test("no elements created if image cannot be found in w:drawing", function() {
         var drawing = new XmlElement("w:drawing", {}, []);
         
-        var reader = new DocumentXmlReader();
+        var reader = new DocumentXmlReader({});
         var result = reader.readXmlElement(drawing);
         assert.deepEqual(result.messages, []);
         assert.deepEqual(result.value, []);
@@ -218,7 +215,7 @@ describe("readXmlElement: ", function() {
     test("no elements created if image cannot be found in wp:inline", function() {
         var drawing = new XmlElement("wp:inline", {}, []);
         
-        var reader = new DocumentXmlReader();
+        var reader = new DocumentXmlReader({});
         var result = reader.readXmlElement(drawing);
         assert.deepEqual(result.messages, []);
         assert.deepEqual(result.value, []);
