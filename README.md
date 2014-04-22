@@ -6,7 +6,7 @@ and convert them to HTML.
 Mammoth aims to produce simple and clean HTML by using semantic information in the document,
 and ignoring other details.
 For instance,
-Mammoth converts any paragraph with the style ID `Heading1` to `h1` elements,
+Mammoth converts any paragraph with the style `Heading 1` to `h1` elements,
 rather than attempting to exactly copy the styling (font, text size, colour, etc.) of the heading.
 
 There's a large mismatch between the structure used by .docx and the structure of HTML,
@@ -95,11 +95,11 @@ Note that `mammoth.convertToHtml` returns a [promise](http://promises-aplus.gith
 By default,
 Mammoth maps some common .docx styles to HTML elements.
 For instance,
-a paragraph with the style ID `Heading1` is converted to a `h1` element.
+a paragraph with the style name `Heading 1` is converted to a `h1` element.
 You can pass in a custom map for styles by passing an options object with a `styleMap` property as a second argument to `convertToHtml`.
 A description of the syntax for style maps can be found in the section "Writing style maps".
-For instance, if paragraphs with the style ID `SectionTitle` should be converted to `h1` elements,
-and paragraphs with the style ID `SubSectionTitle` should be converted to `h2` elements:
+For instance, if paragraphs with the style name `Section Title` should be converted to `h1` elements,
+and paragraphs with the style name `Subsection Title` should be converted to `h2` elements:
 
 ```javascript
 var mammoth = require("mammoth");
@@ -107,8 +107,8 @@ var styleMapping = mammoth.styleMapping;
 
 var options = {
     styleMap: [
-        styleMapping("p.SectionTitle => h1:fresh"),
-        styleMapping("p.SubSectionTitle => h2:fresh")
+        styleMapping("p[style-name='Section Title'] => h1:fresh"),
+        styleMapping("p[style-name='Subsection Title'] => h2:fresh")
     ]
 };
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
@@ -120,8 +120,8 @@ Each non-blank line is treated as a separate style mapping:
 
 ```javascript
 var options = {
-    styleMap: "p.SectionTitle => h1:fresh\n" +
-        "p.SubSectionTitle => h2:fresh"
+    styleMap: "p[style-name='Section Title'] => h1:fresh\n" +
+        "p[style-name='Subsection Title'] => h2:fresh"
 };
 ```
 
@@ -132,8 +132,8 @@ set `options.includeDefaultStyleMap` to `false`:
 ```javascript
 var options = {
     styleMap: [
-        styleMapping("p.SectionTitle => h1:fresh"),
-        styleMapping("p.SubSectionTitle => h2:fresh")
+        styleMapping("p[style-name='Section Title'] => h1:fresh"),
+        styleMapping("p[style-name='Subsection Title'] => h2:fresh")
     ],
     includeDefaultStyleMap: false
 };
@@ -236,26 +236,26 @@ When writing style mappings, it's helpful to understand Mammoth's notion of fres
 When generating, Mammoth will only close an HTML element when necessary.
 Otherwise, elements are reused.
 
-For instance, suppose one of the specified style mappings is `p.Heading1 => h1`.
-If Mammoth encounters a .docx paragraph with the style ID `Heading1`,
+For instance, suppose one of the specified style mappings is `p[style-name='Heading 1'] => h1`.
+If Mammoth encounters a .docx paragraph with the style name `Heading 1`,
 the .docx paragraph is converted to a `h1` element with the same text.
-If the next .docx paragraph also has the style ID `Heading1`,
+If the next .docx paragraph also has the style name `Heading 1`,
 then the text of that paragraph will be appended to the *existing* `h1` element,
 rather than creating a new `h1` element.
 
 In most cases, you'll probably want to generate a new `h1` element instead.
 You can specify this by using the `:fresh` modifier:
 
-`p.Heading1 => h1:fresh`
+`p[style-name='Heading 1'] => h1:fresh`
 
-The two consective `Heading1` .docx paragraphs will then be converted to two separate `h1` elements.
+The two consective `Heading 1` .docx paragraphs will then be converted to two separate `h1` elements.
 
 Reusing elements is useful in generating more complicated HTML structures.
 For instance, suppose your .docx contains asides.
 Each aside might have a heading and some body text,
 which should be contained within a single `div.aside` element.
-In this case, style mappings similar to `p.AsideHeading => div.aside > h2:fresh` and
-`p.AsideText => div.aside > p:fresh` might be helpful.
+In this case, style mappings similar to `p[style-name='Aside Heading'] => div.aside > h2:fresh` and
+`p[style-name='Aside Text'] => div.aside > p:fresh` might be helpful.
 
 ### Document element matchers
 
