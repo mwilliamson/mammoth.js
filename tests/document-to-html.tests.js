@@ -156,11 +156,11 @@ describe('DocumentConverter', function() {
     });
     
     test('run styles are converted to HTML if mapping exists', function() {
-        var run = runOfText("Hello.", {styleId: "Emphasis"});
+        var run = runOfText("Hello.", {styleId: "Heading1Char", styleName: "Heading 1 Char"});
         var converter = new DocumentConverter({
             styleMap: [
                 {
-                    from: documentMatchers.run("Emphasis"),
+                    from: documentMatchers.run({styleName: "Heading 1 Char"}),
                     to: htmlPaths.elements(["strong"])
                 }
             ]
@@ -171,10 +171,10 @@ describe('DocumentConverter', function() {
     });
     
     test('warning is emitted if run style is unrecognised', function() {
-        var run = runOfText("Hello.", {styleId: "Emphasis"});
+        var run = runOfText("Hello.", {styleId: "Heading1Char", styleName: "Heading 1 Char"});
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
-            assert.deepEqual(result.messages, [results.warning("Unrecognised run style: Emphasis")]);
+            assert.deepEqual(result.messages, [results.warning("Unrecognised run style: 'Heading 1 Char'")]);
         });
     });
     
