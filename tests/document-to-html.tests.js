@@ -156,7 +156,7 @@ describe('DocumentConverter', function() {
     });
     
     test('run styles are converted to HTML if mapping exists', function() {
-        var run = runOfText("Hello.", {styleName: "Emphasis"});
+        var run = runOfText("Hello.", {styleId: "Emphasis"});
         var converter = new DocumentConverter({
             styleMap: [
                 {
@@ -171,7 +171,7 @@ describe('DocumentConverter', function() {
     });
     
     test('warning is emitted if run style is unrecognised', function() {
-        var run = runOfText("Hello.", {styleName: "Emphasis"});
+        var run = runOfText("Hello.", {styleId: "Emphasis"});
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
             assert.deepEqual(result.messages, [results.warning("Unrecognised run style: Emphasis")]);
@@ -264,10 +264,10 @@ describe('DocumentConverter', function() {
     });
 });
 
-function paragraphOfText(text, styleName) {
+function paragraphOfText(text, styleId) {
     var run = runOfText(text);
     return new documents.Paragraph([run], {
-        styleName: styleName
+        styleId: styleId
     });
 }
 

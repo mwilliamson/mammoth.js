@@ -40,6 +40,6 @@ describe("document-matchers", function() {
     });
 });
 
-function paragraphWithStyle(styleName) {
-    return new Paragraph([], {styleName: styleName});
+function paragraphWithStyle(styleId) {
+    return new Paragraph([], {styleId: styleId});
 }

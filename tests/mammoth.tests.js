@@ -65,7 +65,7 @@ describe('mammoth', function() {
         });
         var options = {
             transformDocument: function(document) {
-                document.children[0].styleName = "Heading1";
+                document.children[0].styleId = "Heading1";
                 return document;
             }
         };
