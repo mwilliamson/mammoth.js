@@ -87,11 +87,24 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(run.styleId, null);
     });
     
-    test("run has style name read from run properties if present", function() {
-        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
+    test("run has style ID read from run properties if present", function() {
+        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
         var runXml = runWithProperties([runStyleXml]);
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run.styleId, "Emphasis");
+        
+        var styles = new Styles({}, {"Heading1Char": {name: "Heading 1 Char"}});
+        
+        var run = readXmlElementValue(runXml, {styles: styles});
+        assert.deepEqual(run.styleId, "Heading1Char");
+    });
+    
+    test("run has style name read from run properties and styles", function() {
+        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
+        var runXml = runWithProperties([runStyleXml]);
+        
+        var styles = new Styles({}, {"Heading1Char": {name: "Heading 1 Char"}});
+        
+        var run = readXmlElementValue(runXml, {styles: styles});
+        assert.deepEqual(run.styleName, "Heading 1 Char");
     });
     
     test("isBold is false if bold element is not present", function() {
@@ -121,7 +134,7 @@ describe("readXmlElement: ", function() {
     });
     
     test("run properties not included as child of run", function() {
-        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Emphasis"});
+        var runStyleXml = new XmlElement("w:rStyle");
         var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
         var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
         var result = readXmlElement(runXml);
