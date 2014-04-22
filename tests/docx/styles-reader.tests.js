@@ -18,11 +18,43 @@ describe('readStylesXml', function() {
     test('paragraph style can be found by ID', function() {
         var styles = readStylesXml({
             root: new XmlElement("w:styles", {}, [
-                new XmlElement("w:style", {"w:styleId": "Heading1"}, [
-                    new XmlElement("w:name", {"w:val": "Heading 1"}, [])
-                ])
+                paragraphStyleElement("Heading1", "Heading 1")
             ])
         });
         assert.equal(styles.findParagraphStyleById("Heading1").styleId, "Heading1");
     });
+    
+    test('character style can be found by ID', function() {
+        var styles = readStylesXml({
+            root: new XmlElement("w:styles", {}, [
+                characterStyleElement("Heading1Char", "Heading 1 Char")
+            ])
+        });
+        assert.equal(styles.findCharacterStyleById("Heading1Char").styleId, "Heading1Char");
+    });
+    
+    test('paragraph and character styles are distinct', function() {
+        var styles = readStylesXml({
+            root: new XmlElement("w:styles", {}, [
+                paragraphStyleElement("Heading1", "Heading 1"),
+                characterStyleElement("Heading1Char", "Heading 1 Char")
+            ])
+        });
+        assert.equal(styles.findCharacterStyleById("Heading1"), null);
+        assert.equal(styles.findParagraphStyleById("Heading1Char"), null);
+    });
 });
+
+function paragraphStyleElement(id, name) {
+    return styleElement("paragraph", id, name);
+}
+
+function characterStyleElement(id, name) {
+    return styleElement("character", id, name);
+}
+
+function styleElement(type, id, name) {
+    return new XmlElement("w:style", {"w:type": type, "w:styleId": id}, [
+        new XmlElement("w:name", {"w:val": name}, [])
+    ]);
+}
