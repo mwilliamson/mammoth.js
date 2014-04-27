@@ -103,12 +103,11 @@ and paragraphs with the style name `Subsection Title` should be converted to `h2
 
 ```javascript
 var mammoth = require("mammoth");
-var styleMapping = mammoth.styleMapping;
 
 var options = {
     styleMap: [
-        styleMapping("p[style-name='Section Title'] => h1:fresh"),
-        styleMapping("p[style-name='Subsection Title'] => h2:fresh")
+        "p[style-name='Section Title'] => h1:fresh",
+        "p[style-name='Subsection Title'] => h2:fresh"
     ]
 };
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
@@ -132,8 +131,8 @@ set `options.includeDefaultStyleMap` to `false`:
 ```javascript
 var options = {
     styleMap: [
-        styleMapping("p[style-name='Section Title'] => h1:fresh"),
-        styleMapping("p[style-name='Subsection Title'] => h2:fresh")
+        "p[style-name='Section Title'] => h1:fresh",
+        "p[style-name='Subsection Title'] => h2:fresh"
     ],
     includeDefaultStyleMap: false
 };
@@ -187,7 +186,7 @@ Converts the source document to HTML.
      If `options.styleMap` is a string,
      each non-blank line is treated as a separate style mapping.
      If `options.styleMap` is an array,
-     each element is expected to be the result of a call to `mammoth.styleMapping`.
+     each element is expected to be a string representing a single style mapping.
      See "Writing style maps" for a reference to the syntax for style maps.
 
   * `includeDefaultStyleMap`: by default,
@@ -204,10 +203,6 @@ Converts the source document to HTML.
   * `value`: the generated HTML
 
   * `messages`: any messages, such as errors and warnings, generated during the conversion
-
-#### `mammoth.styleMapping(string)`
-
-Creates a style mapping using the passed string.
 
 #### Messages
 

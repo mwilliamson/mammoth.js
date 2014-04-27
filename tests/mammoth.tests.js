@@ -35,12 +35,12 @@ describe('mammoth', function() {
         });
     });
     
-    test('style map can be expressed as array of styles', function() {
+    test('style map can be expressed as array of style mappings', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
         });
         var options = {
-            styleMap: [mammoth.styleMapping("p => h1")]
+            styleMap: ["p => h1"]
         };
         return mammoth.convertToHtml({file: docxFile}, options).then(function(result) {
             assert.equal("<h1>Hello.</h1>", result.value);

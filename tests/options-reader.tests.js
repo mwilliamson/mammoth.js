@@ -1,6 +1,5 @@
 var assert = require("assert");
 
-var styleMapping = require("../").styleMapping;
 var optionsReader = require("../lib/options-reader");
 var standardOptions = optionsReader._standardOptions;
 var readOptions = optionsReader.readOptions;
@@ -19,7 +18,7 @@ describe('readOptions', function() {
         var options = readOptions({
             styleMap: "p.SectionTitle => h2"
         });
-        assert.deepEqual(styleMapping("p.SectionTitle => h2"), options.styleMap[0]);
+        assert.deepEqual("p.SectionTitle => h2", options.styleMap[0]);
         assert.deepEqual(standardOptions.styleMap, options.styleMap.slice(1));
     });
     
@@ -28,7 +27,7 @@ describe('readOptions', function() {
             styleMap: "p.SectionTitle => h2",
             includeDefaultStyleMap: false
         });
-        assert.deepEqual([styleMapping("p.SectionTitle => h2")], options.styleMap);
+        assert.deepEqual(["p.SectionTitle => h2"], options.styleMap);
     });
 });
 

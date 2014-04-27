@@ -8,6 +8,9 @@
   a paragraph with the style name `Heading 1`:
   
     p[style-name='Heading 1']
+    
+* Use an array of raw strings rather than an array of style mappings when
+  passing options to convertToHtml.
 
 # 0.2.2
 
