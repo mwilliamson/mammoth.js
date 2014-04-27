@@ -56,8 +56,8 @@ For instance:
     
 Where `custom-style-map` looks something like:
 
-    p.AsideHeading => div.aside > h2:fresh
-    p.AsideText => div.aside > p:fresh
+    p[style-name='Aside Heading'] => div.aside > h2:fresh
+    p[style-name='Aside Text'] => div.aside > p:fresh
 
 ### Library
 
