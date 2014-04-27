@@ -95,4 +95,15 @@ describe('mammoth', function() {
             assert.deepEqual(result.messages, []);
         });
     });
+    
+    test('using styleMapping throws error', function() {
+        try {
+            mammoth.styleMapping()
+        } catch (error) {
+            assert.equal(
+                error.message,
+                'Use a raw string instead of mammoth.styleMapping e.g. "p[style-naming=\'Title\'] => h1" instead of mammoth.styleMapping("p[style-naming=\'Title\'] => h1")'
+            );
+        }
+    });
 })
