@@ -327,3 +327,40 @@ div.aside > h2
 ```
 
 You can nest elements to any depth.
+
+## Upgrading to later versions
+
+### 0.3.0
+
+If you've defined custom style maps or used a document transform,
+you will likely need to change your usage slightly.
+Otherwise, you should be able to continue using Mammoth as before.
+
+#### Custom style maps
+
+Prior to 0.3.0, Mammoth matched docx paragraphs using style IDs e.g. `p.Heading1`.
+These IDs are used internally in the docx format,
+and are distinct from the style name
+i.e. the name shown by Microsoft Word or LibreOffice.
+Although Mammoth still supports matching styles by ID,
+matching styles by name is preferred.
+For instance, instead of:
+
+```p.AsideHeading => h1```
+
+prefer:
+
+```p[style-name='Aside Heading'] => h1```
+
+#### Document transforms
+
+Prior to 0.3.0,
+Mammoth (misleadingly) assigned the style ID to a property called `styleName`.
+The style ID is now assigned to a more appropriate property, `styleId`.
+The `styleName` property is now set to the name of the style.
+To preserve existing behaviour,
+any existing document transforms should be rewritten in one of two ways:
+
+* Set the `styleId` property instead of the `styleName` property
+
+* Set the `styleName` property to the name of the style, rather than the ID
