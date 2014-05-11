@@ -12,6 +12,8 @@
 * Use an array of raw strings rather than an array of style mappings when
   passing options to convertToHtml.
 
+* Add support for node 0.11 (tested on node 0.11.13).
+
 # 0.2.2
 
 * Fix: exception when bad arguments are passed into unzip.openZip.
