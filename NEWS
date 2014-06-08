@@ -1,3 +1,8 @@
+# 0.3.1
+
+* Fix: all non-paragraph styles are treated as character styles when reading
+  styles from a docx document.
+
 # 0.3.0
 
 * Rename the existing concept of a "style name" to "style ID" to correspond to
