@@ -364,3 +364,7 @@ any existing document transforms should be rewritten in one of two ways:
 * Set the `styleId` property instead of the `styleName` property
 
 * Set the `styleName` property to the name of the style, rather than the ID
+
+### 0.2.0
+
+The function `mammoth.style()` was renamed to `mammoth.styleMapping()`.

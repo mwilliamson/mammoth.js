@@ -25,3 +25,7 @@
 # 0.2.0
 
 * Rename mammoth.style() to mammoth.styleMapping().
+
+* Add support for document transforms.
+
+* Append standard style map to custom style map unless explicitly excluded.
