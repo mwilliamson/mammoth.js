@@ -20,4 +20,8 @@
 
 # 0.2.1
 
-* Fix browserify support
+* Fix browserify support.
+
+# 0.2.0
+
+* Rename mammoth.style() to mammoth.styleMapping().
