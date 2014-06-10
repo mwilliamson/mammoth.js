@@ -199,7 +199,7 @@ describe('DocumentConverter', function() {
     
     test('footnote reference is converted to superscript intra-page link', function() {
         var footnoteReference = new documents.FootnoteReference({
-            footnoteNumber: 1,
+            footnoteId: 1,
             body: paragraphOfText("Who's there?")
         });
         var converter = new DocumentConverter();
@@ -210,7 +210,7 @@ describe('DocumentConverter', function() {
     
     test('footnotes are included after the main body', function() {
         var footnoteReference = new documents.FootnoteReference({
-            footnoteNumber: 1
+            footnoteId: 1
         });
         var document = new documents.Document(
             [new documents.Paragraph([
@@ -220,7 +220,7 @@ describe('DocumentConverter', function() {
             {
                 footnotes: [documents.Footnote({
                     body: [paragraphOfText("Who's there?")],
-                    footnoteNumber: 1
+                    id: 1
                 })]
             }
         );
