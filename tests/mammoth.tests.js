@@ -91,6 +91,7 @@ describe('mammoth', function() {
     test('footnotes are appended to text', function() {
         // TODO: generate unique IDs for footnotes
         // TODO: generate links back to main body
+        // TODO: don't duplicate footnotes with multiple references
         // TODO: not yet implemented
         return;
         var docxPath = path.join(__dirname, "test-data/footnotes.docx");
