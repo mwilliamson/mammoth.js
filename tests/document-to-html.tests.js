@@ -198,10 +198,38 @@ describe('DocumentConverter', function() {
     });
     
     test('footnote reference is converted to superscript intra-page link', function() {
-        var tab = new documents.FootnoteReference({id: 4, body: paragraphOfText("Hello.")});
+        var footnoteReference = new documents.FootnoteReference({
+            footnoteNumber: 1,
+            body: paragraphOfText("Who's there?")
+        });
         var converter = new DocumentConverter();
-        return converter.convertToHtml(tab).then(function(result) {
-            assert.equal(result.value, '<sup><a href="#footnote-4">1</a></sup>');
+        return converter.convertToHtml(footnoteReference).then(function(result) {
+            assert.equal(result.value, '<sup><a href="#footnote-1">1</a></sup>');
+        });
+    });
+    
+    test('footnotes are included after the main body', function() {
+        var footnoteReference = new documents.FootnoteReference({
+            footnoteNumber: 1
+        });
+        var document = new documents.Document(
+            [new documents.Paragraph([
+                runOfText("Knock knock"),
+                new documents.Run([footnoteReference])
+            ])],
+            {
+                footnotes: [documents.Footnote({
+                    body: [paragraphOfText("Who's there?")],
+                    footnoteNumber: 1
+                })]
+            }
+        );
+        
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(document).then(function(result) {
+            var expectedOutput = '<p>Knock knock<sup><a href="#footnote-1">1</a></sup></p>' +
+                '<ol><li id="footnote-1"><p>Who\'s there?</p></li></ol>';
+            assert.equal(result.value, expectedOutput);
         });
     });
     
