@@ -1,3 +1,7 @@
+# 0.3.2
+
+* Add support for footnotes
+
 # 0.3.1
 
 * Fix: all non-paragraph styles are treated as character styles when reading
