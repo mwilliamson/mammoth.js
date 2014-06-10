@@ -17,7 +17,7 @@
   "dependencies": {
     "bluebird": "~1.1.0",
     "sax": "~0.5.2",
-    "underscore": "~1.4.4",
+    "underscore": "~1.6.0",
     "lop": "~0.2.8",
     "async": "~0.2.6",
     "nomnom": "~1.6.2",

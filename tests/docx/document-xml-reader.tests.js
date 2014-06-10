@@ -21,6 +21,14 @@ function readXmlElementValue(element, options) {
     return result.value;
 }
 
+function convertXmlToDocumentValue(element, options) {
+    options = options || {};
+    var reader = new DocumentXmlReader(options);
+    var result = reader.convertXmlToDocument(element, options);
+    assert.deepEqual(result.messages, []);
+    return result.value;
+}
+
 var fakeContentTypes = {
     findContentType: function(path) {
         return "<content-type: " + path + ">";
@@ -279,6 +287,21 @@ describe("readXmlElement: ", function() {
         var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
         var result = readXmlElement(hyperlinkXml);
         assert.deepEqual(result.value[0].type, "run");
+    });
+    
+});
+
+describe("convertXmlToDocument: ", function() {
+    
+    test("footnotes of document are read", function() {
+        var paragraphXml = new XmlElement("w:p", {}, []);
+        var bodyXml = new XmlElement("w:body", {}, [paragraphXml]);
+        var documentXml = new XmlElement("w:document", {}, [bodyXml]);
+        var footnotes = [{id: "4", body: [paragraphXml]}];
+        var document = convertXmlToDocumentValue({root: documentXml}, {footnotes: footnotes});
+        var footnote = document.footnotes.findFootnoteById("4");
+        assert.deepEqual(footnote.id, "4");
+        assert.deepEqual(footnote.body[0].type, "paragraph");
     });
 });
 
