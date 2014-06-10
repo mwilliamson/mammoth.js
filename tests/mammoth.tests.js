@@ -100,6 +100,7 @@ describe('mammoth', function() {
                 '<ol><li id="footnote-1"><p> A tachyon walks into a bar.</p></li>' +
                 '<li id="footnote-2"><p> Fin.</p></li></ol>'
             assert.equal(result.value, expectedOutput);
+            assert.deepEqual(result.messages, []);
         });
     });
     
