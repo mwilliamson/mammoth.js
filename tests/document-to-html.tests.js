@@ -199,12 +199,12 @@ describe('DocumentConverter', function() {
     
     test('footnote reference is converted to superscript intra-page link', function() {
         var footnoteReference = new documents.FootnoteReference({
-            footnoteId: 1,
+            footnoteId: 4,
             body: paragraphOfText("Who's there?")
         });
         var converter = new DocumentConverter();
         return converter.convertToHtml(footnoteReference).then(function(result) {
-            assert.equal(result.value, '<sup><a href="#footnote-1">1</a></sup>');
+            assert.equal(result.value, '<sup><a href="#footnote-4">1</a></sup>');
         });
     });
     
