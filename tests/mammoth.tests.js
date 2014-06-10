@@ -88,6 +88,20 @@ describe('mammoth', function() {
         });
     });
     
+    test('footnotes are appended to text', function() {
+        // TODO: generate unique IDs for footnotes
+        // TODO: generate links back to main body
+        // TODO: not yet implemented
+        return;
+        var docxPath = path.join(__dirname, "test-data/footnotes.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+            var expectedOutput = '<p>Ouch<sup><a href="#footnote-1">1</a></sup>.<sup><a href="#footnote-2">2</a></sup></p>' +
+                '<ol><li id="footnote-1"><p> A tachyon walks into a bar.</p></li>' +
+                '<li id="footnote-2"><p> Fin.</p></li></ol>'
+            assert.equal(result.value, expectedOutput);
+        });
+    });
+    
     test('indentation is used if prettyPrint is true', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
