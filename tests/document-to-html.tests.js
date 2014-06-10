@@ -197,6 +197,14 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('footnote reference is converted to superscript intra-page link', function() {
+        var tab = new documents.FootnoteReference({id: 4, body: paragraphOfText("Hello.")});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(tab).then(function(result) {
+            assert.equal(result.value, '<sup><a href="#footnote-4">1</a></sup>');
+        });
+    });
+    
     test('images are written with data URIs', function() {
         var imageBuffer = new Buffer("Not an image at all!");
         var image = new documents.Image({
