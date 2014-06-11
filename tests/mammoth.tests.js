@@ -94,7 +94,7 @@ describe('mammoth', function() {
         // TODO: don't duplicate footnotes with multiple references
         var docxPath = path.join(__dirname, "test-data/footnotes.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
-            var expectedOutput = '<p>Ouch<sup><a href="#footnote-1">1</a></sup>.<sup><a href="#footnote-2">2</a></sup></p>' +
+            var expectedOutput = '<p>Ouch<sup><a href="#footnote-1">[1]</a></sup>.<sup><a href="#footnote-2">[2]</a></sup></p>' +
                 '<ol><li id="footnote-1"><p> A tachyon walks into a bar.</p></li>' +
                 '<li id="footnote-2"><p> Fin.</p></li></ol>'
             assert.equal(result.value, expectedOutput);

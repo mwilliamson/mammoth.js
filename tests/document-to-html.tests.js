@@ -204,7 +204,7 @@ describe('DocumentConverter', function() {
         });
         var converter = new DocumentConverter();
         return converter.convertToHtml(footnoteReference).then(function(result) {
-            assert.equal(result.value, '<sup><a href="#footnote-4">1</a></sup>');
+            assert.equal(result.value, '<sup><a href="#footnote-4">[1]</a></sup>');
         });
     });
     
@@ -229,7 +229,7 @@ describe('DocumentConverter', function() {
         
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
-            var expectedOutput = '<p>Knock knock<sup><a href="#footnote-4">1</a></sup></p>' +
+            var expectedOutput = '<p>Knock knock<sup><a href="#footnote-4">[1]</a></sup></p>' +
                 '<ol><li id="footnote-4"><p>Who\'s there?</p></li></ol>';
             assert.equal(result.value, expectedOutput);
         });
