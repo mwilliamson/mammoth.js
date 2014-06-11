@@ -93,10 +93,13 @@ describe('mammoth', function() {
         // TODO: generate links back to main body
         // TODO: don't duplicate footnotes with multiple references
         var docxPath = path.join(__dirname, "test-data/footnotes.docx");
-        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
-            var expectedOutput = '<p>Ouch<sup><a href="#footnote-1">[1]</a></sup>.<sup><a href="#footnote-2">[2]</a></sup></p>' +
-                '<ol><li id="footnote-1"><p> A tachyon walks into a bar.</p></li>' +
-                '<li id="footnote-2"><p> Fin.</p></li></ol>'
+        var options = {
+            generateUniquifier: function() { return 42; }
+        };
+        return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
+            var expectedOutput = '<p>Ouch<sup><a href="#footnote-42-1">[1]</a></sup>.<sup><a href="#footnote-42-2">[2]</a></sup></p>' +
+                '<ol><li id="footnote-42-1"><p> A tachyon walks into a bar.</p></li>' +
+                '<li id="footnote-42-2"><p> Fin.</p></li></ol>'
             assert.equal(result.value, expectedOutput);
             // TODO: get rid of warnings
             //~ assert.deepEqual(result.messages, []);
