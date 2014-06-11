@@ -234,7 +234,7 @@ describe('DocumentConverter', function() {
         });
         return converter.convertToHtml(document).then(function(result) {
             var expectedOutput = '<p>Knock knock<sup><a href="#footnote-42-4" id="footnote-ref-42-4">[1]</a></sup></p>' +
-                '<ol><li id="footnote-42-4"><p>Who\'s there?</p> <a href="#footnote-ref-42-4">↑</a></li></ol>';
+                '<ol><li id="footnote-42-4"><p>Who\'s there? <a href="#footnote-ref-42-4">↑</a></p></li></ol>';
             assert.equal(result.value, expectedOutput);
         });
     });

@@ -98,8 +98,8 @@ describe('mammoth', function() {
             var expectedOutput = '<p>Ouch' +
                 '<sup><a href="#footnote-42-1" id="footnote-ref-42-1">[1]</a></sup>.' +
                 '<sup><a href="#footnote-42-2" id="footnote-ref-42-2">[2]</a></sup></p>' +
-                '<ol><li id="footnote-42-1"><p> A tachyon walks into a bar.</p> <a href="#footnote-ref-42-1">↑</a></li>' +
-                '<li id="footnote-42-2"><p> Fin.</p> <a href="#footnote-ref-42-2">↑</a></li></ol>'
+                '<ol><li id="footnote-42-1"><p> A tachyon walks into a bar. <a href="#footnote-ref-42-1">↑</a></p></li>' +
+                '<li id="footnote-42-2"><p> Fin. <a href="#footnote-ref-42-2">↑</a></p></li></ol>'
             assert.equal(result.value, expectedOutput);
             // TODO: get rid of warnings
             //~ assert.deepEqual(result.messages, []);
