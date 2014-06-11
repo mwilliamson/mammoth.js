@@ -20,3 +20,19 @@ describe('readFootnotesXml', function() {
         assert.deepEqual(footnotes[0].id, "1");
     });
 });
+
+footnoteTypeIsIgnored('continuationSeparator');
+footnoteTypeIsIgnored('separator');
+
+function footnoteTypeIsIgnored(type) {
+    describe('footnotes of type ' + type + ' are ignored', function() {
+        test('ID and body of footnote are read', function() {
+            var footnotes = readFootnotesXml({
+                root: new XmlElement("w:footnotes", {}, [
+                    new XmlElement("w:footnote", {"w:id": "1", "w:type": type}, [])
+                ])
+            });
+            assert.equal(footnotes.length, 0);
+        });
+    });
+}
