@@ -88,6 +88,16 @@ describe('mammoth', function() {
         });
     });
     
+    test('word tables are converted to html tables', function() {
+        // TODO: enable this test once tables are supported
+        return;
+        var docxPath = path.join(__dirname, "test-data/tables.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+            assert.equal(result.value, "<p>Above</p><table><tr><td>Top left</td><td>Top right</td></tr><tr><td>Bottom left</td><td>Bottom right</td></tr></table><p>Below</p>");
+            assert.deepEqual(result.messages, []);
+        });
+    });
+    
     test('footnotes are appended to text', function() {
         // TODO: don't duplicate footnotes with multiple references
         var docxPath = path.join(__dirname, "test-data/footnotes.docx");
