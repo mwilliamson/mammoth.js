@@ -197,6 +197,28 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('docx table is converted to table in HTML', function() {
+        var table = new documents.Table([
+            new documents.TableRow([
+                new documents.TableCell([paragraphOfText("Top left")]),
+                new documents.TableCell([paragraphOfText("Top right")])
+            ]),
+            new documents.TableRow([
+                new documents.TableCell([paragraphOfText("Bottom left")]),
+                new documents.TableCell([paragraphOfText("Bottom right")])
+            ])
+        ]);
+        var converter = new DocumentConverter();
+        
+        return converter.convertToHtml(table).then(function(result) {
+            var expectedHtml = "<table>" +
+                "<tr><td><p>Top left</p></td><td><p>Top right</p></td></tr>" +
+                "<tr><td><p>Bottom left</p></td><td><p>Bottom right</p></td></tr>" +
+                "</table>";
+            assert.equal(result.value, expectedHtml);
+        });
+    });
+    
     test('footnote reference is converted to superscript intra-page link', function() {
         var footnoteReference = new documents.FootnoteReference({
             footnoteId: "4",
