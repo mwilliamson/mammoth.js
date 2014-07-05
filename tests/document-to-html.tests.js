@@ -198,7 +198,6 @@ describe('DocumentConverter', function() {
     });
     
     test('docx table is converted to table in HTML', function() {
-        // TODO: test that empty cells are preserved
         var table = new documents.Table([
             new documents.TableRow([
                 new documents.TableCell([paragraphOfText("Top left")]),
@@ -215,6 +214,23 @@ describe('DocumentConverter', function() {
             var expectedHtml = "<table>" +
                 "<tr><td><p>Top left</p></td><td><p>Top right</p></td></tr>" +
                 "<tr><td><p>Bottom left</p></td><td><p>Bottom right</p></td></tr>" +
+                "</table>";
+            assert.equal(result.value, expectedHtml);
+        });
+    });
+    
+    test('empty cells are preserved in table', function() {
+        var table = new documents.Table([
+            new documents.TableRow([
+                new documents.TableCell([paragraphOfText("")]),
+                new documents.TableCell([paragraphOfText("Top right")])
+            ])
+        ]);
+        var converter = new DocumentConverter();
+        
+        return converter.convertToHtml(table).then(function(result) {
+            var expectedHtml = "<table>" +
+                "<tr><td></td><td><p>Top right</p></td></tr>" +
                 "</table>";
             assert.equal(result.value, expectedHtml);
         });
