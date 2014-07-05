@@ -90,7 +90,7 @@ mammoth.convertToHtml({path: "path/to/document.docx"})
 
 Note that `mammoth.convertToHtml` returns a [promise](http://promises-aplus.github.io/promises-spec/).
 
-### Custom style map
+#### Custom style map
 
 By default,
 Mammoth maps some common .docx styles to HTML elements.
@@ -138,7 +138,7 @@ var options = {
 };
 ```
 
-### Document transforms
+#### Document transforms
 
 Mammoth allows a document to be transformed before it is converted.
 For instance,
