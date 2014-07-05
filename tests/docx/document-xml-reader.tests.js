@@ -156,7 +156,7 @@ describe("readXmlElement: ", function() {
     });
     
     test("w:table is read as document table element", function() {
-        var tableXml = new XmlElement("w:table", {}, [
+        var tableXml = new XmlElement("w:tbl", {}, [
             new XmlElement("w:tr", {}, [
                 new XmlElement("w:tc", {}, [
                     new XmlElement("w:p", {}, [])

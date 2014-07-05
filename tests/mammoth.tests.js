@@ -89,8 +89,6 @@ describe('mammoth', function() {
     });
     
     test('word tables are converted to html tables', function() {
-        // TODO: enable this test once tables are supported
-        return;
         var docxPath = path.join(__dirname, "test-data/tables.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
             var expectedHtml = "<p>Above</p>" +
