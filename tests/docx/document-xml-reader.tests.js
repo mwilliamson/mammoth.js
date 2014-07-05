@@ -155,6 +155,24 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value, new documents.Tab());
     });
     
+    test("w:table is read as document table element", function() {
+        var tableXml = new XmlElement("w:table", {}, [
+            new XmlElement("w:tr", {}, [
+                new XmlElement("w:tc", {}, [
+                    new XmlElement("w:p", {}, [])
+                ])
+            ])
+        ]);
+        var result = readXmlElement(tableXml);
+        assert.deepEqual(result.value, new documents.Table([
+            new documents.TableRow([
+                new documents.TableCell([
+                    new documents.Paragraph([])
+                ])
+            ])
+        ]));
+    });
+    
     test("emits warning on unrecognised element", function() {
         var unrecognisedElement = new XmlElement("w:not-an-element");
         var result = readXmlElement(unrecognisedElement);
