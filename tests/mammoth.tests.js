@@ -93,7 +93,13 @@ describe('mammoth', function() {
         return;
         var docxPath = path.join(__dirname, "test-data/tables.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
-            assert.equal(result.value, "<p>Above</p><table><tr><td>Top left</td><td>Top right</td></tr><tr><td>Bottom left</td><td>Bottom right</td></tr></table><p>Below</p>");
+            var expectedHtml = "<p>Above</p>" +
+                "<table>" +
+                "<tr><td><p>Top left</p></td><td><p>Top right</p></td></tr>" +
+                "<tr><td><p>Bottom left</p></td><td><p>Bottom right</p></td></tr>" +
+                "</table>" +
+                "<p>Below</p>";
+            assert.equal(result.value, expectedHtml);
             assert.deepEqual(result.messages, []);
         });
     });
