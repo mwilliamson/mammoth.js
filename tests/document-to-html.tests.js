@@ -198,6 +198,7 @@ describe('DocumentConverter', function() {
     });
     
     test('docx table is converted to table in HTML', function() {
+        // TODO: test that empty cells are preserved
         var table = new documents.Table([
             new documents.TableRow([
                 new documents.TableCell([paragraphOfText("Top left")]),
