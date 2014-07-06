@@ -109,6 +109,19 @@ mammoth.convertToHtml({path: "path/to/document.docx"})
 
 Note that `mammoth.convertToHtml` returns a [promise](http://promises-aplus.github.io/promises-spec/).
 
+You can also extract the raw text of the document by using `mammoth.extractRawText`.
+This will ignore all formatting in the document.
+Each paragraph is followed by two newlines.
+
+```javascript
+mammoth.extractRawText({path: "path/to/document.docx"})
+    .then(function(result){
+        var text = result.value; // The raw text
+        var messages = result.messages;
+    })
+    .done();
+```
+
 #### Custom style map
 
 By default,
@@ -222,6 +235,25 @@ Converts the source document to HTML.
   * `value`: the generated HTML
 
   * `messages`: any messages, such as errors and warnings, generated during the conversion
+
+#### `mammoth.extractRawText(input)`
+
+Extract the raw text of the document.
+This will ignore all formatting in the document.
+Each paragraph is followed by two newlines.
+
+* `input`: an object describing the source document.
+  While running on node.js,
+  to read the file found at `path`, pass in `{path: path}`.
+  While running in the browser,
+  to read the file stored in an array buffer, pass in `{arrayBuffer: arrayBuffer}`.
+
+* Returns a promise containing a result.
+  This result has the following properties:
+
+  * `value`: the raw text
+
+  * `messages`: any messages
 
 #### Messages
 
