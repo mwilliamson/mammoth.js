@@ -138,4 +138,11 @@ describe('mammoth', function() {
             );
         }
     });
+    
+    test('extractRawText only retains raw text', function() {
+        var docxPath = path.join(__dirname, "test-data/simple-list.docx");
+        return mammoth.extractRawText({path: docxPath}).then(function(result) {
+            assert.equal(result.value, 'Apple\n\nBanana\n\n');
+        });
+    });
 })
