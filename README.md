@@ -253,7 +253,7 @@ Each paragraph is followed by two newlines.
 
   * `value`: the raw text
 
-  * `messages`: any messages
+  * `messages`: any messages, such as errors and warnings
 
 #### Messages
 
