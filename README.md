@@ -20,7 +20,7 @@ The following features are currently supported:
 * Lists.
 
 * Customisable mapping from your own docx styles to HTML.
-  For instance, you can convert `WarningHeading` to `h1.warning`.
+  For instance, you could convert `WarningHeading` to `h1.warning` by providing an appropriate style mapping.
   
 * Tables.
   The formatting of the table itself, such as borders, is currently ignored,
