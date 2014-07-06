@@ -13,7 +13,7 @@ There's a large mismatch between the structure used by .docx and the structure o
 meaning that the conversion is unlikely to be perfect for more complicated documents.
 Mammoth works best if you only use styles to semantically mark up your document.
 
-### Web demo
+## Web demo
 
 The easiest way to try out mammoth is to use the web demo:
 
