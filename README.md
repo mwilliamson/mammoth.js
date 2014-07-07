@@ -32,6 +32,8 @@ The following features are currently supported:
 
 * Bold and italics.
 
+* Links.
+
 ## Web demo
 
 The easiest way to try out mammoth is to use the web demo:
