@@ -76,6 +76,18 @@ describe('mammoth', function() {
         });
     });
     
+    test('src of inline images can be changed', function() {
+        var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+        var convertImage = mammoth.images.inline(function(element) {
+            return element.read("base64").then(function(encodedImage) {
+                return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+            });
+        });
+        return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+            assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+        });
+    });
+    
     test('simple list is converted to list elements', function() {
         var docxPath = path.join(__dirname, "test-data/simple-list.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
