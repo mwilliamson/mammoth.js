@@ -1,12 +1,7 @@
 var assert = require("assert");
 var path = require("path");
-var fs = require("fs");
-
-var promises = require("../lib/promises");
 
 var mammoth = require("../");
-var htmlPaths = require("../lib/html-paths");
-var documentMatchers = require("../lib/document-matchers");
 
 var testing = require("./testing");
 var test = testing.test;

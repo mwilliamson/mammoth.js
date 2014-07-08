@@ -1,7 +1,5 @@
 var assert = require("assert");
 
-var duck = require("duck");
-
 var readStylesXml = require("../../lib/docx/styles-reader").readStylesXml;
 var XmlElement = require("../../lib/xmlreader").Element;
 var test = require("../testing").test;

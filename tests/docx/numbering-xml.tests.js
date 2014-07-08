@@ -1,5 +1,3 @@
-var assert = require("assert");
-
 var duck = require("duck");
 
 var readNumberingXml = require("../../lib/docx/numbering-xml").readNumberingXml;

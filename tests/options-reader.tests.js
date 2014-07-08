@@ -30,7 +30,3 @@ describe('readOptions', function() {
         assert.deepEqual(["p.SectionTitle => h2"], options.styleMap);
     });
 });
-
-function last(array) {
-    return array[array.length - 1];
-}
