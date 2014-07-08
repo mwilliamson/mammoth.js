@@ -172,6 +172,25 @@ var options = {
 };
 ```
 
+#### Custom image handlers
+
+By default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
+This behaviour can be changed by setting the `convertImage` option to an [image converter](#image-converters) .
+
+For instance, the following would replicate the default behaviour:
+
+```javascript
+var options = {
+    convertImage: mammoth.images.inline(function(element) {
+        return element.read("base64").then(function(imageBuffer) {
+            return {
+                src: "data:" + element.contentType + ";base64," + imageBuffer
+            };
+        });
+    })
+};
+```
+
 #### Document transforms
 
 Mammoth allows a document to be transformed before it is converted.
@@ -230,6 +249,9 @@ Converts the source document to HTML.
   
   * `transformDocument`: if set,
     this function is applied to the document read from the docx file before the conversion to HTML.
+    
+  * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
+    Set this option to an [image converter](#image-converters) to override the default behaviour.
 
 * Returns a promise containing a result.
   This result has the following properties:
@@ -264,6 +286,34 @@ Each message has the following properties:
 * `type`: a string representing the type of the message, such as `"warning"`
 
 * `message`: a string containing the actual message
+
+#### Image converters
+
+An inline image converter can be created by calling `mammoth.images.inline(func)`.
+This creates an inline `<img>` element for each image in the original docx.
+`func` should be a function that has one argument called `element`.
+This argument is the image element being converted,
+and has the following properties:
+
+* `read([encoding])`: read the image file with the specified encoding.
+  If no encoding is specified, a `Buffer` is returned.
+  
+* `contentType`: the content type of the image, such as `image/png`.
+
+`func` should return an object (or a promise containing an object) with a `src` property,
+which will be used as the `src` attribute on the `<img>` element.
+
+For instance, the following replicates the default image conversion:
+
+```javascript
+mammoth.images.inline(function(element) {
+    return element.read("base64").then(function(imageBuffer) {
+        return {
+            src: "data:" + element.contentType + ";base64," + imageBuffer
+        };
+    });
+})
+```
 
 ## Writing style maps
 
