@@ -13,7 +13,7 @@ function test(name, func) {
     it(name, function(done) {
         var result = func();
         promises.when(result).then(function() {
-            done()
+            done();
         }).done();
     });
 }

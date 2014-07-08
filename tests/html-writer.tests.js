@@ -103,4 +103,4 @@ describe('html-writer', function() {
         writer.close("p");
         return assert.equal(writer.asString(), "<p>\n  One\n  Two\n</p>");
     });
-})
+});

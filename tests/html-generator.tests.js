@@ -35,7 +35,7 @@ describe('HtmlGenerator', function() {
     test('generates empty string if text is empty string', function() {
         var generator = new HtmlGenerator();
         generator.satisfyPath(htmlPaths.elements(["p", "span"]));
-        generator.text("")
+        generator.text("");
         generator.closeAll();
         return assert.equal(generator.asString(), "");
     });
@@ -45,7 +45,7 @@ describe('HtmlGenerator', function() {
         var listPath = htmlPaths.elements([
             htmlPaths.element("ul", {}, {fresh: false}),
             htmlPaths.element("li", {}, {fresh: true})
-        ])
+        ]);
         generator.satisfyPath(listPath);
         generator.text("Apple");
         generator.satisfyPath(listPath);
@@ -69,4 +69,4 @@ describe('HtmlGenerator', function() {
         generator.selfClosing({tagName: "br", attributes: {"data-blah": "<"}});
         return assert.equal(generator.asString(), '<br data-blah="&lt;" />');
     });
-})
+});

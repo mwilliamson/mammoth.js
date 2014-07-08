@@ -29,7 +29,8 @@
     "license-sniffer": "~0.1.0",
     "duck": "~0.1.11",
     "uglify-js": "~2.4.8",
-    "temp": "~0.7.0"
+    "temp": "~0.7.0",
+    "jshint": "^2.5.2"
   },
   "browser": {
     "./lib/unzip.js": "./browser/unzip.js"
@@ -38,6 +39,7 @@
     "mammoth": "bin/mammoth"
   },
   "scripts": {
+    "pretest": "jshint lib tests",
     "test": "mocha tests --recursive"
   },
   "licenses": [

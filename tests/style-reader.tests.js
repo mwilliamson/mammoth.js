@@ -31,21 +31,21 @@ describe('styleReader.readHtmlPath', function() {
     test('reads class on element', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip"})
-        ])
+        ]);
         assert.deepEqual(readHtmlPath("p.tip"), expected);
     });
     
     test('reads multiple classes on element', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip help"})
-        ])
+        ]);
         assert.deepEqual(readHtmlPath("p.tip.help"), expected);
     });
     
     test('reads when element must be fresh', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {}, {"fresh": true})
-        ])
+        ]);
         assert.deepEqual(readHtmlPath("p:fresh"), expected);
     });
 });

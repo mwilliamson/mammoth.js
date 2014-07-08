@@ -11,7 +11,7 @@ var test = testing.test;
 var createFakeDocxFile = testing.createFakeDocxFile;
 
 function readXmlElement(element, options) {
-    options = options || {}
+    options = options || {};
     return new DocumentXmlReader(options).readXmlElement(element);
 }
 
@@ -253,7 +253,7 @@ describe("readXmlElement: ", function() {
         assert.equal(element.altText, "It's a hat");
         return element.read()
             .then(function(readValue) {
-                assert.equal(readValue, imageBuffer)
+                assert.equal(readValue, imageBuffer);
             });
     });
     

@@ -4,7 +4,7 @@ var fs = require("fs");
 
 var promises = require("../lib/promises");
 
-var mammoth = require("../")
+var mammoth = require("../");
 var htmlPaths = require("../lib/html-paths");
 var documentMatchers = require("../lib/document-matchers");
 
@@ -113,7 +113,7 @@ describe('mammoth', function() {
                 '<sup><a href="#footnote-42-1" id="footnote-ref-42-1">[1]</a></sup>.' +
                 '<sup><a href="#footnote-42-2" id="footnote-ref-42-2">[2]</a></sup></p>' +
                 '<ol><li id="footnote-42-1"><p> A tachyon walks into a bar. <a href="#footnote-ref-42-1">↑</a></p></li>' +
-                '<li id="footnote-42-2"><p> Fin. <a href="#footnote-ref-42-2">↑</a></p></li></ol>'
+                '<li id="footnote-42-2"><p> Fin. <a href="#footnote-ref-42-2">↑</a></p></li></ol>';
             assert.equal(result.value, expectedOutput);
             // TODO: get rid of warnings
             //~ assert.deepEqual(result.messages, []);
@@ -130,7 +130,7 @@ describe('mammoth', function() {
     
     test('using styleMapping throws error', function() {
         try {
-            mammoth.styleMapping()
+            mammoth.styleMapping();
         } catch (error) {
             assert.equal(
                 error.message,
@@ -145,4 +145,4 @@ describe('mammoth', function() {
             assert.equal(result.value, 'Apple\n\nBanana\n\n');
         });
     });
-})
+});
