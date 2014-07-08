@@ -1,0 +1,6 @@
+{
+    "undef": true,
+    "unused": "vars",
+    
+    "predef": ["require", "exports", "__dirname", "module", "Buffer", "describe", "it", "setTimeout", "process", "console"]
+}
