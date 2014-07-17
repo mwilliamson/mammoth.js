@@ -141,7 +141,7 @@ describe('mammoth', function() {
         } catch (error) {
             assert.equal(
                 error.message,
-                'Use a raw string instead of mammoth.styleMapping e.g. "p[style-naming=\'Title\'] => h1" instead of mammoth.styleMapping("p[style-naming=\'Title\'] => h1")'
+                'Use a raw string instead of mammoth.styleMapping e.g. "p[style-name=\'Title\'] => h1" instead of mammoth.styleMapping("p[style-name=\'Title\'] => h1")'
             );
         }
     });
