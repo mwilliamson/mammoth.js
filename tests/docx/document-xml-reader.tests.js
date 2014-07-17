@@ -127,7 +127,20 @@ describe("readXmlElement: ", function() {
         var run = readXmlElementValue(runXml);
         assert.equal(run.isBold, true);
     });
-    
+
+    test("isUnderline is false if underline element is not present", function() {
+        var runXml = runWithProperties([]);
+        var run = readXmlElementValue(runXml);
+        assert.deepEqual(run.isUnderline, false);
+    });
+
+    test("isUnderline is true if underline element is present", function() {
+        var underlineXml = new XmlElement("w:u");
+        var runXml = runWithProperties([underlineXml]);
+        var run = readXmlElementValue(runXml);
+        assert.equal(run.isUnderline, true);
+    });
+
     test("isItalic is false if bold element is not present", function() {
         var runXml = runWithProperties([]);
         var run = readXmlElementValue(runXml);
