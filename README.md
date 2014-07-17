@@ -201,15 +201,15 @@ You can use the `transformDocument` argument to modify the document appropriatel
 
 ```javascript
 function transformElement(element) {
-  if (element.children) {
-      element.children.forEach(transformElement);
-  }
-  if (element.type === "paragraph") {
-      if (element.alignment === "center" && !element.styleId) {
-          element.styleId = "Heading2";
-      }
-  }
-  return element;
+    if (element.children) {
+        element.children.forEach(transformElement);
+    }
+    if (element.type === "paragraph") {
+        if (element.alignment === "center" && !element.styleId) {
+            element.styleId = "Heading2";
+        }
+    }
+    return element;
 }
 
 var options = {
