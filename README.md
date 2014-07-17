@@ -220,6 +220,22 @@ var options = {
 The return value of `transformDocument` is used during HTML generation.
 The original document (and any child elements) can be safely modified.
 
+The above can be written more succinctly using the helper `mammoth.transforms.paragraph`:
+
+```javascript
+
+function transformParagraph(element) {
+    if (element.alignment === "center" && !element.styleId) {
+        element.styleId = "Heading2";
+    }
+    return element;
+}
+
+var options = {
+    transformDocument: mammoth.transforms.paragraph(transformParagraph)
+};
+```
+
 ### API
 
 #### `mammoth.convertToHtml(input, options)`
@@ -314,6 +330,13 @@ mammoth.images.inline(function(element) {
     });
 })
 ```
+
+#### `mammoth.transforms.paragraph(transformParagraph)`
+
+Returns a function that can be used as the `transformDocument` option.
+This will apply the function `transformParagraph` to each paragraph element.
+`transformParagraph` should return the new paragraph,
+and is allowed to mutate the original paragraph.
 
 ## Writing style maps
 

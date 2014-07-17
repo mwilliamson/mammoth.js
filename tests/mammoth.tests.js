@@ -69,6 +69,21 @@ describe('mammoth', function() {
         });
     });
     
+    test('mammoth.transforms.paragraph only transforms paragraphs', function() {
+        var docxFile = createFakeDocxFile({
+            "word/document.xml": testData("simple/word/document.xml")
+        });
+        var options = {
+            transformDocument: mammoth.transforms.paragraph(function(paragraph) {
+                paragraph.styleId = "Heading1";
+                return paragraph;
+            })
+        };
+        return mammoth.convertToHtml({file: docxFile}, options).then(function(result) {
+            assert.equal("<h1>Hello.</h1>", result.value);
+        });
+    });
+    
     test('inline images are included in output', function() {
         var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
