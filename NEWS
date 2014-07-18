@@ -1,3 +1,7 @@
+# 0.3.7
+
+* Add optional underline conversion.
+
 # 0.3.6
 
 * Add helper `mammoth.transforms.paragraph`.
