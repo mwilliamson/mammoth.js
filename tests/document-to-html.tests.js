@@ -139,6 +139,24 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('underline runs are wrapped in <u> tags', function() {
+        var run = runOfText("Hello.", {isUnderline: true});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<u>Hello.</u>");
+        });
+    });
+
+    test('underline runs can exist inside other tags', function() {
+        var run = new documents.Paragraph([
+            runOfText("Hello.", {isUnderline: true})
+        ]);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<p><u>Hello.</u></p>");
+        });
+    });
+
     test('italic runs are wrapped in <em> tags', function() {
         var run = runOfText("Hello.", {isItalic: true});
         var converter = new DocumentConverter();
