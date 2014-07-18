@@ -1,6 +1,7 @@
 var assert = require("assert");
 var promises = require("../lib/promises");
 
+var mammoth = require("../lib");
 var documents = require("../lib/documents");
 var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
 var test = require("./testing").test;
@@ -139,21 +140,21 @@ describe('DocumentConverter', function() {
         });
     });
     
-    test('underline runs are wrapped in <u> tags', function() {
+    test('underline runs are ignored by default', function() {
         var run = runOfText("Hello.", {isUnderline: true});
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.value, "<u>Hello.</u>");
+            assert.equal(result.value, "Hello.");
         });
     });
-
-    test('underline runs can exist inside other tags', function() {
-        var run = new documents.Paragraph([
-            runOfText("Hello.", {isUnderline: true})
-        ]);
-        var converter = new DocumentConverter();
+    
+    test('underline runs can be wrapped in <u> tags', function() {
+        var run = runOfText("Hello.", {isUnderline: true});
+        var converter = new DocumentConverter({
+            convertUnderline: mammoth.underline.element("u")
+        });
         return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.value, "<p><u>Hello.</u></p>");
+            assert.equal(result.value, "<u>Hello.</u>");
         });
     });
 
