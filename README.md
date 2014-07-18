@@ -201,7 +201,7 @@ The following will wrap any underlined source text in `<em>` tags:
 
 ```javascript
 var options = {
-    convertUnderline: mammoth.images.underline("em")
+    convertUnderline: mammoth.underline.element("em")
 };
 ```
 
