@@ -30,7 +30,7 @@ The following features are currently supported:
 
 * Images.
 
-* Bold and italics.
+* Bold, italics and underlines.
 
 * Links.
 
@@ -191,6 +191,20 @@ var options = {
 };
 ```
 
+#### Underline
+
+By default, the underlining of any text is ignored since underlining can be confused with links in HTML documents.
+This behaviour can be changed by setting the `convertUnderline` option to `mammoth.underline.element(name)`.
+
+For instance, suppose that a source document uses underlining for emphasis.
+The following will wrap any underlined source text in `<em>` tags:
+
+```javascript
+var options = {
+    convertUnderline: mammoth.images.underline("em")
+};
+```
+
 #### Document transforms
 
 Mammoth allows a document to be transformed before it is converted.
@@ -268,6 +282,9 @@ Converts the source document to HTML.
     
   * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
     Set this option to an [image converter](#image-converters) to override the default behaviour.
+    
+  * `convertUnderline`: by default, the underlining of any text is ignored.
+    Set this option to [`mammoth.underline.element(name)`](#underline) to override the default behaviour.
 
 * Returns a promise containing a result.
   This result has the following properties:
