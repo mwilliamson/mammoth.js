@@ -5,6 +5,7 @@ var documents = require("../../lib/documents");
 var XmlElement = require("../../lib/xmlreader").Element;
 var Numbering = require("../../lib/docx/numbering-xml").Numbering;
 var Styles = require("../../lib/docx/styles-reader").Styles;
+var warning = require("../../lib/results").warning;
 
 var testing = require("../testing");
 var test = testing.test;
@@ -318,6 +319,20 @@ describe("readXmlElement: ", function() {
         var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
         var result = readXmlElement(hyperlinkXml);
         assert.deepEqual(result.value[0].type, "run");
+    });
+    
+    test("w:br is read as line break", function() {
+        var breakXml = new XmlElement("w:br", {}, []);
+        var result = readXmlElement(breakXml);
+        assert.deepEqual(result.value.type, "lineBreak");
+        assert.deepEqual(result.messages, []);
+    });
+    
+    test("warning on breaks that aren't line breaks", function() {
+        var breakXml = new XmlElement("w:br", {"w:type": "page"}, []);
+        var result = readXmlElement(breakXml);
+        assert.deepEqual(result.value, []);
+        assert.deepEqual(result.messages, [warning("Unsupported break type: page")]);
     });
     
 });
