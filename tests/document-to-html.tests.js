@@ -255,6 +255,15 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('line break is converted to <br>', function() {
+        var lineBreak = new documents.LineBreak();
+        var converter = new DocumentConverter();
+        
+        return converter.convertToHtml(lineBreak).then(function(result) {
+            assert.equal(result.value, "<br />");
+        });
+    });
+    
     test('footnote reference is converted to superscript intra-page link', function() {
         var footnoteReference = new documents.FootnoteReference({
             footnoteId: "4",
