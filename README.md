@@ -260,7 +260,7 @@ Converts the source document to HTML.
 
 * `input`: an object describing the source document.
   While running on node.js,
-  to read the file found at `path`, pass in `{path: path}`.
+  to read the file found at `path`, pass in `{path: path}`; to read a node.js `Buffer` object, pass in `{buffer: buffer}`.
   While running in the browser,
   to read the file stored in an array buffer, pass in `{arrayBuffer: arrayBuffer}`.
   
@@ -303,7 +303,7 @@ Each paragraph is followed by two newlines.
 
 * `input`: an object describing the source document.
   While running on node.js,
-  to read the file found at `path`, pass in `{path: path}`.
+  to read the file found at `path`, pass in `{path: path}`; to read a node.js `Buffer` object, pass in `{buffer: buffer}`.
   While running in the browser,
   to read the file stored in an array buffer, pass in `{arrayBuffer: arrayBuffer}`.
 
