@@ -2,6 +2,7 @@ var assert = require("assert");
 var test = require("./testing").test;
 
 var fs = require("fs");
+var path = require("path");
 
 var mammoth = require("../lib");
 
