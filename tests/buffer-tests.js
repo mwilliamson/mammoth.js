@@ -5,8 +5,6 @@ var fs = require("fs");
 
 var mammoth = require("../lib");
 
-
-
 describe("buffer-tests", function() {
     test('should convert docx as Buffer to one HTML paragraph', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
