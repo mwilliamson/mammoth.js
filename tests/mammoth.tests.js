@@ -1,7 +1,9 @@
 var assert = require("assert");
 var path = require("path");
+var fs = require("fs");
 
 var mammoth = require("../");
+var promises = require("../lib/promises");
 
 var testing = require("./testing");
 var test = testing.test;
@@ -16,6 +18,18 @@ describe('mammoth', function() {
             assert.equal(result.value, "<p>Walking on imported air</p>");
             assert.deepEqual(result.messages, []);
         });
+    });
+    
+    test('should convert docx represented by a Buffer', function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return promises.nfcall(fs.readFile, docxPath)
+            .then(function(buffer) {
+                return mammoth.convertToHtml({buffer: buffer});
+            })
+            .then(function(result) {
+                assert.equal(result.value, "<p>Walking on imported air</p>");
+                assert.deepEqual(result.messages, []);
+            });
     });
     
     test('style map can be expressed as string', function() {
@@ -166,5 +180,17 @@ describe('mammoth', function() {
         return mammoth.extractRawText({path: docxPath}).then(function(result) {
             assert.equal(result.value, 'Apple\n\nBanana\n\n');
         });
+    });
+    
+    test('extractRawText can use .docx files represented by a Buffer', function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return promises.nfcall(fs.readFile, docxPath)
+            .then(function(buffer) {
+                return mammoth.extractRawText({buffer: buffer});
+            })
+            .then(function(result) {
+                assert.equal(result.value, "Walking on imported air\n\n");
+                assert.deepEqual(result.messages, []);
+            });
     });
 });

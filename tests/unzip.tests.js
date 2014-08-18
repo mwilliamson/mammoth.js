@@ -1,8 +1,10 @@
+var fs = require("fs");
 var assert = require("assert");
 var path = require("path");
 
 var test = require("./testing").test;
 var unzip = require("../lib/unzip");
+var promises = require("../lib/promises");
 
 describe("unzip", function() {
     test("unzip fails if given empty object", function() {
@@ -20,5 +22,19 @@ describe("unzip", function() {
         }).then(function(contents) {
             assert.equal(contents, "Hello world\n");
         });
+    });
+    
+    test('unzip can open Buffer', function() {
+        var zipPath = path.join(__dirname, "test-data/hello.zip");
+        return promises.nfcall(fs.readFile, zipPath)
+            .then(function(buffer) {
+                return unzip.openZip({buffer: buffer});
+            })
+            .then(function(zipFile) {
+                return zipFile.read("hello", "utf8");
+            })
+            .then(function(contents) {
+                assert.equal(contents, "Hello world\n");
+            });
     });
 });
