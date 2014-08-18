@@ -259,10 +259,14 @@ var options = {
 Converts the source document to HTML.
 
 * `input`: an object describing the source document.
-  While running on node.js,
-  to read the file found at `path`, pass in `{path: path}`; to read a node.js `Buffer` object, pass in `{buffer: buffer}`.
-  While running in the browser,
-  to read the file stored in an array buffer, pass in `{arrayBuffer: arrayBuffer}`.
+  On node.js, the following inputs are supported:
+  
+    * `{path: path}`, where `path` is the path to the .docx file.
+    * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
+    
+  In the browser, the following inputs are supported:
+  
+    * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
   
 * `options` (optional): options for the conversion.
   May have the following properties:
@@ -302,10 +306,14 @@ This will ignore all formatting in the document.
 Each paragraph is followed by two newlines.
 
 * `input`: an object describing the source document.
-  While running on node.js,
-  to read the file found at `path`, pass in `{path: path}`; to read a node.js `Buffer` object, pass in `{buffer: buffer}`.
-  While running in the browser,
-  to read the file stored in an array buffer, pass in `{arrayBuffer: arrayBuffer}`.
+  On node.js, the following inputs are supported:
+  
+    * `{path: path}`, where `path` is the path to the .docx file.
+    * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
+    
+  In the browser, the following inputs are supported:
+  
+    * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
 
 * Returns a promise containing a result.
   This result has the following properties:
