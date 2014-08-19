@@ -32,6 +32,14 @@ describe('mammoth', function() {
             });
     });
     
+    test('should read docx xml files with unicode byte order mark', function() {
+        var docxPath = path.join(__dirname, "test-data/bom.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function (result) {
+            assert.equal(result.value, "<p>This XML has a byte order mark.</p>");
+            assert.deepEqual(result.messages, []);
+        });
+    });
+    
     test('style map can be expressed as string', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
