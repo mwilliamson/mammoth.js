@@ -19,7 +19,7 @@ describe('mammoth', function() {
             assert.deepEqual(result.messages, []);
         });
     });
-    
+
     test('should convert docx represented by a Buffer', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return promises.nfcall(fs.readFile, docxPath)
@@ -31,7 +31,15 @@ describe('mammoth', function() {
                 assert.deepEqual(result.messages, []);
             });
     });
-    
+
+    test('should read docx xml files with unicode byte order mark', function() {
+        var docxPath = path.join(__dirname, "test-data/bom.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function (result) {
+            assert.equal(result.value, "<p>This XML has a byte order mark.</p>");
+            assert.deepEqual(result.messages, []);
+        });
+    });
+
     test('style map can be expressed as string', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
@@ -43,7 +51,7 @@ describe('mammoth', function() {
             assert.equal("<h1>Hello.</h1>", result.value);
         });
     });
-    
+
     test('style map can be expressed as array of style mappings', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
@@ -55,7 +63,7 @@ describe('mammoth', function() {
             assert.equal("<h1>Hello.</h1>", result.value);
         });
     });
-    
+
     test('options are passed to document converter when calling mammoth.convertToHtml', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
@@ -67,7 +75,7 @@ describe('mammoth', function() {
             assert.equal("<h1>Hello.</h1>", result.value);
         });
     });
-    
+
     test('options.transformDocument is used to transform document if set', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
@@ -82,7 +90,7 @@ describe('mammoth', function() {
             assert.equal("<h1>Hello.</h1>", result.value);
         });
     });
-    
+
     test('mammoth.transforms.paragraph only transforms paragraphs', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
@@ -97,14 +105,14 @@ describe('mammoth', function() {
             assert.equal("<h1>Hello.</h1>", result.value);
         });
     });
-    
+
     test('inline images are included in output', function() {
         var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
             assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
         });
     });
-    
+
     test('src of inline images can be changed', function() {
         var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
         var convertImage = mammoth.images.inline(function(element) {
@@ -116,14 +124,14 @@ describe('mammoth', function() {
             assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
         });
     });
-    
+
     test('simple list is converted to list elements', function() {
         var docxPath = path.join(__dirname, "test-data/simple-list.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
             assert.equal(result.value, '<ul><li>Apple</li><li>Banana</li></ul>');
         });
     });
-    
+
     test('word tables are converted to html tables', function() {
         var docxPath = path.join(__dirname, "test-data/tables.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
@@ -137,7 +145,7 @@ describe('mammoth', function() {
             assert.deepEqual(result.messages, []);
         });
     });
-    
+
     test('footnotes are appended to text', function() {
         // TODO: don't duplicate footnotes with multiple references
         var docxPath = path.join(__dirname, "test-data/footnotes.docx");
@@ -155,7 +163,7 @@ describe('mammoth', function() {
             //~ assert.deepEqual(result.messages, []);
         });
     });
-    
+
     test('indentation is used if prettyPrint is true', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
@@ -163,7 +171,7 @@ describe('mammoth', function() {
             assert.deepEqual(result.messages, []);
         });
     });
-    
+
     test('using styleMapping throws error', function() {
         try {
             mammoth.styleMapping();
@@ -174,14 +182,14 @@ describe('mammoth', function() {
             );
         }
     });
-    
+
     test('extractRawText only retains raw text', function() {
         var docxPath = path.join(__dirname, "test-data/simple-list.docx");
         return mammoth.extractRawText({path: docxPath}).then(function(result) {
             assert.equal(result.value, 'Apple\n\nBanana\n\n');
         });
     });
-    
+
     test('extractRawText can use .docx files represented by a Buffer', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return promises.nfcall(fs.readFile, docxPath)
