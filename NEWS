@@ -1,3 +1,7 @@
+# 0.3.10
+
+* Handle XML files that start with the UTF-8 BOM.
+
 # 0.3.9
 
 * Add support for reading Buffer instances.
