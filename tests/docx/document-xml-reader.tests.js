@@ -341,9 +341,11 @@ describe("convertXmlToDocument: ", function() {
     
     test("footnotes of document are read", function() {
         var paragraphXml = new XmlElement("w:p", {}, []);
-        var bodyXml = new XmlElement("w:body", {}, [paragraphXml]);
-        var documentXml = new XmlElement("w:document", {}, [bodyXml]);
         var footnotes = [{id: "4", body: [paragraphXml]}];
+        
+        var bodyXml = new XmlElement("w:body", {}, []);
+        var documentXml = new XmlElement("w:document", {}, [bodyXml]);
+        
         var document = convertXmlToDocumentValue({root: documentXml}, {footnotes: footnotes});
         var footnote = document.footnotes.findFootnoteById("4");
         assert.deepEqual(footnote.id, "4");
