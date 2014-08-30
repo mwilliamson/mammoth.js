@@ -266,8 +266,7 @@ describe('DocumentConverter', function() {
     
     test('footnote reference is converted to superscript intra-page link', function() {
         var footnoteReference = new documents.FootnoteReference({
-            footnoteId: "4",
-            body: paragraphOfText("Who's there?")
+            footnoteId: "4"
         });
         var converter = new DocumentConverter({
             generateUniquifier: function() { return 42; }
