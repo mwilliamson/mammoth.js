@@ -161,6 +161,14 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.baseline);
     });
     
+    test("run has vertical alignment read from properties", function() {
+        var verticalAlignmentXml = new XmlElement("w:vertAlign", {"w:val": "superscript"});
+        var runXml = runWithProperties([verticalAlignmentXml]);
+        
+        var run = readXmlElementValue(runXml);
+        assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.superscript);
+    });
+    
     test("run properties not included as child of run", function() {
         var runStyleXml = new XmlElement("w:rStyle");
         var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
