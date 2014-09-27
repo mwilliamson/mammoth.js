@@ -30,7 +30,7 @@ The following features are currently supported:
 
 * Images.
 
-* Bold, italics and underlines.
+* Bold, italics, underlines, superscript and subscript.
 
 * Links.
 
