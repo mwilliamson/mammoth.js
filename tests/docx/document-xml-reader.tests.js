@@ -155,6 +155,12 @@ describe("readXmlElement: ", function() {
         assert.equal(run.isItalic, true);
     });
     
+    test("run has baseline vertical alignment by default", function() {
+        var runXml = runWithProperties([]);
+        var run = readXmlElementValue(runXml);
+        assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.baseline);
+    });
+    
     test("run properties not included as child of run", function() {
         var runStyleXml = new XmlElement("w:rStyle");
         var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
