@@ -174,6 +174,26 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('superscript runs are wrapped in <sup> tags', function() {
+        var run = runOfText("Hello.", {
+            verticalAlignment: documents.verticalAlignment.superscript
+        });
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<sup>Hello.</sup>");
+        });
+    });
+    
+    test('subscript runs are wrapped in <sub> tags', function() {
+        var run = runOfText("Hello.", {
+            verticalAlignment: documents.verticalAlignment.subscript
+        });
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<sub>Hello.</sub>");
+        });
+    });
+    
     test('run styles are converted to HTML if mapping exists', function() {
         var run = runOfText("Hello.", {styleId: "Heading1Char", styleName: "Heading 1 Char"});
         var converter = new DocumentConverter({
