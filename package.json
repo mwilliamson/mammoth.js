@@ -1,6 +1,6 @@
 {
   "name": "mammoth",
-  "version": "0.3.11",
+  "version": "0.3.12",
   "author": "Michael Williamson <mike@zwobble.org>",
   "description": "Convert Word documents to simple HTML",
   "keywords": [
