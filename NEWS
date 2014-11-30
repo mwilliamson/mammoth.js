@@ -1,3 +1,11 @@
+# 0.3.13
+
+* Update license-sniffer to fix license comments in mammoth.browser.js.
+
+# 0.3.12
+
+* Update bluebird dependency to fix operation in web workers.
+
 # 0.3.11
 
 * Add support for superscript and subscript text.
