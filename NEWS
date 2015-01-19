@@ -1,3 +1,7 @@
+# 0.3.14
+
+* Add support for endnotes.
+
 # 0.3.13
 
 * Update license-sniffer to fix license comments in mammoth.browser.js.
