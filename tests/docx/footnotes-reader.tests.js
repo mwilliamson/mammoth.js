@@ -1,6 +1,6 @@
 var assert = require("assert");
 
-var readFootnotesXml = require("../../lib/docx/footnotes-reader").readFootnotesXml;
+var readFootnotesXml = require("../../lib/docx/notes-reader").readFootnotesXml;
 var XmlElement = require("../../lib/xmlreader").Element;
 var test = require("../testing").test;
 
