@@ -361,7 +361,7 @@ describe("convertXmlToDocument: ", function() {
         var documentXml = new XmlElement("w:document", {}, [bodyXml]);
         
         var document = convertXmlToDocumentValue({root: documentXml}, {footnotes: footnotes});
-        var footnote = document.notes.findFootnoteById("4");
+        var footnote = document.notes.resolve({noteType: "footnote", noteId: "4"});
         assert.deepEqual(footnote.id, "4");
         assert.deepEqual(footnote.body[0].type, "paragraph");
     });
