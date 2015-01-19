@@ -353,15 +353,15 @@ describe("readXmlElement: ", function() {
 
 describe("convertXmlToDocument: ", function() {
     
-    test("footnotes of document are read", function() {
+    test("notes of document are read", function() {
         var paragraphXml = new XmlElement("w:p", {}, []);
-        var footnotes = [{id: "4", body: [paragraphXml]}];
+        var footnotes = [{noteType: "footnote", id: "4", body: [paragraphXml]}];
         
         var bodyXml = new XmlElement("w:body", {}, []);
         var documentXml = new XmlElement("w:document", {}, [bodyXml]);
         
         var document = convertXmlToDocumentValue({root: documentXml}, {footnotes: footnotes});
-        var footnote = document.footnotes.findFootnoteById("4");
+        var footnote = document.notes.findFootnoteById("4");
         assert.deepEqual(footnote.id, "4");
         assert.deepEqual(footnote.body[0].type, "paragraph");
     });

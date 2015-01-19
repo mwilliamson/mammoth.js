@@ -306,8 +306,9 @@ describe('DocumentConverter', function() {
                 new documents.Run([footnoteReference])
             ])],
             {
-                footnotes: new documents.Footnotes({
-                    4: new documents.Footnote({
+                notes: new documents.Notes({
+                    4: new documents.Note({
+                        noteType: "footnote",
                         id: "4",
                         body: [paragraphOfText("Who's there?")]
                     })
