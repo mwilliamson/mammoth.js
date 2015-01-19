@@ -164,6 +164,24 @@ describe('mammoth', function() {
         });
     });
     
+    test('endnotes are appended to text', function() {
+        return;
+        var docxPath = path.join(__dirname, "test-data/endnotes.docx");
+        var options = {
+            generateUniquifier: function() { return 42; }
+        };
+        return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
+            var expectedOutput = '<p>Ouch' +
+                '<sup><a href="#endnote-42-1" id="endnote-ref-42-1">[1]</a></sup>.' +
+                '<sup><a href="#endnote-42-2" id="endnote-ref-42-2">[2]</a></sup></p>' +
+                '<ol><li id="endnote-42-1"><p> A tachyon walks into a bar. <a href="#endnote-ref-42-1">↑</a></p></li>' +
+                '<li id="endnote-42-2"><p> Fin. <a href="#endnote-ref-42-2">↑</a></p></li></ol>';
+            assert.equal(result.value, expectedOutput);
+            // TODO: get rid of warnings
+            //~ assert.deepEqual(result.messages, []);
+        });
+    });
+    
     test('indentation is used if prettyPrint is true', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
