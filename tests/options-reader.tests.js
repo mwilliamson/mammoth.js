@@ -9,11 +9,11 @@ describe('readOptions', function() {
     it('standard options are used if options is undefined', function() {
         assert.deepEqual(standardOptions, readOptions(undefined));
     });
-    
+
     it('standard options are used if options is empty', function() {
         assert.deepEqual(standardOptions, readOptions({}));
     });
-    
+
     it('custom style mappings are prepended to standard style mappings', function() {
         var options = readOptions({
             styleMap: "p.SectionTitle => h2"
@@ -21,7 +21,7 @@ describe('readOptions', function() {
         assert.deepEqual("p.SectionTitle => h2", options.styleMap[0]);
         assert.deepEqual(standardOptions.styleMap, options.styleMap.slice(1));
     });
-    
+
     it('default style mappings are ignored if includeDefaultStyleMap is false', function() {
         var options = readOptions({
             styleMap: "p.SectionTitle => h2",

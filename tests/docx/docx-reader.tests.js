@@ -25,7 +25,7 @@ describe("docx-reader", function() {
             assert.deepEqual(expectedDocument, result.document);
         });
     });
-    
+
     test("hyperlink hrefs are read from relationships file", function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("hyperlinks/word/document.xml"),

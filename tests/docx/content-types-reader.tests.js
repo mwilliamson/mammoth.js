@@ -14,7 +14,7 @@ describe('readContentTypesFromXml', function() {
         });
         assert.equal(contentTypes.findContentType("word/media/hat.png"), "image/png");
     });
-    
+
     test('reads overrides in preference to defaults', function() {
         var contentTypes = readContentTypesFromXml({
             root: new XmlElement("content-types:Types", {}, [

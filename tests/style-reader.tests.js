@@ -18,7 +18,7 @@ describe('styleReader.readHtmlPath', function() {
     test('reads single element', function() {
         assert.deepEqual(readHtmlPath("p"), htmlPaths.elements(["p"]));
     });
-    
+
     test('reads choice of elements', function() {
         assert.deepEqual(
             readHtmlPath("ul|ol"),
@@ -27,25 +27,25 @@ describe('styleReader.readHtmlPath', function() {
             ])
         );
     });
-    
+
     test('reads nested elements', function() {
         assert.deepEqual(readHtmlPath("ul > li"), htmlPaths.elements(["ul", "li"]));
     });
-    
+
     test('reads class on element', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip"})
         ]);
         assert.deepEqual(readHtmlPath("p.tip"), expected);
     });
-    
+
     test('reads multiple classes on element', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip help"})
         ]);
         assert.deepEqual(readHtmlPath("p.tip.help"), expected);
     });
-    
+
     test('reads when element must be fresh', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {}, {"fresh": true})
@@ -58,35 +58,35 @@ describe("styleReader.readDocumentMatcher", function() {
     test("reads plain paragraph", function() {
         assert.deepEqual(readDocumentMatcher("p"), documentMatchers.paragraph());
     });
-    
+
     test("reads paragraph with style ID", function() {
         assert.deepEqual(
             readDocumentMatcher("p.Heading1"),
             documentMatchers.paragraph({styleId: "Heading1"})
         );
     });
-    
+
     test("reads paragraph with style name", function() {
         assert.deepEqual(
             readDocumentMatcher("p[style-name='Heading 1']"),
             documentMatchers.paragraph({styleName: "Heading 1"})
         );
     });
-    
+
     test("reads p:ordered-list(1) as ordered list with index of 0", function() {
         assert.deepEqual(
             readDocumentMatcher("p:ordered-list(1)"),
             documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0}})
         );
     });
-    
+
     test("reads p:unordered-list(1) as unordered list with index of 0", function() {
         assert.deepEqual(
             readDocumentMatcher("p:unordered-list(1)"),
             documentMatchers.paragraph({list: {isOrdered: false, levelIndex: 0}})
         );
     });
-    
+
     test("reads plain run", function() {
         assert.deepEqual(
             readDocumentMatcher("r"),
