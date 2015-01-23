@@ -228,6 +228,17 @@ describe('DocumentConverter', function() {
         });
     });
 
+    test('docx hyperlink with anchor is converted to <a>', function() {
+        var hyperlink = new documents.Hyperlink(
+            [runOfText("Hello.")],
+            {anchor: "_Peter"}
+        );
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(hyperlink).then(function(result) {
+            assert.equal(result.value, '<a href="#_Peter">Hello.</a>');
+        });
+    });
+
     test('docx tab is converted to tab in HTML', function() {
         var tab = new documents.Tab();
         var converter = new DocumentConverter();

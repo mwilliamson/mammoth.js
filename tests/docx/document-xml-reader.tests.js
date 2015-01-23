@@ -359,7 +359,7 @@ describe("readXmlElement: ", function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"w:anchor": "_Peter"}, [runXml]);
         var result = readXmlElement(hyperlinkXml);
-        assert.deepEqual(result.value.href, "#_Peter");
+        assert.deepEqual(result.value.anchor, "_Peter");
         assert.deepEqual(result.value.children[0].type, "run");
     });
 
