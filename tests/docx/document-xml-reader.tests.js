@@ -217,12 +217,12 @@ describe("readXmlElement: ", function() {
             }]
         );
     });
-    
-    test("w:bookmarkStart is ignored without warning", function() {
-        var ignoredElement = new XmlElement("w:bookmarkStart");
-        var result = readXmlElement(ignoredElement);
-        assert.deepEqual(result.messages, []);
-        assert.deepEqual([], result.value);
+
+    test("w:bookmarkStart is read as a bookmarkStart", function() {
+        var bookmarkStart = new XmlElement("w:bookmarkStart", {"w:name": "_Peter", "w:id": "42"});
+        var result = readXmlElement(bookmarkStart);
+        assert.deepEqual(result.value.name, "_Peter");
+        assert.deepEqual(result.value.type, "bookmarkStart");
     });
     
     test("can read inline pictures", function() {
@@ -354,7 +354,15 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value.href, "http://example.com");
         assert.deepEqual(result.value.children[0].type, "run");
     });
-    
+
+    test("w:hyperlink is read as document hyperlink if it has an anchor", function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var hyperlinkXml = new XmlElement("w:hyperlink", {"w:anchor": "_Peter"}, [runXml]);
+        var result = readXmlElement(hyperlinkXml);
+        assert.deepEqual(result.value.anchor, "_Peter");
+        assert.deepEqual(result.value.children[0].type, "run");
+    });
+
     test("w:hyperlink is ignored if it does not have a relationship ID", function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
