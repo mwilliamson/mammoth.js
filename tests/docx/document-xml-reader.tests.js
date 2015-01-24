@@ -218,11 +218,19 @@ describe("readXmlElement: ", function() {
         );
     });
 
-    test("w:bookmarkStart is ignored without warning", function() {
-        var ignoredElement = new XmlElement("w:bookmarkStart");
-        var result = readXmlElement(ignoredElement);
-        assert.deepEqual(result.messages, []);
-        assert.deepEqual([], result.value);
+    test("w:bookmarkStart is read as a bookmarkStart", function() {
+        var bookmarkStart = new XmlElement("w:bookmarkStart", {"w:name": "_Peter", "w:id": "42"});
+        var result = readXmlElement(bookmarkStart);
+        assert.deepEqual(result.value.name, "_Peter");
+        assert.deepEqual(result.value.type, "bookmarkStart");
+        assert.deepEqual(result.value.id, "42");
+    });
+
+    test("w:bookmarkEnd is read as a bookmarkEnd", function() {
+        var bookmarkEnd = new XmlElement("w:bookmarkEnd", {"w:id": "42"});
+        var result = readXmlElement(bookmarkEnd);
+        assert.deepEqual(result.value.type, "bookmarkEnd");
+        assert.deepEqual(result.value.id, "42");
     });
 
     test("can read inline pictures", function() {

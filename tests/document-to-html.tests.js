@@ -404,6 +404,32 @@ describe('DocumentConverter', function() {
             assert.equal(result.value.indexOf("<p>Hello.</p>"), 0);
         });
     });
+
+    test('BookmarkStart is converted to a bookmarkStart anchor', function() {
+        var bookmarkStart = new documents.BookmarkStart({name: "_Peter", id: "1"});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(bookmarkStart).then(function(result) {
+            assert.equal(result.value, '<span id="_Peter" data-bookmark-start="1"></span>');
+        });
+    });
+
+    test('BookmarkEnd is converted to a bookmarkEnd element', function() {
+        var bookmarkEnd = new documents.BookmarkEnd({id: "33"});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(bookmarkEnd).then(function(result) {
+            assert.equal(result.value, '<span data-bookmark-end="33"></span>');
+        });
+    });
+
+    test('lastEditBookmark is not converted', function() {
+        var bookmarkStart = new documents.BookmarkStart({name: "_GoBack", id: "12"});
+        var bookmarkEnd = new documents.BookmarkEnd({id: "12"});
+        var converter = new DocumentConverter();
+        var document = new documents.Document([bookmarkStart, bookmarkEnd]);
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.value, '');
+        });
+    });
 });
 
 function paragraphOfText(text, styleId, styleName) {
