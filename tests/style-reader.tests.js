@@ -105,4 +105,14 @@ describe("styleReader.read", function() {
             }
         );
     });
+    
+    test("reads style mapping with no HTML path", function() {
+        assert.deepEqual(
+            readStyle("r =>"),
+            {
+                from: documentMatchers.run(),
+                to: htmlPaths.empty
+            }
+        );
+    });
 });
