@@ -290,10 +290,10 @@ describe('DocumentConverter', function() {
             noteId: "4"
         });
         var converter = new DocumentConverter({
-            generateUniquifier: function() { return 42; }
+            idPrefix: "doc-42"
         });
         return converter.convertToHtml(footnoteReference).then(function(result) {
-            assert.equal(result.value, '<sup><a href="#footnote-42-4" id="footnote-ref-42-4">[1]</a></sup>');
+            assert.equal(result.value, '<sup><a href="#doc-42-footnote-4" id="doc-42-footnote-ref-4">[1]</a></sup>');
         });
     });
     
@@ -311,7 +311,7 @@ describe('DocumentConverter', function() {
                 notes: new documents.Notes({
                     4: new documents.Note({
                         noteType: "footnote",
-                        id: "4",
+                        noteId: "4",
                         body: [paragraphOfText("Who's there?")]
                     })
                 })
@@ -319,11 +319,11 @@ describe('DocumentConverter', function() {
         );
         
         var converter = new DocumentConverter({
-            generateUniquifier: function() { return 42; }
+            idPrefix: "doc-42"
         });
         return converter.convertToHtml(document).then(function(result) {
-            var expectedOutput = '<p>Knock knock<sup><a href="#footnote-42-4" id="footnote-ref-42-4">[1]</a></sup></p>' +
-                '<ol><li id="footnote-42-4"><p>Who\'s there? <a href="#footnote-ref-42-4">↑</a></p></li></ol>';
+            var expectedOutput = '<p>Knock knock<sup><a href="#doc-42-footnote-4" id="doc-42-footnote-ref-4">[1]</a></sup></p>' +
+                '<ol><li id="doc-42-footnote-4"><p>Who\'s there? <a href="#doc-42-footnote-ref-4">↑</a></p></li></ol>';
             assert.equal(result.value, expectedOutput);
         });
     });
