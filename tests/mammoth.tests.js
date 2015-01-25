@@ -159,8 +159,7 @@ describe('mammoth', function() {
                 '<ol><li id="footnote-42-1"><p> A tachyon walks into a bar. <a href="#footnote-ref-42-1">↑</a></p></li>' +
                 '<li id="footnote-42-2"><p> Fin. <a href="#footnote-ref-42-2">↑</a></p></li></ol>';
             assert.equal(result.value, expectedOutput);
-            // TODO: get rid of warnings
-            //~ assert.deepEqual(result.messages, []);
+            assert.deepEqual(result.messages, []);
         });
     });
     
