@@ -11,6 +11,10 @@ var readStyle = styleReader.readStyle;
 
 
 describe('styleReader.readHtmlPath', function() {
+    test('reads empty path', function() {
+        assert.deepEqual(readHtmlPath(""), htmlPaths.empty);
+    });
+    
     test('reads single element', function() {
         assert.deepEqual(readHtmlPath("p"), htmlPaths.elements(["p"]));
     });
