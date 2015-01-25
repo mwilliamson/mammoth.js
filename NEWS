@@ -1,3 +1,10 @@
+# 0.3.15
+
+* Add default style mappings for builtin footnote and endnote styles in
+  Microsoft Word and LibreOffice.
+
+* Allow style mappings with a zero-element HTML path.
+
 # 0.3.14
 
 * Add support for endnotes.
