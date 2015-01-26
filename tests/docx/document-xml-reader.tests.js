@@ -34,7 +34,8 @@ function convertXmlToDocumentValue(element, options) {
 var fakeContentTypes = {
     findContentType: function(filePath) {
         var extensionTypes = {
-            ".png": "image/png"
+            ".png": "image/png",
+            ".emf": "image/x-emf"
         };
         return extensionTypes[path.extname(filePath)];
     }
@@ -287,6 +288,28 @@ describe("readXmlElement: ", function() {
             .then(function(readValue) {
                 assert.equal(readValue, imageBuffer);
             });
+    });
+    
+    test("warning if unsupported image type", function() {
+        var drawing = createInlineImage({
+            relationshipId: "rId5",
+            description: "It's a hat"
+        });
+        
+        var imageBuffer = new Buffer("Not an image at all!");
+        var reader = new DocumentXmlReader({
+            relationships: {
+                "rId5": {target: "media/hat.emf"}
+            },
+            contentTypes: fakeContentTypes,
+            docxFile: createFakeDocxFile({
+                "word/media/hat.emf": imageBuffer
+            })
+        });
+        var result = reader.readXmlElement(drawing);
+        assert.deepEqual(result.messages, [warning("Image of type image/x-emf is unlikely to display in web browsers")]);
+        var element = single(result.value);
+        assert.equal(element.contentType, "image/x-emf");
     });
     
     test("no elements created if image cannot be found in w:drawing", function() {
