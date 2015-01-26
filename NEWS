@@ -5,6 +5,8 @@
 
 * Allow style mappings with a zero-element HTML path.
 
+* Emit warnings when image types are unlikely to be supported by web browsers.
+
 # 0.3.14
 
 * Add support for endnotes.
