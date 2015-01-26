@@ -1,4 +1,5 @@
 var assert = require("assert");
+var path = require("path");
 
 var DocumentXmlReader = require("../../lib/docx/document-xml-reader").DocumentXmlReader;
 var documents = require("../../lib/documents");
@@ -31,8 +32,11 @@ function convertXmlToDocumentValue(element, options) {
 }
 
 var fakeContentTypes = {
-    findContentType: function(path) {
-        return "<content-type: " + path + ">";
+    findContentType: function(filePath) {
+        var extensionTypes = {
+            ".png": "image/png"
+        };
+        return extensionTypes[path.extname(filePath)];
     }
 };
 
@@ -241,7 +245,7 @@ describe("readXmlElement: ", function() {
         var element = single(result.value);
         assert.equal("image", element.type);
         assert.equal(element.altText, "It's a hat");
-        assert.equal(element.contentType, "<content-type: word/media/hat.png>");
+        assert.equal(element.contentType, "image/png");
         return element.read()
             .then(function(readValue) {
                 assert.equal(readValue, imageBuffer);
