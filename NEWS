@@ -7,6 +7,8 @@
 
 * Emit warnings when image types are unlikely to be supported by web browsers.
 
+* Update jszip to 2.4.0.
+
 # 0.3.14
 
 * Add support for endnotes.
