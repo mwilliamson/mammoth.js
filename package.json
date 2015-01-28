@@ -21,7 +21,7 @@
     "lop": "~0.2.8",
     "async": "~0.2.6",
     "nomnom": "~1.6.2",
-    "jszip": "~2.2.0"
+    "jszip": "~2.4.0"
   },
   "devDependencies": {
     "mocha": "~1.8",
