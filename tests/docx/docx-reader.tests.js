@@ -16,8 +16,7 @@ describe("docx-reader", function() {
                 documents.Run([
                     documents.Text("Hello.")
                 ]),
-                documents.BookmarkStart({name: "_GoBack", id: "0"}),
-                documents.BookmarkEnd({id: "0"})
+                documents.BookmarkStart({name: "_GoBack"})
             ])
         ]);
         var docxFile = createFakeDocxFile({

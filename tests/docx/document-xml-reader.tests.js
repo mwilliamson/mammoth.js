@@ -223,14 +223,6 @@ describe("readXmlElement: ", function() {
         var result = readXmlElement(bookmarkStart);
         assert.deepEqual(result.value.name, "_Peter");
         assert.deepEqual(result.value.type, "bookmarkStart");
-        assert.deepEqual(result.value.id, "42");
-    });
-
-    test("w:bookmarkEnd is read as a bookmarkEnd", function() {
-        var bookmarkEnd = new XmlElement("w:bookmarkEnd", {"w:id": "42"});
-        var result = readXmlElement(bookmarkEnd);
-        assert.deepEqual(result.value.type, "bookmarkEnd");
-        assert.deepEqual(result.value.id, "42");
     });
 
     test("can read inline pictures", function() {
