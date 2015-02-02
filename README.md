@@ -299,6 +299,44 @@ Converts the source document to HTML.
 
   * `messages`: any messages, such as errors and warnings, generated during the conversion
 
+#### `mammoth.extract(input, options)`
+
+Extracts the source document and converts it to a tree structure for further manipulation.
+
+* `input`: an object describing the source document.
+  On node.js, the following inputs are supported:
+  
+    * `{path: path}`, where `path` is the path to the .docx file.
+    * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
+    
+  In the browser, the following inputs are supported:
+  
+    * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
+
+* `options` (optional): options for the conversion.
+  May have the following properties:
+  
+  * `styleMap`: controls the mapping of Word styles to HTML.
+     If `options.styleMap` is a string,
+     each non-blank line is treated as a separate style mapping.
+     If `options.styleMap` is an array,
+     each element is expected to be a string representing a single style mapping.
+     See "Writing style maps" for a reference to the syntax for style maps.
+
+  * `includeDefaultStyleMap`: by default,
+     the style map passed in `styleMap` is combined with the default style map.
+     To stop using the default style map altogether,
+     set `options.includeDefaultStyleMap` to `false`.
+  
+  * `transformDocument`: if set,
+    this function is applied to the document read from the docx file before the conversion to HTML.
+
+* Returns a promise containing a result.
+  This result has the following properties:
+
+  * `value`: a tree structure which contains the parsed docx content
+  * `messages`: any messages, such as errors and warnings
+
 #### `mammoth.extractRawText(input)`
 
 Extract the raw text of the document.
