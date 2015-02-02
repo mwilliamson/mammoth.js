@@ -74,9 +74,9 @@
 
 * Allow paragraphs and runs to be matched by style name. For instance, to match
   a paragraph with the style name `Heading 1`:
-  
+
     p[style-name='Heading 1']
-    
+
 * Use an array of raw strings rather than an array of style mappings when
   passing options to convertToHtml.
 

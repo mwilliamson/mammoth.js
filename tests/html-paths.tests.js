@@ -11,7 +11,7 @@ describe("html-paths", function() {
         assert.ok(pathPart.matchesElement({tagName: "ol"}));
         assert.ok(!pathPart.matchesElement({tagName: "p"}));
     });
-    
+
     test("element matches if attributes are the same", function() {
         var pathPart = htmlPaths.element(["p"], {"class": "tip"});
         assert.ok(!pathPart.matchesElement({tagName: "p"}));

@@ -21,11 +21,11 @@ The following features are currently supported:
 
 * Customisable mapping from your own docx styles to HTML.
   For instance, you could convert `WarningHeading` to `h1.warning` by providing an appropriate style mapping.
-  
+
 * Tables.
   The formatting of the table itself, such as borders, is currently ignored,
   but the formatting of the text is treated the same as in the rest of the document.
-  
+
 * Footnotes and endnotes.
 
 * Images.
@@ -47,7 +47,7 @@ The easiest way to try out mammoth is to use the web demo:
 ## Installation
 
     npm install mammoth
-    
+
 ## Usage
 
 ### CLI
@@ -76,7 +76,7 @@ A custom style map can be read from a file using `--style-map`.
 For instance:
 
     mammoth document.docx output.html --style-map=custom-style-map
-    
+
 Where `custom-style-map` looks something like:
 
     p[style-name='Aside Heading'] => div.aside > h2:fresh
@@ -260,17 +260,17 @@ Converts the source document to HTML.
 
 * `input`: an object describing the source document.
   On node.js, the following inputs are supported:
-  
+
     * `{path: path}`, where `path` is the path to the .docx file.
     * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
-    
+
   In the browser, the following inputs are supported:
-  
+
     * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
-  
+
 * `options` (optional): options for the conversion.
   May have the following properties:
-  
+
   * `styleMap`: controls the mapping of Word styles to HTML.
      If `options.styleMap` is a string,
      each non-blank line is treated as a separate style mapping.
@@ -282,13 +282,13 @@ Converts the source document to HTML.
      the style map passed in `styleMap` is combined with the default style map.
      To stop using the default style map altogether,
      set `options.includeDefaultStyleMap` to `false`.
-  
+
   * `transformDocument`: if set,
     this function is applied to the document read from the docx file before the conversion to HTML.
-    
+
   * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
     Set this option to an [image converter](#image-converters) to override the default behaviour.
-    
+
   * `convertUnderline`: by default, the underlining of any text is ignored.
     Set this option to [`mammoth.underline.element(name)`](#underline) to override the default behaviour.
 
@@ -307,12 +307,12 @@ Each paragraph is followed by two newlines.
 
 * `input`: an object describing the source document.
   On node.js, the following inputs are supported:
-  
+
     * `{path: path}`, where `path` is the path to the .docx file.
     * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
-    
+
   In the browser, the following inputs are supported:
-  
+
     * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
 
 * Returns a promise containing a result.
@@ -340,7 +340,7 @@ and has the following properties:
 
 * `read([encoding])`: read the image file with the specified encoding.
   If no encoding is specified, a `Buffer` is returned.
-  
+
 * `contentType`: the content type of the image, such as `image/png`.
 
 `func` should return an object (or a promise containing an object) with a `src` property,

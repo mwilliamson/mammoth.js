@@ -14,7 +14,7 @@ describe("unzip", function() {
             assert.equal("Could not find file in options", error.message);
         });
     });
-    
+
     test("unzip can open local zip file", function() {
         var zipPath = path.join(__dirname, "test-data/hello.zip");
         return unzip.openZip({path: zipPath}).then(function(zipFile) {
@@ -23,7 +23,7 @@ describe("unzip", function() {
             assert.equal(contents, "Hello world\n");
         });
     });
-    
+
     test('unzip can open Buffer', function() {
         var zipPath = path.join(__dirname, "test-data/hello.zip");
         return promises.nfcall(fs.readFile, zipPath)

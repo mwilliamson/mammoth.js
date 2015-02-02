@@ -16,7 +16,7 @@ describe("CLI", function() {
             assert.equal(result.output, "<p>Walking on imported air</p>");
         });
     });
-    
+
     test("HTML is written to file if output file is set", function() {
         return createTempDir().then(function(tempDir) {
             var outputPath = path.join(tempDir, "output.html");
@@ -27,16 +27,16 @@ describe("CLI", function() {
             });
         });
     });
-    
+
     var imageBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=";
-    
+
     test("inline images are included in output if writing to single file", function() {
         return runMammoth(testPath("tiny-picture.docx")).then(function(result) {
             assert.equal(result.stderrOutput, "");
             assert.equal(result.output, '<p><img src="data:image/png;base64,' + imageBase64 + '" /></p>');
         });
     });
-    
+
     test("images are written to separate files if output dir is set", function() {
         return createTempDir().then(function(tempDir) {
             var outputPath = path.join(tempDir, "tiny-picture.html");
@@ -49,7 +49,7 @@ describe("CLI", function() {
             });
         });
     });
-    
+
     test("style map is used if set", function() {
         return createTempDir().then(function(tempDir) {
             var styleMapPath = path.join(tempDir, "style-map");
@@ -66,7 +66,7 @@ describe("CLI", function() {
 function runMammoth() {
     var args = Array.prototype.slice.call(arguments, 0);
     var deferred = promises.defer();
-    
+
     var processArgs = ["node", "bin/mammoth"].concat(args);
     // TODO: proper escaping of args
     var command = processArgs.join(" ");
@@ -75,7 +75,7 @@ function runMammoth() {
         assert.equal(error, null);
         deferred.resolve({output: stdout, stderrOutput: stderr});
     });
-    
+
     return deferred.promise;
 }
 

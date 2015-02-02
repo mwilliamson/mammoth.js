@@ -33,7 +33,7 @@ function createFakeDocxFile(files) {
             if (_.isString(buffer)) {
                 buffer = new Buffer(buffer);
             }
-            
+
             if (!Buffer.isBuffer(buffer)) {
                 return promises.reject(new Error("file was not a buffer"));
             } else if (encoding) {
@@ -43,11 +43,11 @@ function createFakeDocxFile(files) {
             }
         });
     }
-    
+
     function exists(path) {
         return !!files[path];
     }
-    
+
     return {
         read: read,
         exists: exists
