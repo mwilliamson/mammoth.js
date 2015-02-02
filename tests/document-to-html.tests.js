@@ -405,19 +405,23 @@ describe('DocumentConverter', function() {
         });
     });
 
-    test('BookmarkStart is converted to a bookmarkStart anchor', function() {
+    test('referenced bookmarks are coverted to anchors', function() {
         var bookmarkStart = new documents.BookmarkStart({name: "_Peter"});
+        var hyperlink = new documents.Hyperlink(
+            [runOfText("Hello.")],
+            {anchor: "_Peter"}
+        );
         var converter = new DocumentConverter();
-        return converter.convertToHtml(bookmarkStart).then(function(result) {
-            assert.equal(result.value, '<span id="_Peter"></span>');
+        var document = new documents.Document([bookmarkStart, hyperlink]);
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.value, '<span id="_Peter"></span><a href="#_Peter">Hello.</a>');
         });
     });
 
-    test('bookmark _GoBack is not converted', function() {
-        var bookmarkStart = new documents.BookmarkStart({name: "_GoBack"});
+    test('unreferenced bookmarks are not converted', function() {
+        var bookmarkStart = new documents.BookmarkStart({name: "_Unreferenced"});
         var converter = new DocumentConverter();
-        var document = new documents.Document([bookmarkStart]);
-        return converter.convertToHtml(document).then(function(result) {
+        return converter.convertToHtml(bookmarkStart).then(function(result) {
             assert.equal(result.value, '');
         });
     });
