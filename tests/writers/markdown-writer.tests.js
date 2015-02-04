@@ -76,6 +76,14 @@ describe('markdown-writer', function() {
         writer.close("a");
         return assert.equal(writer.asString(), "[Hello]()");
     });
+    
+    test('elements with IDs have anchor tags with IDs appended to start of markdown element', function() {
+        var writer = mdWriter.writer();
+        writer.open("h1", {id: "start"});
+        writer.text("Hello");
+        writer.close("p");
+        return assert.equal(writer.asString(), '# <a id="start"></a>Hello\n\n');
+    });
 
     test('can generate images', function() {
         var writer = mdWriter.writer();
