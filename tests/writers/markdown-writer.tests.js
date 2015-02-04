@@ -123,6 +123,14 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "");
     });
 
+    test('list item outside of list is treated as unordered list', function() {
+        var writer = mdWriter.writer();
+        writer.open("li");
+        writer.text("Hello");
+        writer.close("li");
+        return assert.equal(writer.asString(), "- Hello\n");
+    });
+
     test('can generate an ordered list', function() {
         var writer = mdWriter.writer();
         writer.open("ol");
