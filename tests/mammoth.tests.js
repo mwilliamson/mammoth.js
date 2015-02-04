@@ -198,6 +198,14 @@ describe('mammoth', function() {
         }
     });
     
+    test('can convert single paragraph to markdown', function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return mammoth.convertToMarkdown({path: docxPath}).then(function(result) {
+            assert.equal(result.value, "Walking on imported air\n\n");
+            assert.deepEqual(result.messages, []);
+        });
+    });
+
     test('extractRawText only retains raw text', function() {
         var docxPath = path.join(__dirname, "test-data/simple-list.docx");
         return mammoth.extractRawText({path: docxPath}).then(function(result) {
