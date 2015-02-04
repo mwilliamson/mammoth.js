@@ -26,7 +26,7 @@
     "jszip": "~2.4.0"
   },
   "devDependencies": {
-    "mocha": "~1.8",
+    "mocha": "~2.1",
     "browserify": "~3.33.0",
     "license-sniffer": "~0.1.2",
     "duck": "~0.1.11",
