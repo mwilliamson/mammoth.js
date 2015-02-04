@@ -10,11 +10,16 @@ var args = require("nomnom")
     .option("output-path", {
         position: 1,
         type: "string",
-        help: "Output path for the generated HTML. Images will be stored inline in the HTML. Output is written to stdout if not set."
+        help: "Output path for the generated document. Images will be stored inline in the output document. Output is written to stdout if not set."
     })
     .option("output-dir", {
         type: "string",
         help: "Output directory for generated HTML and images. Images will be stored in separate files. Takes precedence over output-path."
+    })
+    .option("output-format", {
+        default: "html",
+        choices: ["html", "markdown"],
+        help: "Output format."
     })
     .option("style-map", {
         type: "string",

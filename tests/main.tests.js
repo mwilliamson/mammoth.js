@@ -60,6 +60,13 @@ describe("CLI", function() {
             });
         });
     });
+    
+    test("--output-format=markdown option generate markdown output", function() {
+        return runMammoth(testPath("single-paragraph.docx"), "--output-format=markdown").then(function(result) {
+            assert.equal(result.stderrOutput, "");
+            assert.equal(result.output, "Walking on imported air\n\n");
+        });
+    });
 });
 
 
