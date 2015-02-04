@@ -20,38 +20,6 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "# Hello\n\n");
     });
 
-    test('can generate a level 2 heading', function() {
-        var writer = mdWriter.writer();
-        writer.open("h2");
-        writer.text("Hello");
-        writer.close("h2");
-        return assert.equal(writer.asString(), "## Hello\n\n");
-    });
-
-    test('can generate a level 3 heading', function() {
-        var writer = mdWriter.writer();
-        writer.open("h3");
-        writer.text("Hello");
-        writer.close("h3");
-        return assert.equal(writer.asString(), "### Hello\n\n");
-    });
-
-    test('can generate a level 4 heading', function() {
-        var writer = mdWriter.writer();
-        writer.open("h4");
-        writer.text("Hello");
-        writer.close("h4");
-        return assert.equal(writer.asString(), "#### Hello\n\n");
-    });
-
-    test('can generate a level 5 heading', function() {
-        var writer = mdWriter.writer();
-        writer.open("h5");
-        writer.text("Hello");
-        writer.close("h5");
-        return assert.equal(writer.asString(), "##### Hello\n\n");
-    });
-
     test('can generate a level 6 heading', function() {
         var writer = mdWriter.writer();
         writer.open("h6");
