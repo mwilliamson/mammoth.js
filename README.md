@@ -537,3 +537,24 @@ any existing document transforms should be rewritten in one of two ways:
 ### 0.2.0
 
 The function `mammoth.style()` was renamed to `mammoth.styleMapping()`.
+
+## Acknowledgements
+
+Thanks to the following people for their contributions to Mammoth:
+
+* [Craig Leinoff](https://github.com/Offlein):
+
+  * Document transforms
+    
+* [John McLear](https://github.com/JohnMcLear):
+
+  * Underline support
+
+* [Chris Price](https://github.com/studiochris): 
+
+  * node.js `Buffer` support
+  * UTF8 BOM handling
+
+* [Stoo Goff](https://github.com/stoogoff)
+
+  * Markdown support
