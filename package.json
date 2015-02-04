@@ -7,7 +7,9 @@
     "docx",
     "html",
     "office",
-    "word"
+    "word",
+    "markdown",
+    "md"
   ],
   "main": "./lib/index.js",
   "repository": {
