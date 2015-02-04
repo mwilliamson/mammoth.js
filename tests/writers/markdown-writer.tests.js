@@ -4,6 +4,12 @@ var test = require("../testing").test;
 var mdWriter = require("../../lib/writers/markdown-writer");
 
 describe('markdown-writer', function() {
+    test('special markdown characters are escaped', function() {
+        var writer = mdWriter.writer();
+        writer.text("\\*");
+        return assert.equal(writer.asString(), "\\\\\\*");
+    });
+
     test('can generate a paragraph', function() {
         var writer = mdWriter.writer();
         writer.open("p");
