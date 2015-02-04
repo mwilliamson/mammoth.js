@@ -1,7 +1,7 @@
 var assert = require("assert");
-var test = require("./testing").test;
+var test = require("../testing").test;
 
-var htmlWriter = require("../lib/html-writer");
+var htmlWriter = require("../../lib/writers/html-writer");
 
 
 describe('html-writer', function() {

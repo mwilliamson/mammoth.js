@@ -1,6 +1,7 @@
 var assert = require("assert");
-var test = require("./testing").test;
-var mdWriter = require("../lib/markdown-writer");
+var test = require("../testing").test;
+
+var mdWriter = require("../../lib/writers/markdown-writer");
 
 describe('markdown-writer', function() {
     test('can generate a paragraph', function() {
