@@ -91,6 +91,14 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), '# <a id="start"></a>Hello\n\n');
     });
 
+    test('links have anchors before opening square bracket', function() {
+        var writer = mdWriter.writer();
+        writer.open("a", {href: "http://example.com", id: "start"});
+        writer.text("Hello");
+        writer.close("a");
+        return assert.equal(writer.asString(), '<a id="start"></a>[Hello](http://example.com)');
+    });
+
     test('can generate images', function() {
         var writer = mdWriter.writer();
         writer.selfClosing("img", { "src": "http://example.com/image.jpg", "alt": "Alt Text" });
