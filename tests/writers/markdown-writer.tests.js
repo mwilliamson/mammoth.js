@@ -112,19 +112,19 @@ describe('markdown-writer', function() {
     test('can generate images', function() {
         var writer = mdWriter.writer();
         writer.selfClosing("img", { "src": "http://example.com/image.jpg", "alt": "Alt Text" });
-        return assert.equal(writer.asString(), "[Alt Text](http://example.com/image.jpg)");
+        return assert.equal(writer.asString(), "![Alt Text](http://example.com/image.jpg)");
     });
 
     test('can generate images with missing alt attribute', function() {
         var writer = mdWriter.writer();
         writer.selfClosing("img", { "src": "http://example.com/image.jpg" });
-        return assert.equal(writer.asString(), "[](http://example.com/image.jpg)");
+        return assert.equal(writer.asString(), "![](http://example.com/image.jpg)");
     });
 
     test('can generate images with misssing src attribute', function() {
         var writer = mdWriter.writer();
         writer.selfClosing("img", { "alt": "Alt Text" });
-        return assert.equal(writer.asString(), "[Alt Text]()");
+        return assert.equal(writer.asString(), "![Alt Text]()");
     });
 
     test("doesn't display empty images", function() {
