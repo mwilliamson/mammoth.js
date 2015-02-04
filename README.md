@@ -82,6 +82,16 @@ Where `custom-style-map` looks something like:
     p[style-name='Aside Heading'] => div.aside > h2:fresh
     p[style-name='Aside Text'] => div.aside > p:fresh
 
+#### Markdown
+
+Using `--output-format=markdown` will cause Markdown to be generated.
+For instance:
+
+    mammoth document.docx --output-format=markdown
+
+Markdown support is still in its early stages,
+so you may find some features are unsupported.
+
 ### Library
 
 In node.js, mammoth can be required in the usual way:
@@ -298,6 +308,12 @@ Converts the source document to HTML.
   * `value`: the generated HTML
 
   * `messages`: any messages, such as errors and warnings, generated during the conversion
+
+#### `mammoth.convertToMarkdown(input, options)`
+
+Converts the source document to Markdown.
+This behaves the same as `convertToHtml`,
+except that the `value` property of the result contains Markdown rather than HTML.
 
 #### `mammoth.extractRawText(input)`
 
