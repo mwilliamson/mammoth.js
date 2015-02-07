@@ -47,7 +47,7 @@ describe('markdown-writer', function() {
         writer.open("strong");
         writer.text("World");
         writer.close("strong");
-        return assert.equal(writer.asString(), "Hello **World**");
+        return assert.equal(writer.asString(), "Hello __World__");
     });
     
     test('can generate emphasis text', function() {
@@ -302,7 +302,7 @@ describe('markdown-writer', function() {
         writer.close("strong");
         writer.text(" amet");
         writer.close("p");
-        return assert.equal(writer.asString(), "Lorem **ipsum *dolor* sit** amet\n\n");
+        return assert.equal(writer.asString(), "Lorem __ipsum *dolor* sit__ amet\n\n");
     });
 
     test('can emphasise list text', function() {
@@ -323,7 +323,7 @@ describe('markdown-writer', function() {
         writer.text(" World");
         writer.close("li");
         writer.close("ol");
-        return assert.equal(writer.asString(), "1. Hello **Strong** World\n2. Hello *Emphasis* World\n\n");
+        return assert.equal(writer.asString(), "1. Hello __Strong__ World\n2. Hello *Emphasis* World\n\n");
     });
 
     test('blank paragraphs are removed', function() {
