@@ -140,6 +140,18 @@ describe('DocumentConverter', function() {
         });
     });
     
+    // TODO
+    //~ test('consecutive bold runs are wrapped in a single <strong> element', function() {
+        //~ var paragraph = new documents.Paragraph([
+            //~ runOfText("Hello", {isBold: true}),
+            //~ runOfText(".", {isBold: true})
+        //~ ]);
+        //~ var converter = new DocumentConverter();
+        //~ return converter.convertToHtml(paragraph).then(function(result) {
+            //~ assert.equal(result.value, "<p><strong>Hello.</strong></p>");
+        //~ });
+    //~ });
+    
     test('underline runs are ignored by default', function() {
         var run = runOfText("Hello.", {isUnderline: true});
         var converter = new DocumentConverter();
