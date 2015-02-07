@@ -326,23 +326,6 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "1. Hello __Strong__ World\n2. Hello *Emphasis* World\n\n");
     });
 
-    test('blank paragraphs are removed', function() {
-        var writer = mdWriter.writer();
-        writer.open("p");
-        writer.text("Hello");
-        writer.close("p");
-        writer.open("p");
-        writer.text("");
-        writer.close("p");
-        writer.open("p");
-        writer.text("");
-        writer.close("p");
-        writer.open("p");
-        writer.text("World");
-        writer.close("p");
-        return assert.equal(writer.asString(), "Hello\n\nWorld\n\n");
-    });
-
     test('generates correct spacing between paragraphs and lists', function() {
         var writer = mdWriter.writer();
         writer.open("p");
