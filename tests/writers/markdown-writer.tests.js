@@ -204,32 +204,6 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "1. Outer One\n\t1. Nested One\n\t\t1. Inner One\n\n");
     });
 
-    test('can generate sequential ordered lists with correct numbering', function() {
-        var writer = mdWriter.writer();
-        writer.open("ol");
-        writer.open("li");
-        writer.text("First One");
-        writer.close("li");
-        writer.open("li");
-        writer.text("First Two");
-        writer.close("li");
-        writer.close("ol");
-
-        writer.open("ol");
-        writer.open("li");
-        writer.text("Second One");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Second Two");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Second Three");
-        writer.close("li");
-        writer.close("ol");
-
-        return assert.equal(writer.asString(), "1. First One\n2. First Two\n\n1. Second One\n2. Second Two\n3. Second Three\n\n");
-    });
-
     test('can generate a nested unordered list', function() {
         var writer = mdWriter.writer();
         writer.open("ul");
