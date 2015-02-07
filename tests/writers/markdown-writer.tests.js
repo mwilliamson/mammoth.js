@@ -10,7 +10,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "\\\\\\*");
     });
 
-    test('can generate a paragraph', function() {
+    test('paragraphs are terminated with double new line', function() {
         var writer = mdWriter.writer();
         writer.open("p");
         writer.text("Hello");
@@ -34,7 +34,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "###### Hello\n\n");
     });
 
-    test('can generate a new line', function() {
+    test('br is written as new line', function() {
         var writer = mdWriter.writer();
         writer.text("Hello World");
         writer.selfClosing("br");
