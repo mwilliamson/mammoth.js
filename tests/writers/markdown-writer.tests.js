@@ -180,52 +180,28 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "1. Outer One\n\t1. Nested One\n\t2. Nested Two\n2. Outer Two\n\n");
     });
 
-    test('can generate a multi-level nested ordered list with correct numbering', function() {
+    test('can generate a multi-level nested ordered list', function() {
         var writer = mdWriter.writer();
         writer.open("ol");
         writer.open("li");
         writer.text("Outer One");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Outer Two");
 
         writer.open("ol");
         writer.open("li");
         writer.text("Nested One");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Nested Two");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Nested Three");
 
         writer.open("ol");
         writer.open("li");
         writer.text("Inner One");
         writer.close("li");
-        writer.open("li");
-        writer.text("Inner Two");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Inner Three");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Inner Four");
+        writer.close("ol");
+
         writer.close("li");
         writer.close("ol");
 
         writer.close("li");
-        writer.open("li");
-        writer.text("Nested Four");
-        writer.close("li");
         writer.close("ol");
-
-        writer.close("li");
-        writer.open("li");
-        writer.text("Outer Three");
-        writer.close("li");
-        writer.close("ol");
-        return assert.equal(writer.asString(), "1. Outer One\n2. Outer Two\n\t1. Nested One\n\t2. Nested Two\n\t3. Nested Three\n\t\t1. Inner One\n\t\t2. Inner Two\n\t\t3. Inner Three\n\t\t4. Inner Four\n\t4. Nested Four\n3. Outer Three\n\n");
+        return assert.equal(writer.asString(), "1. Outer One\n\t1. Nested One\n\t\t1. Inner One\n\n");
     });
 
     test('can generate sequential ordered lists with correct numbering', function() {
