@@ -162,9 +162,6 @@ describe('markdown-writer', function() {
         writer.open("ol");
         writer.open("li");
         writer.text("Outer One");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Outer Two");
 
         writer.open("ol");
         writer.open("li");
@@ -173,17 +170,14 @@ describe('markdown-writer', function() {
         writer.open("li");
         writer.text("Nested Two");
         writer.close("li");
-        writer.open("li");
-        writer.text("Nested Three");
-        writer.close("li");
         writer.close("ol");
 
         writer.close("li");
         writer.open("li");
-        writer.text("Outer Three");
+        writer.text("Outer Two");
         writer.close("li");
         writer.close("ol");
-        return assert.equal(writer.asString(), "1. Outer One\n2. Outer Two\n\t1. Nested One\n\t2. Nested Two\n\t3. Nested Three\n3. Outer Three\n\n");
+        return assert.equal(writer.asString(), "1. Outer One\n\t1. Nested One\n\t2. Nested Two\n2. Outer Two\n\n");
     });
 
     test('can generate a multi-level nested ordered list with correct numbering', function() {
