@@ -230,9 +230,6 @@ describe('markdown-writer', function() {
         writer.open("ul");
         writer.open("li");
         writer.text("Outer One");
-        writer.close("li");
-        writer.open("li");
-        writer.text("Outer Two");
 
         writer.open("ul");
         writer.open("li");
@@ -241,17 +238,14 @@ describe('markdown-writer', function() {
         writer.open("li");
         writer.text("Nested Two");
         writer.close("li");
-        writer.open("li");
-        writer.text("Nested Three");
-        writer.close("li");
         writer.close("ul");
 
         writer.close("li");
         writer.open("li");
-        writer.text("Outer Three");
+        writer.text("Outer Two");
         writer.close("li");
         writer.close("ul");
-        return assert.equal(writer.asString(), "- Outer One\n- Outer Two\n\t- Nested One\n\t- Nested Two\n\t- Nested Three\n- Outer Three\n\n");
+        return assert.equal(writer.asString(), "- Outer One\n\t- Nested One\n\t- Nested Two\n- Outer Two\n\n");
     });
 
     test('can nest inline elements', function() {
