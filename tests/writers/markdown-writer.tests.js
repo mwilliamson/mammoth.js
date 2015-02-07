@@ -204,6 +204,27 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "1. Outer One\n\t1. Nested One\n\t\t1. Inner One\n\n");
     });
 
+    test('new ordered list resets numbering', function() {
+        var writer = mdWriter.writer();
+        writer.open("ol");
+        writer.open("li");
+        writer.text("First");
+        writer.close("li");
+        writer.close("ol");
+
+        writer.open("p");
+        writer.text("Hello");
+        writer.close("p");
+
+        writer.open("ol");
+        writer.open("li");
+        writer.text("Second");
+        writer.close("li");
+        writer.close("ol");
+
+        return assert.equal(writer.asString(), "1. First\n\nHello\n\n1. Second\n\n");
+    });
+
     test('can generate a nested unordered list', function() {
         var writer = mdWriter.writer();
         writer.open("ul");
