@@ -49,7 +49,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "Hello World  \n");
     });
 
-    test('can generate strong text', function() {
+    test('strong text is surrounded by two underscores', function() {
         var writer = mdWriter.writer();
         writer.text("Hello ");
         writer.open("strong");
@@ -58,7 +58,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "Hello __World__");
     });
     
-    test('can generate emphasis text', function() {
+    test('emphasised text is surrounded by one asterix', function() {
         var writer = mdWriter.writer();
         writer.text("Hello ");
         writer.open("em");
@@ -67,7 +67,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "Hello *World*");
     });
 
-    test('can generate hyperlinks', function() {
+    test('anchor tags are written as hyperlinks', function() {
         var writer = mdWriter.writer();
         writer.open("a", { "href": "http://example.com" });
         writer.text("Hello");
