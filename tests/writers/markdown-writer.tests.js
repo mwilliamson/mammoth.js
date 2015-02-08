@@ -18,7 +18,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "Hello\n\n");
     });
 
-    test('can generate a level 1 heading', function() {
+    test('h1 elements are converted to heading with leading hash', function() {
         var writer = mdWriter.writer();
         writer.open("h1");
         writer.text("Hello");
@@ -26,7 +26,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "# Hello\n\n");
     });
 
-    test('can generate a level 6 heading', function() {
+    test('h6 elements are converted to heading with six leading hashes', function() {
         var writer = mdWriter.writer();
         writer.open("h6");
         writer.text("Hello");
