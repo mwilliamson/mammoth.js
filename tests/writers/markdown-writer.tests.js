@@ -42,7 +42,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "###### Hello\n\n");
     });
 
-    test('br is written as new line', function() {
+    test('br is written as two spaces followed by new line', function() {
         var writer = mdWriter.writer();
         writer.text("Hello World");
         writer.selfClosing("br");
