@@ -9,6 +9,14 @@ describe('markdown-writer', function() {
         writer.text("\\*");
         return assert.equal(writer.asString(), "\\\\\\*");
     });
+    
+    test('unrecognised elements are treated as normal text', function() {
+        var writer = mdWriter.writer();
+        writer.open("blah");
+        writer.text("Hello");
+        writer.close("blah");
+        return assert.equal(writer.asString(), "Hello");
+    });
 
     test('paragraphs are terminated with double new line', function() {
         var writer = mdWriter.writer();
