@@ -75,22 +75,14 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "[Hello](http://example.com)");
     });
 
-    test('can generate hyperlinks with missing href attribute', function() {
-        var writer = mdWriter.writer();
-        writer.open("a", {});
-        writer.text("Hello");
-        writer.close("a");
-        return assert.equal(writer.asString(), "[Hello]()");
-    });
-
-    test('can generate hyperlinks with empty attributes', function() {
+    test('anchor tags without href attribute are treated as ordinary text', function() {
         var writer = mdWriter.writer();
         writer.open("a");
         writer.text("Hello");
         writer.close("a");
-        return assert.equal(writer.asString(), "[Hello]()");
+        return assert.equal(writer.asString(), "Hello");
     });
-    
+
     test('elements with IDs have anchor tags with IDs appended to start of markdown element', function() {
         var writer = mdWriter.writer();
         writer.open("h1", {id: "start"});
