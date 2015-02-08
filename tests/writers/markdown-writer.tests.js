@@ -87,7 +87,7 @@ describe('markdown-writer', function() {
         var writer = mdWriter.writer();
         writer.open("h1", {id: "start"});
         writer.text("Hello");
-        writer.close("p");
+        writer.close("h1");
         return assert.equal(writer.asString(), '# <a id="start"></a>Hello\n\n');
     });
 
