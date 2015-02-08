@@ -111,7 +111,7 @@ describe('markdown-writer', function() {
         return assert.equal(writer.asString(), "![](http://example.com/image.jpg)");
     });
 
-    test('can generate images with misssing src attribute', function() {
+    test('can generate images with missing src attribute', function() {
         var writer = mdWriter.writer();
         writer.selfClosing("img", { "alt": "Alt Text" });
         return assert.equal(writer.asString(), "![Alt Text]()");
