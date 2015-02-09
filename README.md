@@ -558,3 +558,7 @@ Thanks to the following people for their contributions to Mammoth:
 * [Stoo Goff](https://github.com/stoogoff)
 
   * Markdown support
+
+* [Andreas Lubbe](https://github.com/alubbe)
+
+  * Internal hyperlink support
