@@ -225,6 +225,12 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value.type, "bookmarkStart");
     });
     
+    test('_GoBack bookmark is ignored', function() {
+        var bookmarkStart = new XmlElement("w:bookmarkStart", {"w:name": "_GoBack"});
+        var result = readXmlElement(bookmarkStart);
+        assert.deepEqual(result.value, []);
+    });
+    
     test("can read inline pictures", function() {
         var drawing = createInlineImage({
             relationshipId: "rId5",

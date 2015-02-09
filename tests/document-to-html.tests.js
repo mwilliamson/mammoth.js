@@ -429,14 +429,6 @@ describe('DocumentConverter', function() {
             assert.equal(result.value, '<span id="_Peter"></span><a href="#_Peter">Hello.</a>');
         });
     });
-
-    test('unreferenced bookmarks are not converted', function() {
-        var bookmarkStart = new documents.BookmarkStart({name: "_Unreferenced"});
-        var converter = new DocumentConverter();
-        return converter.convertToHtml(bookmarkStart).then(function(result) {
-            assert.equal(result.value, '');
-        });
-    });
 });
 
 function paragraphOfText(text, styleId, styleName) {
