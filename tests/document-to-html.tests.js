@@ -245,9 +245,11 @@ describe('DocumentConverter', function() {
             [runOfText("Hello.")],
             {anchor: "_Peter"}
         );
-        var converter = new DocumentConverter();
+        var converter = new DocumentConverter({
+            idPrefix: "doc-42"
+        });
         return converter.convertToHtml(hyperlink).then(function(result) {
-            assert.equal(result.value, '<a href="#_Peter">Hello.</a>');
+            assert.equal(result.value, '<a href="#doc-42-_Peter">Hello.</a>');
         });
     });
 
@@ -423,10 +425,12 @@ describe('DocumentConverter', function() {
             [runOfText("Hello.")],
             {anchor: "_Peter"}
         );
-        var converter = new DocumentConverter();
+        var converter = new DocumentConverter({
+            idPrefix: "doc-42"
+        });
         var document = new documents.Document([bookmarkStart, hyperlink]);
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.value, '<span id="_Peter"></span><a href="#_Peter">Hello.</a>');
+            assert.equal(result.value, '<a id="doc-42-_Peter"></a><a href="#doc-42-_Peter">Hello.</a>');
         });
     });
 });
