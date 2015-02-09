@@ -419,18 +419,14 @@ describe('DocumentConverter', function() {
         });
     });
 
-    test('referenced bookmarks are coverted to anchors', function() {
+    test('bookmarks are converted to anchors', function() {
         var bookmarkStart = new documents.BookmarkStart({name: "_Peter"});
-        var hyperlink = new documents.Hyperlink(
-            [runOfText("Hello.")],
-            {anchor: "_Peter"}
-        );
         var converter = new DocumentConverter({
             idPrefix: "doc-42"
         });
-        var document = new documents.Document([bookmarkStart, hyperlink]);
+        var document = new documents.Document([bookmarkStart]);
         return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.value, '<a id="doc-42-_Peter"></a><a href="#doc-42-_Peter">Hello.</a>');
+            assert.equal(result.value, '<a id="doc-42-_Peter"></a>');
         });
     });
 });
