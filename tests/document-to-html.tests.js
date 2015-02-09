@@ -253,6 +253,17 @@ describe('DocumentConverter', function() {
         });
     });
 
+    test('bookmarks are converted to anchors', function() {
+        var bookmarkStart = new documents.BookmarkStart({name: "_Peter"});
+        var converter = new DocumentConverter({
+            idPrefix: "doc-42"
+        });
+        var document = new documents.Document([bookmarkStart]);
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.value, '<a id="doc-42-_Peter"></a>');
+        });
+    });
+
     test('docx tab is converted to tab in HTML', function() {
         var tab = new documents.Tab();
         var converter = new DocumentConverter();
@@ -416,17 +427,6 @@ describe('DocumentConverter', function() {
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
             assert.equal(result.value.indexOf("<p>Hello.</p>"), 0);
-        });
-    });
-
-    test('bookmarks are converted to anchors', function() {
-        var bookmarkStart = new documents.BookmarkStart({name: "_Peter"});
-        var converter = new DocumentConverter({
-            idPrefix: "doc-42"
-        });
-        var document = new documents.Document([bookmarkStart]);
-        return converter.convertToHtml(document).then(function(result) {
-            assert.equal(result.value, '<a id="doc-42-_Peter"></a>');
         });
     });
 });
