@@ -1,3 +1,7 @@
+# 0.3.17
+
+* Add support for hyperlinks to bookmarks in the same document.
+
 # 0.3.16
 
 * Add basic support for Markdown. Not all features are currently supported.
