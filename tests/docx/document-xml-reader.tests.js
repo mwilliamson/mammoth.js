@@ -369,7 +369,7 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value.children[0].type, "run");
     });
 
-    test("w:hyperlink is ignored if it does not have a relationship ID", function() {
+    test("w:hyperlink is ignored if it does not have a relationship ID nor anchor", function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
         var result = readXmlElement(hyperlinkXml);
