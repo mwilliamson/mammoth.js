@@ -78,6 +78,23 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('mappings for style names are case insensitive', function() {
+        var document = new documents.Document([
+            paragraphOfText("Hello.", "Heading1", "heading 1"),
+        ]);
+        var converter = new DocumentConverter({
+            styleMap: [
+                {
+                    from: documentMatchers.paragraph({styleName: "Heading 1"}),
+                    to: htmlPaths.topLevelElement("h1")
+                }
+            ]
+        });
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.value, "<h1>Hello.</h1>");
+        });
+    });
+    
     test('can use non-default HTML element for unstyled paragraphs', function() {
         var document = new documents.Document([
             paragraphOfText("Hello.")
