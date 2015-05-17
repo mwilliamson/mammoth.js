@@ -301,6 +301,9 @@ Converts the source document to HTML.
     
   * `convertUnderline`: by default, the underlining of any text is ignored.
     Set this option to [`mammoth.underline.element(name)`](#underline) to override the default behaviour.
+  
+  * `ignoreEmptyParagraphs`: by default, empty paragraphs are ignored.
+    Set this option to `false` to preserve empty paragraphs in the output.
 
 * Returns a promise containing a result.
   This result has the following properties:

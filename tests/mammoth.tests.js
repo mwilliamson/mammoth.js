@@ -40,6 +40,22 @@ describe('mammoth', function() {
         });
     });
     
+    test('empty paragraphs are ignored by default', function() {
+        var docxPath = path.join(__dirname, "test-data/empty.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+            assert.equal(result.value, "");
+            assert.deepEqual(result.messages, []);
+        });
+    });
+    
+    test('empty paragraphs are preserved if ignoreEmptyParagraphs is false', function() {
+        var docxPath = path.join(__dirname, "test-data/empty.docx");
+        return mammoth.convertToHtml({path: docxPath}, {ignoreEmptyParagraphs: false}).then(function(result) {
+            assert.equal(result.value, "<p></p>");
+            assert.deepEqual(result.messages, []);
+        });
+    });
+    
     test('style map can be expressed as string', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
