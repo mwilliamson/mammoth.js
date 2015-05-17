@@ -1,3 +1,7 @@
+# 0.3.19
+
+* Add ignoreEmptyParagraphs option, which defaults to true.
+
 # 0.3.18
 
 * Make style names case-insensitive in style mappings. This should make style
