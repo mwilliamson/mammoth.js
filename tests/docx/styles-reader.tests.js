@@ -59,6 +59,17 @@ describe('readStylesXml', function() {
         });
         assert.equal(styles.findParagraphStyleById("Heading1").name, "Heading 1");
     });
+
+    test('styles names should be null by default', function() {
+      var styles = readStylesXml({
+        root: new XmlElement("w:styles", {}, [
+          paragraphStyleElement("Heading1", null),
+          characterStyleElement("Heading1Char", null)
+        ])
+      });
+      assert.equal(styles.findParagraphStyleById("Heading1Char"), null);
+      assert.equal(styles.findCharacterStyleById("Heading1"), null);
+    });
 });
 
 function paragraphStyleElement(id, name) {
