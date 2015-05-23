@@ -61,15 +61,16 @@ describe('readStylesXml', function() {
     });
 
     test('styles names should be null by default', function() {
-      var styles = readStylesXml({
-        root: new XmlElement("w:styles", {}, [
-          paragraphStyleElement("Heading1", null),
-          characterStyleElement("Heading1Char", null)
-        ])
-      });
-      assert.equal(styles.findParagraphStyleById("Heading1Char"), null);
-      assert.equal(styles.findCharacterStyleById("Heading1"), null);
+        var styles = readStylesXml({
+            root: new XmlElement("w:styles", {}, [
+                unusualStyleElement("paragraph", "Heading1", "Heading 1"),
+                unusualStyleElement("character", "Heading1Char", "Heading1Char 1")
+            ])
+        });
+        assert.equal(styles.findParagraphStyleById("Heading1").name, null);
+        assert.equal(styles.findCharacterStyleById("Heading1Char").name, null);
     });
+
 });
 
 function paragraphStyleElement(id, name) {
@@ -83,5 +84,11 @@ function characterStyleElement(id, name) {
 function styleElement(type, id, name) {
     return new XmlElement("w:style", {"w:type": type, "w:styleId": id}, [
         new XmlElement("w:name", {"w:val": name}, [])
+    ]);
+}
+
+function unusualStyleElement(type, id, name) {
+    return new XmlElement("w:style", {"w:type": type, "w:styleId": id}, [
+        new XmlElement("w:notName", {"w:val": name}, [])
     ]);
 }
