@@ -63,8 +63,8 @@ describe('readStylesXml', function() {
     test('style name is null if w:name element does not exist', function() {
         var styles = readStylesXml({
             root: new XmlElement("w:styles", {}, [
-                styleWithoutWNameElement("paragraph", "Heading1", "Heading 1"),
-                styleWithoutWNameElement("character", "Heading1Char", "Heading1Char 1")
+                styleWithoutWNameElement("paragraph", "Heading1"),
+                styleWithoutWNameElement("character", "Heading1Char")
             ])
         });
         assert.equal(styles.findParagraphStyleById("Heading1").name, null);
@@ -87,8 +87,6 @@ function styleElement(type, id, name) {
     ]);
 }
 
-function styleWithoutWNameElement(type, id, name) {
-    return new XmlElement("w:style", {"w:type": type, "w:styleId": id}, [
-        new XmlElement("w:notName", {"w:val": name}, [])
-    ]);
+function styleWithoutWNameElement(type, id) {
+    return new XmlElement("w:style", {"w:type": type, "w:styleId": id}, []);
 }
