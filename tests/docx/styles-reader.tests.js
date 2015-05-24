@@ -59,6 +59,18 @@ describe('readStylesXml', function() {
         });
         assert.equal(styles.findParagraphStyleById("Heading1").name, "Heading 1");
     });
+
+    test('style name is null if w:name element does not exist', function() {
+        var styles = readStylesXml({
+            root: new XmlElement("w:styles", {}, [
+                styleWithoutWNameElement("paragraph", "Heading1"),
+                styleWithoutWNameElement("character", "Heading1Char")
+            ])
+        });
+        assert.equal(styles.findParagraphStyleById("Heading1").name, null);
+        assert.equal(styles.findCharacterStyleById("Heading1Char").name, null);
+    });
+
 });
 
 function paragraphStyleElement(id, name) {
@@ -73,4 +85,8 @@ function styleElement(type, id, name) {
     return new XmlElement("w:style", {"w:type": type, "w:styleId": id}, [
         new XmlElement("w:name", {"w:val": name}, [])
     ]);
+}
+
+function styleWithoutWNameElement(type, id) {
+    return new XmlElement("w:style", {"w:type": type, "w:styleId": id}, []);
 }
