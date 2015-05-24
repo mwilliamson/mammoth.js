@@ -565,3 +565,7 @@ Thanks to the following people for their contributions to Mammoth:
 * [Andreas Lubbe](https://github.com/alubbe)
 
   * Internal hyperlink support
+
+* [Jacob Wang](https://github.com/jaceyshome)
+
+  * Supporting styles defined without names
