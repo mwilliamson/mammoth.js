@@ -13,7 +13,12 @@ var test = testing.test;
 var createFakeDocxFile = testing.createFakeDocxFile;
 
 function readXmlElement(element, options) {
-    options = options || {};
+    var styles = {
+        findParagraphStyleById: function(id) {
+            return {};
+        }
+    };
+    options = options || {styles: styles};
     return new DocumentXmlReader(options).readXmlElement(element);
 }
 
@@ -396,7 +401,37 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value, []);
         assert.deepEqual(result.messages, [warning("Unsupported break type: page")]);
     });
-    
+
+    test("text boxes have content appended after containing paragraph", function() {
+        var textbox = new XmlElement("w:pict", {}, [
+            new XmlElement("v:shape", {}, [
+                new XmlElement("v:textbox", {}, [
+                    new XmlElement("w:txbxContent", {}, [
+                        paragraphWithStyleId("textbox-content")
+                    ])
+                ])
+            ])
+        ]);
+        var paragraph = new XmlElement("w:p", {}, [
+            new XmlElement("w:r", {}, [textbox])
+        ]);
+        var result = readXmlElement(paragraph);
+        assert.deepEqual(result.value[1].styleId, "textbox-content");
+    });
+
+    test("mc:Fallback is used when mc:AlternateContent is read", function() {
+        var styles = new Styles({"first": {name: "First"}, "second": {name: "Second"}}, {});
+        var textbox = new XmlElement("mc:AlternateContent", {}, [
+            new XmlElement("mc:Choice", {"Requires": "wps"}, [
+                paragraphWithStyleId("first")
+            ]),
+            new XmlElement("mc:Fallback", {}, [
+                paragraphWithStyleId("second")
+            ])
+        ]);
+        var result = readXmlElement(textbox, {styles: styles});
+        assert.deepEqual(result.value[0].styleId, "second");
+    });
 });
 
 describe("convertXmlToDocument: ", function() {
@@ -414,6 +449,14 @@ describe("convertXmlToDocument: ", function() {
         assert.deepEqual(footnote.body[0].type, "paragraph");
     });
 });
+
+function paragraphWithStyleId(styleId) {
+    return new XmlElement("w:p", {}, [
+        new XmlElement("w:pPr", {}, [
+            new XmlElement("w:pStyle", {"w:val": styleId}, [])
+        ])
+    ]);
+}
 
 function runWithProperties(children) {
     return new XmlElement("w:r", {}, [createRunPropertiesXml(children)]);

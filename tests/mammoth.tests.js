@@ -195,6 +195,14 @@ describe('mammoth', function() {
         });
     });
     
+    test('textboxes are read', function() {
+        var docxPath = path.join(__dirname, "test-data/text-box.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+            var expectedOutput = '<p>Datum plane</p>';
+            assert.equal(result.value, expectedOutput);
+        });
+    });
+    
     test('indentation is used if prettyPrint is true', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
