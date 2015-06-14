@@ -36,6 +36,9 @@ The following features are currently supported:
 
 * Line breaks.
 
+* Text boxes. The contents of the text box are treated as a separate paragraph
+  that appears after the paragraph containing the text box.
+
 ## Web demo
 
 The easiest way to try out mammoth is to use the web demo:

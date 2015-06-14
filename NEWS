@@ -1,3 +1,8 @@
+# 0.3.21
+
+* Add basic support for text boxes. The contents of the text box are treated as
+  a separate paragraph that appears after the paragraph containing the text box.
+
 # 0.3.20
 
 * Support styles defined without a name
