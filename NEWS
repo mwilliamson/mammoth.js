@@ -2,6 +2,8 @@
 
 * Add support for underlines in style map.
 
+* Add support for strikethrough.
+
 # 0.3.21
 
 * Add basic support for text boxes. The contents of the text box are treated as

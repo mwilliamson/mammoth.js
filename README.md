@@ -233,6 +233,23 @@ var options = {
 };
 ```
 
+### Strikethrough
+
+By default, strikethrough text is wrapped in `<s>` tags.
+This behaviour can be changed by adding a style mapping for `strike`.
+For instance, to wrap strikethrough text in `<del>` tags:
+
+```javascript
+var mammoth = require("mammoth");
+
+var options = {
+    styleMap: [
+        "strike => del"
+    ]
+};
+mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+```
+
 #### Document transforms
 
 Mammoth allows a document to be transformed before it is converted.
@@ -485,6 +502,17 @@ u
 
 Note that this matches text that has had underline explicitly applied to it.
 It will not match any text that is underlined because of its paragraph or run style.
+
+#### Strikethough
+
+Match explicitly struckthrough text:
+
+```
+strike
+```
+
+Note that this matches text that has had strikethrough explicitly applied to it.
+It will not match any text that is struckthrough because of its paragraph or run style.
 
 ### HTML paths
 
