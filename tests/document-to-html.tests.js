@@ -202,6 +202,14 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('strikethrough runs are wrapped in <s> tags by default', function() {
+        var run = runOfText("Hello.", {isStrikethrough: true});
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<s>Hello.</s>");
+        });
+    });
+    
     test('style mapping for underline runs does not close parent elements', function() {
         var run = runOfText("Hello.", {isUnderline: true, isBold: true});
         var converter = new DocumentConverter({

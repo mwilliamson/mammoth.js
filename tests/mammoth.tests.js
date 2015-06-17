@@ -224,6 +224,13 @@ describe('mammoth', function() {
         });
     });
     
+    test('strikethrough is converted to <s> by default', function() {
+        var docxPath = path.join(__dirname, "test-data/strikethrough.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+            assert.equal(result.value, "<p><s>Today's Special: Salmon</s> Sold out</p>");
+        });
+    });
+    
     test('indentation is used if prettyPrint is true', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {

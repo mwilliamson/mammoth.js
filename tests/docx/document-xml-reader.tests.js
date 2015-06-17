@@ -152,6 +152,19 @@ describe("readXmlElement: ", function() {
         assert.equal(run.isUnderline, true);
     });
 
+    test("isStrikethrough is false if strikethrough element is not present", function() {
+        var runXml = runWithProperties([]);
+        var run = readXmlElementValue(runXml);
+        assert.deepEqual(run.isStrikethrough, false);
+    });
+
+    test("isStrikethrough is true if strikethrough element is present", function() {
+        var strikethroughXml = new XmlElement("w:strike");
+        var runXml = runWithProperties([strikethroughXml]);
+        var run = readXmlElementValue(runXml);
+        assert.equal(run.isStrikethrough, true);
+    });
+
     test("isItalic is false if bold element is not present", function() {
         var runXml = runWithProperties([]);
         var run = readXmlElementValue(runXml);
