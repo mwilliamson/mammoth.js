@@ -211,7 +211,7 @@ var options = {
 By default, the underlining of any text is ignored since underlining can be confused with links in HTML documents.
 This behaviour can be changed by adding a style mapping for `u`.
 For instance, suppose that a source document uses underlining for emphasis.
-The following will wrap any underlined source text in `<em>` tags:
+The following will wrap any explicitly underlined source text in `<em>` tags:
 
 ```javascript
 var mammoth = require("mammoth");
