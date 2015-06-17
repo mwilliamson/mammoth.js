@@ -209,10 +209,23 @@ var options = {
 #### Underline
 
 By default, the underlining of any text is ignored since underlining can be confused with links in HTML documents.
-This behaviour can be changed by setting the `convertUnderline` option to `mammoth.underline.element(name)`.
-
+This behaviour can be changed by adding a style mapping for `u`.
 For instance, suppose that a source document uses underlining for emphasis.
 The following will wrap any underlined source text in `<em>` tags:
+
+```javascript
+var mammoth = require("mammoth");
+
+var options = {
+    styleMap: [
+        "u => em"
+    ]
+};
+mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+```
+
+The `convertUnderline` option is deprecated, and will be removed in Mammoth.js 1.0.
+The following behaves as the example above:
 
 ```javascript
 var options = {
@@ -461,6 +474,17 @@ For instance, to match a paragraph with the style ID `Heading1`:
 ```
 p.Heading1
 ```
+
+#### Underline
+
+Match explicitly underlined text:
+
+```
+u
+```
+
+Note that this matches text that has had underline explicitly applied to it.
+It will not match any text that is underlined because of its paragraph or run style.
 
 ### HTML paths
 
