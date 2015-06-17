@@ -203,6 +203,20 @@ describe('mammoth', function() {
         });
     });
     
+    test('underline is ignored by default', function() {
+        var docxPath = path.join(__dirname, "test-data/underline.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+            assert.equal(result.value, '<p><strong>The </strong><strong>Sunset</strong><strong> Tree</strong></p>');
+        });
+    });
+    
+    test('underline can be configured with convertUnderline option', function() {
+        var docxPath = path.join(__dirname, "test-data/underline.docx");
+        return mammoth.convertToHtml({path: docxPath}, {convertUnderline: mammoth.underline.element("em")}).then(function(result) {
+            assert.equal(result.value, '<p><strong>The </strong><strong><em>Sunset</em></strong><strong> Tree</strong></p>');
+        });
+    });
+    
     test('indentation is used if prettyPrint is true', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
