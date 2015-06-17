@@ -202,6 +202,21 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('style mapping for underline runs does not close parent elements', function() {
+        var run = runOfText("Hello.", {isUnderline: true, isBold: true});
+        var converter = new DocumentConverter({
+            styleMap: [
+                {
+                    from: documentMatchers.underline,
+                    to: htmlPaths.elements([htmlPaths.element("u")])
+                }
+            ]
+        });
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<strong><u>Hello.</u></strong>");
+        });
+    });
+    
     test('strikethrough runs are wrapped in <s> tags by default', function() {
         var run = runOfText("Hello.", {isStrikethrough: true});
         var converter = new DocumentConverter();
@@ -222,21 +237,6 @@ describe('DocumentConverter', function() {
         });
         return converter.convertToHtml(run).then(function(result) {
             assert.equal(result.value, "<del>Hello.</del>");
-        });
-    });
-    
-    test('style mapping for underline runs does not close parent elements', function() {
-        var run = runOfText("Hello.", {isUnderline: true, isBold: true});
-        var converter = new DocumentConverter({
-            styleMap: [
-                {
-                    from: documentMatchers.underline,
-                    to: htmlPaths.elements([htmlPaths.element("u")])
-                }
-            ]
-        });
-        return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.value, "<strong><u>Hello.</u></strong>");
         });
     });
 
