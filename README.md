@@ -315,7 +315,7 @@ Converts the source document to HTML.
   * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
     Set this option to an [image converter](#image-converters) to override the default behaviour.
     
-  * `convertUnderline`: by default, the underlining of any text is ignored.
+  * `convertUnderline`: deprecated in favour of using style mappings to describe how to convert underlined text.
     Set this option to [`mammoth.underline.element(name)`](#underline) to override the default behaviour.
   
   * `ignoreEmptyParagraphs`: by default, empty paragraphs are ignored.
