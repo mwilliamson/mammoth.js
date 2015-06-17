@@ -210,6 +210,21 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('strikethrough runs can be configured with style mapping', function() {
+        var run = runOfText("Hello.", {isStrikethrough: true});
+        var converter = new DocumentConverter({
+            styleMap: [
+                {
+                    from: documentMatchers.strikethrough,
+                    to: htmlPaths.elements([htmlPaths.element("del")])
+                }
+            ]
+        });
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<del>Hello.</del>");
+        });
+    });
+    
     test('style mapping for underline runs does not close parent elements', function() {
         var run = runOfText("Hello.", {isUnderline: true, isBold: true});
         var converter = new DocumentConverter({

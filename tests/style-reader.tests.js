@@ -100,6 +100,13 @@ describe("styleReader.readDocumentMatcher", function() {
             documentMatchers.underline
         );
     });
+    
+    test("reads strikethrough", function() {
+        assert.deepEqual(
+            readDocumentMatcher("strike"),
+            documentMatchers.strikethrough
+        );
+    });
 });
 
 describe("styleReader.read", function() {

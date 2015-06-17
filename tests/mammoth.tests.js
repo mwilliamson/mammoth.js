@@ -231,6 +231,13 @@ describe('mammoth', function() {
         });
     });
     
+    test('strikethrough conversion can be configured with style mappings', function() {
+        var docxPath = path.join(__dirname, "test-data/strikethrough.docx");
+        return mammoth.convertToHtml({path: docxPath}, {styleMap: "strike => del"}).then(function(result) {
+            assert.equal(result.value, "<p><del>Today's Special: Salmon</del> Sold out</p>");
+        });
+    });
+    
     test('indentation is used if prettyPrint is true', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
