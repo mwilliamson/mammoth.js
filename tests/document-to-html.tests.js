@@ -177,13 +177,43 @@ describe('DocumentConverter', function() {
         });
     });
     
-    test('underline runs can be wrapped in <u> tags', function() {
+    test('underline runs can be wrapped in <u> tags using convertUnderline option', function() {
         var run = runOfText("Hello.", {isUnderline: true});
         var converter = new DocumentConverter({
             convertUnderline: mammoth.underline.element("u")
         });
         return converter.convertToHtml(run).then(function(result) {
             assert.equal(result.value, "<u>Hello.</u>");
+        });
+    });
+    
+    test('underline runs can be mapped using style mapping', function() {
+        var run = runOfText("Hello.", {isUnderline: true});
+        var converter = new DocumentConverter({
+            styleMap: [
+                {
+                    from: documentMatchers.underline,
+                    to: htmlPaths.elements([htmlPaths.element("u")])
+                }
+            ]
+        });
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<u>Hello.</u>");
+        });
+    });
+    
+    test('style mapping for underline runs does not close parent elements', function() {
+        var run = runOfText("Hello.", {isUnderline: true, isBold: true});
+        var converter = new DocumentConverter({
+            styleMap: [
+                {
+                    from: documentMatchers.underline,
+                    to: htmlPaths.elements([htmlPaths.element("u")])
+                }
+            ]
+        });
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<strong><u>Hello.</u></strong>");
         });
     });
 

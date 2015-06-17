@@ -69,4 +69,13 @@ describe('HtmlGenerator', function() {
         generator.selfClosing({tagName: "br", attributes: {"data-blah": "<"}});
         return assert.equal(generator.asString(), '<br data-blah="&lt;" />');
     });
+    
+    test('appendPath does not close currently-open elements', function() {
+        var generator = new HtmlGenerator();
+        generator.satisfyPath(htmlPaths.elements(["strong"]));
+        generator.appendPath(htmlPaths.elements(["em"]));
+        generator.text("Hello!");
+        generator.closeAll();
+        return assert.equal(generator.asString(), "<strong><em>Hello!</em></strong>");
+    });
 });

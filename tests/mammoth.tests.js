@@ -217,6 +217,13 @@ describe('mammoth', function() {
         });
     });
     
+    test('underline can be configured with style mapping', function() {
+        var docxPath = path.join(__dirname, "test-data/underline.docx");
+        return mammoth.convertToHtml({path: docxPath}, {styleMap: "u => em"}).then(function(result) {
+            assert.equal(result.value, '<p><strong>The </strong><strong><em>Sunset</em></strong><strong> Tree</strong></p>');
+        });
+    });
+    
     test('indentation is used if prettyPrint is true', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {

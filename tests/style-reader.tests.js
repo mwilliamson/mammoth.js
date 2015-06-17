@@ -93,6 +93,13 @@ describe("styleReader.readDocumentMatcher", function() {
             documentMatchers.run()
         );
     });
+    
+    test("reads underline", function() {
+        assert.deepEqual(
+            readDocumentMatcher("u"),
+            documentMatchers.underline
+        );
+    });
 });
 
 describe("styleReader.read", function() {
