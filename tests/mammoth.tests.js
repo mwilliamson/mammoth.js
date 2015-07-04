@@ -196,7 +196,6 @@ describe('mammoth', function() {
     });
     
     test('relationships are handled properly in footnotes', function() {
-        // TODO: don't duplicate footnotes with multiple references
         var docxPath = path.join(__dirname, "test-data/footnote-hyperlink.docx");
         var options = {
             idPrefix: "doc-42"
