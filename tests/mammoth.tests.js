@@ -195,6 +195,21 @@ describe('mammoth', function() {
         });
     });
     
+    test('relationships are handled properly in footnotes', function() {
+        // TODO: don't duplicate footnotes with multiple references
+        var docxPath = path.join(__dirname, "test-data/footnote-hyperlink.docx");
+        var options = {
+            idPrefix: "doc-42"
+        };
+        return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
+            var expectedOutput =
+                '<p><sup><a href="#doc-42-footnote-1" id="doc-42-footnote-ref-1">[1]</a></sup></p>' +
+                '<ol><li id="doc-42-footnote-1"><p> <a href="http://www.example.com">Example</a> <a href="#doc-42-footnote-ref-1">↑</a></p></li></ol>';
+            assert.equal(result.value, expectedOutput);
+            assert.deepEqual(result.messages, []);
+        });
+    });
+    
     test('textboxes are read', function() {
         var docxPath = path.join(__dirname, "test-data/text-box.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
