@@ -1,3 +1,7 @@
+# 0.3.24
+
+* Ignore w:numPr elements without w:numId or w:ilvl children.
+
 # 0.3.23
 
 * Support links and images in footnotes and endnotes.

@@ -92,6 +92,49 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
     });
     
+    test("numbering properties are converted to numbering at specified level", function() {
+        var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+            new XmlElement("w:ilvl", {"w:val": "1"}),
+            new XmlElement("w:numId", {"w:val": "42"})
+        ]);
+        
+        var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+        
+        var reader = new BodyReader({
+            numbering: numbering
+        });
+        var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+        assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
+    });
+    
+    test("numbering properties are ignored if w:ilvl is missing", function() {
+        var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+            new XmlElement("w:numId", {"w:val": "42"})
+        ]);
+        
+        var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+        
+        var reader = new BodyReader({
+            numbering: numbering
+        });
+        var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+        assert.equal(numberingLevel, null);
+    });
+    
+    test("numbering properties are ignored if w:numId is missing", function() {
+        var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+            new XmlElement("w:ilvl", {"w:val": "1"})
+        ]);
+        
+        var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+        
+        var reader = new BodyReader({
+            numbering: numbering
+        });
+        var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+        assert.equal(numberingLevel, null);
+    });
+    
     test("run has no style if it has no properties", function() {
         var runXml = runWithProperties([]);
         var run = readXmlElementValue(runXml);
