@@ -80,6 +80,21 @@ describe('mammoth', function() {
         });
     });
     
+    test('style map can be saved and read from document buffer', function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return promises.nfcall(fs.readFile, docxPath)
+            .then(function(buffer) {
+                return mammoth.writeStyleMapToDocx({buffer: buffer, styleMap: "p => h1"});
+            })
+            .then(function(docx) {
+                return mammoth.convertToHtml({buffer: docx.toBuffer()});
+            })
+            .then(function(result) {
+                assert.equal(result.value, "<h1>Walking on imported air</h1>");
+                assert.deepEqual(result.messages, []);
+            });
+    });
+    
     test('options are passed to document converter when calling mammoth.convertToHtml', function() {
         var docxFile = createFakeDocxFile({
             "word/document.xml": testData("simple/word/document.xml")
