@@ -84,7 +84,7 @@ describe('mammoth', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return promises.nfcall(fs.readFile, docxPath)
             .then(function(buffer) {
-                return mammoth.writeStyleMapToDocx({buffer: buffer, styleMap: "p => h1"});
+                return mammoth.writeStyleMapToDocx({buffer: buffer}, "p => h1");
             })
             .then(function(docx) {
                 return mammoth.convertToHtml({buffer: docx.toBuffer()});
