@@ -1,3 +1,7 @@
+# 0.3.25
+
+* When the styleMap option is passed as a string, ignore lines beginning with #.
+
 # 0.3.24
 
 * Ignore w:numPr elements without w:numId or w:ilvl children.

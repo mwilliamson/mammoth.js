@@ -85,6 +85,8 @@ Where `custom-style-map` looks something like:
     p[style-name='Aside Heading'] => div.aside > h2:fresh
     p[style-name='Aside Text'] => div.aside > p:fresh
 
+Lines beginning with `#` will be ignored.
+
 #### Markdown
 
 Using `--output-format=markdown` will cause Markdown to be generated.
@@ -164,7 +166,8 @@ mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 
 To more easily support style maps stored in text files,
 `styleMap` can also be a string.
-Each non-blank line is treated as a separate style mapping:
+Each line is treated as a separate style mapping,
+ignoring blank lines and lines starting with `#`:
 
 ```javascript
 var options = {
@@ -316,7 +319,8 @@ Converts the source document to HTML.
   
   * `styleMap`: controls the mapping of Word styles to HTML.
      If `options.styleMap` is a string,
-     each non-blank line is treated as a separate style mapping.
+     each line is treated as a separate style mapping,
+     ignoring blank lines and lines starting with `#`:
      If `options.styleMap` is an array,
      each element is expected to be a string representing a single style mapping.
      See "Writing style maps" for a reference to the syntax for style maps.
