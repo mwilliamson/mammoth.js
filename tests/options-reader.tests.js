@@ -14,9 +14,25 @@ describe('readOptions', function() {
         assert.deepEqual(standardOptions, readOptions({}));
     });
     
-    it('custom style mappings are prepended to standard style mappings', function() {
+    it('custom style map as string is prepended to standard style map', function() {
         var options = readOptions({
             styleMap: "p.SectionTitle => h2"
+        });
+        assert.deepEqual("p.SectionTitle => h2", options.styleMap[0]);
+        assert.deepEqual(standardOptions.styleMap, options.styleMap.slice(1));
+    });
+    
+    it('custom style map as array is prepended to standard style map', function() {
+        var options = readOptions({
+            styleMap: ["p.SectionTitle => h2"]
+        });
+        assert.deepEqual("p.SectionTitle => h2", options.styleMap[0]);
+        assert.deepEqual(standardOptions.styleMap, options.styleMap.slice(1));
+    });
+    
+    it('lines starting with # in custom style map are ignored', function() {
+        var options = readOptions({
+            styleMap: "# p.SectionTitle => h3\np.SectionTitle => h2"
         });
         assert.deepEqual("p.SectionTitle => h2", options.styleMap[0]);
         assert.deepEqual(standardOptions.styleMap, options.styleMap.slice(1));
