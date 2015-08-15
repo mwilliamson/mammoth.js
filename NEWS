@@ -2,6 +2,9 @@
 
 * When the styleMap option is passed as a string, ignore lines beginning with #.
 
+* Generate warnings for not-understood style mappings and continue, rather than
+  stopping with an error.
+
 # 0.3.24
 
 * Ignore w:numPr elements without w:numId or w:ilvl children.

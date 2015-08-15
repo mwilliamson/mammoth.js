@@ -2,6 +2,7 @@ var assert = require("assert");
 var htmlPaths = require("../lib/html-paths");
 var documentMatchers = require("../lib/document-matchers");
 var styleReader = require("../lib/style-reader");
+var results = require("../lib/results");
 var test = require("./testing").test;
 
 
@@ -54,7 +55,7 @@ describe('styleReader.readHtmlPath', function() {
     });
     
     function assertHtmlPath(input, expected) {
-        assert.deepEqual(readHtmlPath(input), expected);
+        assert.deepEqual(readHtmlPath(input), results.success(expected));
     }
 });
 
@@ -113,7 +114,7 @@ describe("styleReader.readDocumentMatcher", function() {
     });
     
     function assertDocumentMatcher(input, expected) {
-        assert.deepEqual(readDocumentMatcher(input), expected);
+        assert.deepEqual(readDocumentMatcher(input), results.success(expected));
     }
 });
 
@@ -139,6 +140,6 @@ describe("styleReader.read", function() {
     });
     
     function assertStyleMapping(input, expected) {
-        assert.deepEqual(readStyle(input), expected);
+        assert.deepEqual(readStyle(input), results.success(expected));
     }
 });

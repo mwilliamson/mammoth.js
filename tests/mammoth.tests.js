@@ -4,6 +4,7 @@ var fs = require("fs");
 
 var mammoth = require("../");
 var promises = require("../lib/promises");
+var results = require("../lib/results");
 
 var testing = require("./testing");
 var test = testing.test;
@@ -93,6 +94,19 @@ describe('mammoth', function() {
                 assert.equal(result.value, "<h1>Walking on imported air</h1>");
                 assert.deepEqual(result.messages, []);
             });
+    });
+    
+    test('warning if style mapping is not understood', function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        var options = {
+            styleMap: "!!!!\np => h1"
+        };
+        return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
+            assert.equal("<h1>Walking on imported air</h1>", result.value);
+            var warning = "Did not understand this style mapping, so ignored it: !!!!\n" +
+                'Error was at character number 1: Expected element type but got unrecognisedCharacter "!"';
+            assert.deepEqual(result.messages, [results.warning(warning)]);
+        });
     });
     
     test('options are passed to document converter when calling mammoth.convertToHtml', function() {
