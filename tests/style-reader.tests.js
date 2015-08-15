@@ -12,16 +12,16 @@ var readStyle = styleReader.readStyle;
 
 describe('styleReader.readHtmlPath', function() {
     test('reads empty path', function() {
-        assert.deepEqual(readHtmlPath(""), htmlPaths.empty);
+        assertHtmlPath("", htmlPaths.empty);
     });
     
     test('reads single element', function() {
-        assert.deepEqual(readHtmlPath("p"), htmlPaths.elements(["p"]));
+        assertHtmlPath("p", htmlPaths.elements(["p"]));
     });
     
     test('reads choice of elements', function() {
-        assert.deepEqual(
-            readHtmlPath("ul|ol"),
+        assertHtmlPath(
+            "ul|ol",
             htmlPaths.elements([
                 htmlPaths.element(["ul", "ol"])
             ])
@@ -29,90 +29,98 @@ describe('styleReader.readHtmlPath', function() {
     });
     
     test('reads nested elements', function() {
-        assert.deepEqual(readHtmlPath("ul > li"), htmlPaths.elements(["ul", "li"]));
+        assertHtmlPath("ul > li", htmlPaths.elements(["ul", "li"]));
     });
     
     test('reads class on element', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip"})
         ]);
-        assert.deepEqual(readHtmlPath("p.tip"), expected);
+        assertHtmlPath("p.tip", expected);
     });
     
     test('reads multiple classes on element', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip help"})
         ]);
-        assert.deepEqual(readHtmlPath("p.tip.help"), expected);
+        assertHtmlPath("p.tip.help", expected);
     });
     
     test('reads when element must be fresh', function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {}, {"fresh": true})
         ]);
-        assert.deepEqual(readHtmlPath("p:fresh"), expected);
+        assertHtmlPath("p:fresh", expected);
     });
+    
+    function assertHtmlPath(input, expected) {
+        assert.deepEqual(readHtmlPath(input), expected);
+    }
 });
 
 describe("styleReader.readDocumentMatcher", function() {
     test("reads plain paragraph", function() {
-        assert.deepEqual(readDocumentMatcher("p"), documentMatchers.paragraph());
+        assertDocumentMatcher("p", documentMatchers.paragraph());
     });
     
     test("reads paragraph with style ID", function() {
-        assert.deepEqual(
-            readDocumentMatcher("p.Heading1"),
+        assertDocumentMatcher(
+            "p.Heading1",
             documentMatchers.paragraph({styleId: "Heading1"})
         );
     });
     
     test("reads paragraph with style name", function() {
-        assert.deepEqual(
-            readDocumentMatcher("p[style-name='Heading 1']"),
+        assertDocumentMatcher(
+            "p[style-name='Heading 1']",
             documentMatchers.paragraph({styleName: "Heading 1"})
         );
     });
     
     test("reads p:ordered-list(1) as ordered list with index of 0", function() {
-        assert.deepEqual(
-            readDocumentMatcher("p:ordered-list(1)"),
+        assertDocumentMatcher(
+            "p:ordered-list(1)",
             documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0}})
         );
     });
     
     test("reads p:unordered-list(1) as unordered list with index of 0", function() {
-        assert.deepEqual(
-            readDocumentMatcher("p:unordered-list(1)"),
+        assertDocumentMatcher(
+            "p:unordered-list(1)",
             documentMatchers.paragraph({list: {isOrdered: false, levelIndex: 0}})
         );
     });
     
     test("reads plain run", function() {
-        assert.deepEqual(
-            readDocumentMatcher("r"),
+        assertDocumentMatcher(
+            "r",
             documentMatchers.run()
         );
     });
     
     test("reads underline", function() {
-        assert.deepEqual(
-            readDocumentMatcher("u"),
+        assertDocumentMatcher(
+            "u",
             documentMatchers.underline
         );
     });
     
     test("reads strikethrough", function() {
-        assert.deepEqual(
-            readDocumentMatcher("strike"),
+        assertDocumentMatcher(
+            "strike",
             documentMatchers.strikethrough
         );
     });
+    
+    function assertDocumentMatcher(input, expected) {
+        assert.deepEqual(readDocumentMatcher(input), expected);
+    }
 });
 
 describe("styleReader.read", function() {
     test("document matcher is mapped to HTML path using arrow", function() {
-        assert.deepEqual(
-            readStyle("p => h1"),
+        assertStyleMapping(
+            "p => h1",
             {
                 from: documentMatchers.paragraph(),
                 to: htmlPaths.elements(["h1"])
@@ -121,12 +129,16 @@ describe("styleReader.read", function() {
     });
     
     test("reads style mapping with no HTML path", function() {
-        assert.deepEqual(
-            readStyle("r =>"),
+        assertStyleMapping(
+            "r =>",
             {
                 from: documentMatchers.run(),
                 to: htmlPaths.empty
             }
         );
     });
+    
+    function assertStyleMapping(input, expected) {
+        assert.deepEqual(readStyle(input), expected);
+    }
 });
