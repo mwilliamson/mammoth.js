@@ -14,6 +14,17 @@ describe('xml.writer', function() {
         assertXmlString(new Element("root", {}, [new Element("album"), new Element("single")]),
             '<root><album/><single/></root>');
     });
+    
+    test('can write empty descendant elements', function() {
+        var element = new Element("root", {}, [
+            new Element("album", {}, [
+                new Element("year"),
+                new Element("song")
+            ])
+        ]);
+        assertXmlString(element,
+            '<root><album><year/><song/></album></root>');
+    });
 });
 
 
