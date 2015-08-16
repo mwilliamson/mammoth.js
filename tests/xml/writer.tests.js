@@ -7,11 +7,11 @@ var test = require("../testing").test;
 
 describe('xml.writer', function() {
     test('writing empty root element writes out xml declaration and empty root element', function() {
-        assertXmlString(xml.element("root"), '<root/>');
+        assertXmlString(xml.element("root"), {}, '<root/>');
     });
     
     test('can write empty child elements', function() {
-        assertXmlString(xml.element("root", {}, [xml.element("album"), xml.element("single")]),
+        assertXmlString(xml.element("root", {}, [xml.element("album"), xml.element("single")]), {},
             '<root><album/><single/></root>');
     });
     
@@ -22,7 +22,7 @@ describe('xml.writer', function() {
                 xml.element("song")
             ])
         ]);
-        assertXmlString(element,
+        assertXmlString(element, {},
             '<root><album><year/><song/></album></root>');
     });
     
@@ -30,7 +30,7 @@ describe('xml.writer', function() {
         var element = xml.element("root", {}, [
             xml.element("album", {"title": "Everything in Transit"})
         ]);
-        assertXmlString(element,
+        assertXmlString(element, {},
             '<root><album title="Everything in Transit"/></root>');
     });
     
@@ -40,14 +40,30 @@ describe('xml.writer', function() {
                 xml.text("Everything in Transit")
             ])
         ]);
-        assertXmlString(element,
+        assertXmlString(element, {},
             '<root><album>Everything in Transit</album></root>');
+    });
+    
+    test('can write child elements with long-form prefix when URI is namespace', function() {
+        var element = xml.element("root", {"m": "music"}, [
+            xml.element("{music}album")
+        ]);
+        assertXmlString(element, {"m": "music"},
+            '<root xmlns:m="music"><m:album/></root>');
+    });
+    
+    test('can write child elements with short-form prefix when URI is namespace', function() {
+        var element = xml.element("root", {"m": "music"}, [
+            xml.element("m:album")
+        ]);
+        assertXmlString(element, {"m": "music"},
+            '<root xmlns:m="music"><m:album/></root>');
     });
 });
 
 
-function assertXmlString(element, expectedString) {
-    assert.equal(writer.writeString(element),
+function assertXmlString(element, namespaces, expectedString) {
+    assert.equal(writer.writeString(element, namespaces),
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
         expectedString);
 }
