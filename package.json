@@ -27,7 +27,7 @@
     "xmlbuilder": "~2.6.4"
   },
   "devDependencies": {
-    "mocha": "~2.1",
+    "mocha": "~2.2.5",
     "browserify": "~3.33.0",
     "license-sniffer": "~0.1.2",
     "duck": "~0.1.11",
