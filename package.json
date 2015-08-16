@@ -23,7 +23,8 @@
     "lop": "~0.3.0",
     "async": "~0.2.6",
     "nomnom": "~1.6.2",
-    "jszip": "~2.5.0"
+    "jszip": "~2.5.0",
+    "xmlbuilder": "~2.6.4"
   },
   "devDependencies": {
     "mocha": "~2.1",
