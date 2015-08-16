@@ -81,11 +81,11 @@ describe('mammoth', function() {
         });
     });
     
-    test('style map can be saved and read from document buffer', function() {
+    test('embedded style is used if present', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return promises.nfcall(fs.readFile, docxPath)
             .then(function(buffer) {
-                return mammoth.writeStyleMapToDocx({buffer: buffer}, "p => h1");
+                return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
             })
             .then(function(docx) {
                 return mammoth.convertToHtml({buffer: docx.toBuffer()});
