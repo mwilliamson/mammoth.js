@@ -9,6 +9,11 @@ describe('xml.writer', function() {
     test('writing empty root element writes out xml declaration and empty root element', function() {
         assertXmlString(new Element("root"), '<root/>');
     });
+    
+    test('can write empty child elements', function() {
+        assertXmlString(new Element("root", {}, [new Element("album"), new Element("single")]),
+            '<root><album/><single/></root>');
+    });
 });
 
 
