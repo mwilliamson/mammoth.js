@@ -3,7 +3,7 @@ var assert = require("assert");
 var createFootnotesReader = require("../../lib/docx/notes-reader").createFootnotesReader;
 var BodyReader = require("../../lib/docx/body-reader").BodyReader;
 var documents = require("../../lib/documents");
-var XmlElement = require("../../lib/xmlreader").Element;
+var XmlElement = require("../../lib/xml").Element;
 var test = require("../testing").test;
 
 

@@ -6,7 +6,7 @@ var documents = require("../lib/documents");
 var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
 var test = require("./testing").test;
 var htmlPaths = require("../lib/html-paths");
-var xmlreader = require("../lib/xmlreader");
+var xml = require("../lib/xml");
 var results = require("../lib/results");
 var documentMatchers = require("../lib/document-matchers");
 
@@ -459,7 +459,7 @@ describe('DocumentConverter', function() {
         var converter = new DocumentConverter();
         return converter.convertToHtml(image)
             .then(function(result) {
-                return xmlreader.read(result.value);
+                return xml.readString(result.value);
             })
             .then(function(htmlImageElementDocument) {
                 var htmlImageElement = htmlImageElementDocument.root;

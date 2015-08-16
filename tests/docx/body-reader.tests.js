@@ -3,7 +3,7 @@ var path = require("path");
 
 var BodyReader = require("../../lib/docx/body-reader").BodyReader;
 var documents = require("../../lib/documents");
-var XmlElement = require("../../lib/xmlreader").Element;
+var XmlElement = require("../../lib/xml").Element;
 var Numbering = require("../../lib/docx/numbering-xml").Numbering;
 var Styles = require("../../lib/docx/styles-reader").Styles;
 var warning = require("../../lib/results").warning;

@@ -1,7 +1,7 @@
 var duck = require("duck");
 
 var readNumberingXml = require("../../lib/docx/numbering-xml").readNumberingXml;
-var XmlElement = require("../../lib/xmlreader").Element;
+var XmlElement = require("../../lib/xml").Element;
 var test = require("../testing").test;
 
 

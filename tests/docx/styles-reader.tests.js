@@ -1,7 +1,7 @@
 var assert = require("assert");
 
 var readStylesXml = require("../../lib/docx/styles-reader").readStylesXml;
-var XmlElement = require("../../lib/xmlreader").Element;
+var XmlElement = require("../../lib/xml").Element;
 var test = require("../testing").test;
 
 
