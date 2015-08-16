@@ -26,6 +26,14 @@ describe('xml.writer', function() {
             '<root><album><year/><song/></album></root>');
     });
     
+    test('can write element attributes', function() {
+        var element = xml.element("root", {}, [
+            xml.element("album", {"title": "Everything in Transit"})
+        ]);
+        assertXmlString(element,
+            '<root><album title="Everything in Transit"/></root>');
+    });
+    
     test('can write text nodes', function() {
         var element = xml.element("root", {}, [
             xml.element("album", {}, [
