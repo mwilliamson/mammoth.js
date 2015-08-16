@@ -16,6 +16,16 @@ describe("zipfile", function() {
             assert.equal(contents, "p => h1");
         });
     });
+    
+    test('embedded style map is written to separate file', function() {
+        var zip = emptyZipFile();
+        
+        styleMap.writeStyleMap(zip, "p => h1");
+        
+        return zip.read("mammoth/style-map", "utf8").then(function(contents) {
+            assert.equal(contents, "p => h1");
+        });
+    });
 });
 
 function emptyZipFile() {
