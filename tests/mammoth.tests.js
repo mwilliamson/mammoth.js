@@ -81,7 +81,7 @@ describe('mammoth', function() {
         });
     });
     
-    test('embedded style is used if present', function() {
+    test('embedded style map is used if present', function() {
         var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
         return promises.nfcall(fs.readFile, docxPath)
             .then(function(buffer) {
@@ -93,6 +93,20 @@ describe('mammoth', function() {
             .then(function(result) {
                 assert.equal(result.value, "<h1>Walking on imported air</h1>");
                 assert.deepEqual(result.messages, []);
+            });
+    });
+    
+    test('embedded style map can be retrieved', function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return promises.nfcall(fs.readFile, docxPath)
+            .then(function(buffer) {
+                return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
+            })
+            .then(function(docx) {
+                return mammoth.readEmbeddedStyleMap({buffer: docx.toBuffer()});
+            })
+            .then(function(styleMap) {
+                assert.equal(styleMap, "p => h1");
             });
     });
     
