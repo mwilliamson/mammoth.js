@@ -44,20 +44,34 @@ describe('xml.writer', function() {
             '<root><album>Everything in Transit</album></root>');
     });
     
+    test('can write root element with long-form prefix when URI is namespace', function() {
+        var element = xml.element("{music}:root");
+        assertXmlString(element, {"m": "music"},
+            '<m:root xmlns:m="music"/>');
+    });
+    
     test('can write child elements with long-form prefix when URI is namespace', function() {
-        var element = xml.element("root", {"m": "music"}, [
-            xml.element("{music}album")
+        var element = xml.element("root", {}, [
+            xml.element("{music}:album")
         ]);
         assertXmlString(element, {"m": "music"},
             '<root xmlns:m="music"><m:album/></root>');
     });
     
     test('can write child elements with short-form prefix when URI is namespace', function() {
-        var element = xml.element("root", {"m": "music"}, [
+        var element = xml.element("root", {}, [
             xml.element("m:album")
         ]);
         assertXmlString(element, {"m": "music"},
             '<root xmlns:m="music"><m:album/></root>');
+    });
+    
+    test('default namespace has key of empty string', function() {
+        var element = xml.element("root", {}, [
+            xml.element("{music}:album")
+        ]);
+        assertXmlString(element, {"": "music"},
+            '<root xmlns="music"><album/></root>');
     });
 });
 
