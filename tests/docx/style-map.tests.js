@@ -6,7 +6,7 @@ var zipfile = require("../../lib/zipfile");
 var styleMap = require("../../lib/docx/style-map");
 var test = require("../testing").test;
 
-describe("zipfile", function() {
+describe("style-map", function() {
     test('embedded style map can be read after being written', function() {
         var zip = normalDocx();
         
