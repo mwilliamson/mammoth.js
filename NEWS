@@ -4,6 +4,8 @@
 
 * Generate warnings for not-understood style mappings and continue, rather than
   stopping with an error.
+  
+* Add support for embedded style maps.
 
 # 0.3.24
 
