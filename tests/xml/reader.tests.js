@@ -40,7 +40,7 @@ describe('xmlreader.readString', function() {
 
     test('unmapped namespaces URIs are included in braces as prefix', function() {
         return xmlreader.readString('<w:body xmlns:w="word"/>').then(function(result) {
-            assert.deepEqual(result.root.name, "{word}:body");
+            assert.deepEqual(result.root.name, "{word}body");
         });
     });
 

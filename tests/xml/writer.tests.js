@@ -45,14 +45,14 @@ describe('xml.writer', function() {
     });
     
     test('can write root element with long-form prefix when URI is namespace', function() {
-        var element = xml.element("{music}:root");
+        var element = xml.element("{music}root");
         assertXmlString(element, {"m": "music"},
             '<m:root xmlns:m="music"/>');
     });
     
     test('can write child elements with long-form prefix when URI is namespace', function() {
         var element = xml.element("root", {}, [
-            xml.element("{music}:album")
+            xml.element("{music}album")
         ]);
         assertXmlString(element, {"m": "music"},
             '<root xmlns:m="music"><m:album/></root>');
@@ -68,7 +68,7 @@ describe('xml.writer', function() {
     
     test('default namespace has key of empty string', function() {
         var element = xml.element("root", {}, [
-            xml.element("{music}:album")
+            xml.element("{music}album")
         ]);
         assertXmlString(element, {"": "music"},
             '<root xmlns="music"><album/></root>');
