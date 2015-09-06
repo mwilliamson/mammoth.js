@@ -33,4 +33,12 @@ describe("uriToPath", function() {
     test("URI is unquoted", function() {
         assert.equal(uriToPath("file:///a%20b"), "/a b");
     });
+    
+    test("when host is set to localhost then path can be found", function() {
+        assert.equal(uriToPath("file://localhost/a/b/c"), "/a/b/c");
+    });
+    
+    test("when host is set but not localhost then path cannot be found", function() {
+        assert.throws(function() { uriToPath("file://example/a/b/c"); }, /Could not convert URI to path: file:\/\/example\/a\/b\/c/);
+    });
 });
