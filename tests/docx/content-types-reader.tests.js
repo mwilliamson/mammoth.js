@@ -24,4 +24,17 @@ describe('readContentTypesFromXml', function() {
         });
         assert.equal(contentTypes.findContentType("word/media/hat.png"), "image/hat");
     });
+    
+    test('fallback content types have common image types', function() {
+        var contentTypes = readContentTypesFromXml({
+            root: new XmlElement("content-types:Types", {}, [])
+        });
+        assert.equal(contentTypes.findContentType("word/media/hat.png"), "image/png");
+        assert.equal(contentTypes.findContentType("word/media/hat.gif"), "image/gif");
+        assert.equal(contentTypes.findContentType("word/media/hat.jpg"), "image/jpeg");
+        assert.equal(contentTypes.findContentType("word/media/hat.jpeg"), "image/jpeg");
+        assert.equal(contentTypes.findContentType("word/media/hat.bmp"), "image/bmp");
+        assert.equal(contentTypes.findContentType("word/media/hat.tif"), "image/tiff");
+        assert.equal(contentTypes.findContentType("word/media/hat.tiff"), "image/tiff");
+    });
 });
