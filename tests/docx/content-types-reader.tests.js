@@ -37,4 +37,11 @@ describe('readContentTypesFromXml', function() {
         assert.equal(contentTypes.findContentType("word/media/hat.tif"), "image/tiff");
         assert.equal(contentTypes.findContentType("word/media/hat.tiff"), "image/tiff");
     });
+    
+    test('fallback content types are case insensitive on extension', function() {
+        var contentTypes = readContentTypesFromXml({
+            root: new XmlElement("content-types:Types", {}, [])
+        });
+        assert.equal(contentTypes.findContentType("word/media/hat.PnG"), "image/png");
+    });
 });
