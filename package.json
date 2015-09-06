@@ -45,10 +45,5 @@
     "pretest": "jshint lib tests",
     "test": "mocha tests --recursive"
   },
-  "licenses": [
-    {
-      "type": "BSD",
-      "url": "http://opensource.org/licenses/BSD-2-Clause"
-    }
-  ]
+  "license": "BSD-2-Clause"
 }
