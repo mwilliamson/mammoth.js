@@ -29,4 +29,8 @@ describe("uriToPath", function() {
     test("leading slash is retained on non-Windows file URIs", function() {
         assert.equal(uriToPath("file:///a/b/c"), "/a/b/c");
     });
+    
+    test("URI is unquoted", function() {
+        assert.equal(uriToPath("file:///a%20b"), "/a b");
+    });
 });
