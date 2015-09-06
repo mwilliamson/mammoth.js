@@ -22,6 +22,16 @@ describe("Files", function() {
             });
         });
     });
+    
+    test("can open files with relative URI", function() {
+        var filePath = path.resolve(testing.testPath("tiny-picture.png"));
+        var files = new Files(testing.testPath("."));
+        return files.read("tiny-picture.png", "base64").then(function(contents) {
+            return readFile(filePath, "base64").then(function(expectedContents) {
+                assert.deepEqual(contents, expectedContents);
+            });
+        });
+    });
 });
 
 
@@ -50,5 +60,9 @@ describe("uriToPath", function() {
     test("leading slash is dropped on Windows file URIs when platform is Windows", function() {
         assert.equal(uriToPath("file:///c:/a", "win32"), "c:/a");
         assert.equal(uriToPath("file:///C:/a", "win32"), "C:/a");
+    });
+    
+    test("relative URI is unquoted", function() {
+        assert.equal(uriToPath("a%20b/c"), "a b/c");
     });
 });
