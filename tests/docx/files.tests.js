@@ -4,6 +4,7 @@ var assert = require("assert");
 
 var promises = require("../../lib/promises");
 var Files = require("../../lib/docx/files").Files;
+var uriToPath = require("../../lib/docx/files").uriToPath;
 
 var testing = require("../testing");
 var test = testing.test;
@@ -20,5 +21,12 @@ describe("Files", function() {
                 assert.deepEqual(contents, expectedContents);
             });
         });
+    });
+});
+
+
+describe("uriToPath", function() {
+    test("leading slash is retained on non-Windows file URIs", function() {
+        assert.equal(uriToPath("file:///a/b/c"), "/a/b/c");
     });
 });
