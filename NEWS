@@ -7,6 +7,8 @@
   
 * Add support for embedded style maps.
 
+* Add support for linked images.
+
 # 0.3.24
 
 * Ignore w:numPr elements without w:numId or w:ilvl children.
