@@ -188,7 +188,16 @@ describe('mammoth', function() {
         var docxPath = path.join(__dirname, "test-data/external-picture.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
             assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
-            assert.deepEqual([], result.messages);
+            assert.deepEqual(result.messages, []);
+        });
+    });
+    
+    test('warn if images stored outside of document are specified when passing file without path', function() {
+        var docxPath = path.join(__dirname, "test-data/external-picture.docx");
+        var buffer = fs.readFileSync(docxPath);
+        return mammoth.convertToHtml({buffer: buffer}).then(function(result) {
+            assert.equal(result.value, '');
+            assert.deepEqual(result.messages, [results.warning("could not find external image 'tiny-picture.png', path of input document is unknown")]);
         });
     });
     

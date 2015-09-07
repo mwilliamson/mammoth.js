@@ -32,7 +32,20 @@ describe("Files", function() {
             });
         });
     });
+    
+    test("given base is not set when opening relative uri then error is raised", function() {
+        var files = new Files(null);
+        return assertError(files.read("not-a-real-file.png", "base64"), function(err) {
+            assert.equal(err.message, "could not find external image 'not-a-real-file.png', path of input document is unknown");
+        });
+    });
 });
+
+function assertError(promise, func) {
+    return promise.then(function() {
+        assert(false, "Expected error");
+    }, func);
+}
 
 
 describe("uriToPath", function() {
