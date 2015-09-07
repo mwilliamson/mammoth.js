@@ -37,7 +37,8 @@
     "jshint": "^2.5.2"
   },
   "browser": {
-    "./lib/unzip.js": "./browser/unzip.js"
+    "./lib/unzip.js": "./browser/unzip.js",
+    "./lib/docx/files.js": "./browser/docx/files.js"
   },
   "bin": {
     "mammoth": "bin/mammoth"
