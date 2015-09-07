@@ -39,6 +39,13 @@ describe("Files", function() {
             assert.equal(err.message, "could not find external image 'not-a-real-file.png', path of input document is unknown");
         });
     });
+    
+    test("error if relative uri cannot be opened", function() {
+        var files = new Files("/tmp");
+        return assertError(files.read("not-a-real-file.png", "base64"), function(err) {
+            assert.equal(err.message, "could not open external image: 'not-a-real-file.png' (document directory: '/tmp')\nENOENT, open '/tmp/not-a-real-file.png'");
+        });
+    });
 });
 
 function assertError(promise, func) {
