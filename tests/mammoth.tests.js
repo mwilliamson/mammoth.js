@@ -184,6 +184,14 @@ describe('mammoth', function() {
         });
     });
     
+    test('images stored outside of document are included in output', function() {
+        var docxPath = path.join(__dirname, "test-data/external-picture.docx");
+        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+            assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
+            assert.deepEqual([], result.messages);
+        });
+    });
+    
     test('simple list is converted to list elements', function() {
         var docxPath = path.join(__dirname, "test-data/simple-list.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {

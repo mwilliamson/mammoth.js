@@ -7,6 +7,7 @@ exports.test = test;
 exports.testPath = testPath;
 exports.testData = testData;
 exports.createFakeDocxFile = createFakeDocxFile;
+exports.createFakeFiles = createFakeFiles;
 
 
 function test(name, func) {
@@ -28,6 +29,23 @@ function testData(testDataPath) {
 }
 
 function createFakeDocxFile(files) {
+    function exists(path) {
+        return !!files[path];
+    }
+    
+    return {
+        read: createRead(files),
+        exists: exists
+    };
+}
+
+function createFakeFiles(files) {
+    return {
+        read: createRead(files)
+    };
+}
+
+function createRead(files) {
     function read(path, encoding) {
         return promises.when(files[path], function(buffer) {
             if (_.isString(buffer)) {
@@ -43,13 +61,5 @@ function createFakeDocxFile(files) {
             }
         });
     }
-    
-    function exists(path) {
-        return !!files[path];
-    }
-    
-    return {
-        read: read,
-        exists: exists
-    };
+    return read;
 }

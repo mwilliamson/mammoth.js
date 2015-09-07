@@ -286,7 +286,7 @@ describe("readXmlElement: ", function() {
     
     test("can read inline pictures", function() {
         var drawing = createInlineImage({
-            relationshipId: "rId5",
+            blip: createEmbeddedBlip("rId5"),
             description: "It's a hat"
         });
         
@@ -349,9 +349,37 @@ describe("readXmlElement: ", function() {
             });
     });
     
+    test("can read linked pictures", function() {
+        var drawing = createInlineImage({
+            blip: createLinkedBlip("rId5"),
+            description: "It's a hat"
+        });
+        
+        var imageBuffer = new Buffer("Not an image at all!");
+        var reader = new BodyReader({
+            relationships: {
+                "rId5": {target: "file:///media/hat.png"}
+            },
+            contentTypes: fakeContentTypes,
+            files: testing.createFakeFiles({
+                "file:///media/hat.png": imageBuffer
+            })
+        });
+        var result = reader.readXmlElement(drawing);
+        assert.deepEqual(result.messages, []);
+        var element = single(result.value);
+        assert.equal("image", element.type);
+        assert.equal(element.altText, "It's a hat");
+        assert.equal(element.contentType, "image/png");
+        return element.read()
+            .then(function(readValue) {
+                assert.equal(readValue, imageBuffer);
+            });
+    });
+    
     test("warning if unsupported image type", function() {
         var drawing = createInlineImage({
-            relationshipId: "rId5",
+            blip: createEmbeddedBlip("rId5"),
             description: "It's a hat"
         });
         
@@ -514,11 +542,19 @@ function createInlineImage(options) {
                 new XmlElement("a:graphicData", {}, [
                     new XmlElement("pic:pic", {}, [
                         new XmlElement("pic:blipFill", {}, [
-                            new XmlElement("a:blip", {"r:embed": options.relationshipId})
+                            options.blip
                         ])
                     ])
                 ])
             ])
         ])
     ]);
+}
+
+function createEmbeddedBlip(relationshipId) {
+    return new XmlElement("a:blip", {"r:embed": relationshipId});
+}
+
+function createLinkedBlip(relationshipId) {
+    return new XmlElement("a:blip", {"r:link": relationshipId});
 }
