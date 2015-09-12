@@ -64,7 +64,36 @@ describe("style-map", function() {
             });
         });
     });
+    
+    test('embedded style map has override content type in [Content_Types].xml', function() {
+        var zip = normalDocx();
+        
+        return styleMap.writeStyleMap(zip, "p => h1").then(function() {
+            return zip.read("[Content_Types].xml", "utf8").then(function(contents) {
+                assert.equal(contents, expectedContentTypesXml);
+            });
+        });
+    });
+    
+    test('replacing style map keeps content type', function() {
+        var zip = normalDocx();
+        
+        return styleMap.writeStyleMap(zip, "p => h1").then(function() {
+            return styleMap.writeStyleMap(zip, "p => h2");
+        }).then(function() {
+            return zip.read("[Content_Types].xml", "utf8").then(function(contents) {
+                assert.equal(contents, expectedContentTypesXml);
+            });
+        });
+    });
+    
 });
+
+var expectedContentTypesXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+    '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+    '<Default Extension="png" ContentType="image/png"/>' +
+    '<Override PartName="/mammoth/style-map" ContentType="text/prs.mammoth.style-map"/>' +
+    '</Types>';
 
 function normalDocx() {
     var zip = new JSZip();
@@ -72,7 +101,12 @@ function normalDocx() {
         '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">' +
         '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/settings" Target="settings.xml"/>' +
         '</Relationships>';
+    var originalContentTypesXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' +
+        '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">' +
+        '<Default Extension="png" ContentType="image/png"/>' +
+        '</Types>';
     zip.file("word/_rels/document.xml.rels", originalRelationshipsXml);
+    zip.file("[Content_Types].xml", originalContentTypesXml);
     var buffer = zip.generate({type: "arraybuffer"});
     return zipfile.openArrayBuffer(buffer);
 }
