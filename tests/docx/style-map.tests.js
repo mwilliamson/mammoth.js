@@ -7,6 +7,14 @@ var styleMap = require("../../lib/docx/style-map");
 var test = require("../testing").test;
 
 describe("style-map", function() {
+    test('reading embedded style map on document without embedded style map returns null', function() {
+        var zip = normalDocx();
+        
+        return styleMap.readStyleMap(zip).then(function(contents) {
+            assert.equal(contents, null);
+        });
+    });
+    
     test('embedded style map can be read after being written', function() {
         var zip = normalDocx();
         
