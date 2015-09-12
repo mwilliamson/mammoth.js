@@ -378,6 +378,35 @@ Each paragraph is followed by two newlines.
 
   * `messages`: any messages, such as errors and warnings
 
+#### `mammoth.embedStyleMap(input, styleMap)`
+
+Given an existing docx file,
+`embedStyleMap` will generate a new docx file with the passed style map embedded.
+When the new docx file is read by Mammoth,
+it will use the embedded style if no explicit style map is provided.
+
+* `input`: an object describing the source document.
+  On node.js, the following inputs are supported:
+  
+    * `{path: path}`, where `path` is the path to the .docx file.
+    * `{buffer: buffer}`, where `buffer` is a node.js Buffer containing a .docx file.
+    
+  In the browser, the following inputs are supported:
+  
+    * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
+
+* Returns a promise.
+  Call `toBuffer()` on the value inside the promise to get a `Buffer` representing the new document.
+
+For instance:
+
+```javascript
+mammoth.embedStyleMap({path: sourcePath}, "p[style-name='Section Title'] => h1:fresh");
+    .then(function(docx) {
+        fs.writeFile(destinationPath, docx.toBuffer(), callback);
+    });
+```
+
 #### Messages
 
 Each message has the following properties:
