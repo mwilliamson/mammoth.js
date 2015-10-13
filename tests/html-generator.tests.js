@@ -40,6 +40,19 @@ describe('HtmlGenerator', function() {
         return assert.equal(generator.asString(), "");
     });
     
+    test('can leave all HTML elements for next style', function() {
+        var generator = new HtmlGenerator();
+        var htmlPath = htmlPaths.elements([
+            htmlPaths.element("p", {}, {fresh: false})
+        ]);
+        generator.satisfyPath(htmlPath);
+        generator.text("Apple");
+        generator.satisfyPath(htmlPath);
+        generator.text("Banana");
+        generator.closeAll();
+        return assert.equal(generator.asString(), "<p>AppleBanana</p>");
+    });
+    
     test('can leave some HTML elements for next style', function() {
         var generator = new HtmlGenerator();
         var listPath = htmlPaths.elements([
