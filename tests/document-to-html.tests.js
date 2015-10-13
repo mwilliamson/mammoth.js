@@ -9,6 +9,7 @@ var htmlPaths = require("../lib/html-paths");
 var xml = require("../lib/xml");
 var results = require("../lib/results");
 var documentMatchers = require("../lib/document-matchers");
+var Html = require("../lib/html");
 
 
 describe('DocumentConverter', function() {
@@ -157,17 +158,16 @@ describe('DocumentConverter', function() {
         });
     });
     
-    // TODO
-    //~ test('consecutive bold runs are wrapped in a single <strong> element', function() {
-        //~ var paragraph = new documents.Paragraph([
-            //~ runOfText("Hello", {isBold: true}),
-            //~ runOfText(".", {isBold: true})
-        //~ ]);
-        //~ var converter = new DocumentConverter();
-        //~ return converter.convertToHtml(paragraph).then(function(result) {
-            //~ assert.equal(result.value, "<p><strong>Hello.</strong></p>");
-        //~ });
-    //~ });
+    test('consecutive bold runs are wrapped in a single <strong> element', function() {
+        var paragraph = new documents.Paragraph([
+            runOfText("Hello", {isBold: true}),
+            runOfText(".", {isBold: true})
+        ]);
+        var converter = new DocumentConverter();
+        return converter.convertToHtml(paragraph).then(function(result) {
+            assert.equal(result.value, "<p><strong>Hello.</strong></p>");
+        });
+    });
     
     test('underline runs are ignored by default', function() {
         var run = runOfText("Hello.", {isUnderline: true});
@@ -476,10 +476,9 @@ describe('DocumentConverter', function() {
             contentType: "image/png"
         });
         var converter = new DocumentConverter({
-            convertImage: function(element, html, messages, callback) {
+            convertImage: function(element, messages, callback) {
                 element.read("utf8").then(function(altText) {
-                    html.selfClosing(htmlPaths.element("img", {alt: altText}));
-                    callback();
+                    callback(null, Html.selfClosingElement("img", {alt: altText}));
                 });
             }
         });

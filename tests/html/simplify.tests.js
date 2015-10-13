@@ -6,11 +6,25 @@ var htmlPaths = require("../../lib/html-paths");
 
 
 var fragment = html.fragment;
-var element = html.element;
 var text = html.text;
 var pathToNode = html.pathToNode;
 
 describe("simplify", function() {
+    test("empty text nodes are removed", function() {
+        assert.deepEqual(
+            html.simplify(fragment([text("")])),
+            fragment([]));
+    });
+    
+    test("empty elements are removed", function() {
+        var path = htmlPaths.elements([
+            htmlPaths.element("p", {}, {fresh: false})]);
+        assert.deepEqual(
+            html.simplify(fragment([
+                pathToNode(path, [text("")])])),
+            fragment([]));
+    });
+    
     test("successive fresh elements are not collapsed", function() {
         var path = htmlPaths.elements([
             htmlPaths.element("p", {}, {fresh: true})]);
