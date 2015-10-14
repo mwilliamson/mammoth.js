@@ -5,6 +5,7 @@ var html = require("../../lib/html");
 var htmlPaths = require("../../lib/html-paths");
 
 
+var nonFreshElement = html.nonFreshElement;
 var fragment = html.fragment;
 var text = html.text;
 var pathToNode = html.pathToNode;
@@ -16,13 +17,22 @@ describe("simplify", function() {
             fragment([]));
     });
     
-    test("empty elements are removed", function() {
-        var path = htmlPaths.elements([
-            htmlPaths.element("p", {}, {fresh: false})]);
+    test("elements with no children are removed", function() {
         assert.deepEqual(
-            html.simplify(fragment([
-                pathToNode(path, [text("")])])),
+            html.simplify(fragment([nonFreshElement("p", {}, [])])),
             fragment([]));
+    });
+    
+    test("elements only containing empty nodes are removed", function() {
+        assert.deepEqual(
+            html.simplify(fragment([nonFreshElement("p", {}, [text("")])])),
+            fragment([]));
+    });
+    
+    test("children of element is simplified", function() {
+        assert.deepEqual(
+            html.simplify(fragment([nonFreshElement("p", {}, [text("Hello"), text("")])])),
+            fragment([nonFreshElement("p", {}, [text("Hello")])]));
     });
     
     test("successive fresh elements are not collapsed", function() {
