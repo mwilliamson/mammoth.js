@@ -13,8 +13,8 @@ describe("HTML ast", function() {
     
     test("children of elements are collapsed", function() {
         assert.deepEqual(
-            html.element("p", {}, [html.text("Hello")]),
-            html.element("p", {}, [html.fragment([html.text("Hello")])]));
+            html.freshElement("p", {}, [html.text("Hello")]),
+            html.freshElement("p", {}, [html.fragment([html.text("Hello")])]));
     });
 });
 
