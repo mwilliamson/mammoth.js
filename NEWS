@@ -5,6 +5,8 @@
 
 * Collapse similar non-fresh HTML elements together.
 
+* Don't escape double quotes outside of attributes.
+
 # 0.3.25
 
 * When the styleMap option is passed as a string, ignore lines beginning with #.
