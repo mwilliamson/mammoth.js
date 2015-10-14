@@ -1,3 +1,7 @@
+# 0.3.27
+
+* Fix recursive collapsing of elements.
+
 # 0.3.26
 
 * Keep HTML elements open correctly when the HTML path contains no fresh

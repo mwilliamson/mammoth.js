@@ -29,7 +29,7 @@ describe("simplify", function() {
             fragment([]));
     });
     
-    test("children of element is simplified", function() {
+    test("empty children of element are removed", function() {
         assert.deepEqual(
             html.simplify(fragment([nonFreshElement("p", {}, [text("Hello"), text("")])])),
             fragment([nonFreshElement("p", {}, [text("Hello")])]));
@@ -69,5 +69,13 @@ describe("simplify", function() {
                 pathToNode(nonFreshPath, [text(" there")])])),
             fragment([
                 pathToNode(freshPath, [text("Hello"), text(" there")])]));
+    });
+    
+    test("children of collapsed element can collapse with children of another collapsed element", function() {
+        assert.deepEqual(
+            html.simplify(fragment([
+                nonFreshElement("blockquote", {}, [nonFreshElement("p", {}, [text("Hello")])]),
+                nonFreshElement("blockquote", {}, [nonFreshElement("p", {}, [text("there")])])])),
+            fragment([nonFreshElement("blockquote", {}, [nonFreshElement("p", {}, [text("Hello"), text("there")])])]));
     });
 });
