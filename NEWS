@@ -3,6 +3,8 @@
 * Keep HTML elements open correctly when the HTML path contains no fresh
   element.
 
+* Collapse similar non-fresh HTML elements together.
+
 # 0.3.25
 
 * When the styleMap option is passed as a string, ignore lines beginning with #.
