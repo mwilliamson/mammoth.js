@@ -58,7 +58,7 @@ describe("simplify", function() {
                 pathToNode(path, [text("Hello"), text(" there")])]));
     });
     
-    test("non-fresh can collapse into preceding non-fresh element", function() {
+    test("non-fresh can collapse into preceding fresh element", function() {
         var freshPath = htmlPaths.elements([
             htmlPaths.element("p", {}, {fresh: true})]);
         var nonFreshPath = htmlPaths.elements([
