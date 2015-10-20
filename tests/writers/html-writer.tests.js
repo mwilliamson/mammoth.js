@@ -47,7 +47,18 @@ describe('html-writer', function() {
         writer.text("Two");
         writer.close("li");
         writer.close("ul");
-        return assert.equal(writer.asString(), "<ul>\n  <li>One</li>\n  <li>Two</li>\n</ul>");
+        return assert.equal(writer.asString(), "<ul>\n  <li>\n    One\n  </li>\n  <li>\n    Two\n  </li>\n</ul>");
+    });
+    
+    test('when prettyPrint is true inner elements do not have new lines', function() {
+        var writer = htmlWriter.writer({prettyPrint: true});
+        writer.open("p");
+        writer.text("One");
+        writer.open("em");
+        writer.text("Two");
+        writer.close("em");
+        writer.close("p");
+        return assert.equal(writer.asString(), "<p>\n  One<em>Two</em>\n</p>");
     });
     
     test('indents closing element correctly when nested inside another indented element', function() {
