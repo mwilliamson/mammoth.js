@@ -6,7 +6,7 @@
 
 * Read children of v:roundrect.
 
-* Ignore v:shadow.
+* Ignore v:shadow and v:shapetype.
 
 # 0.3.27
 
