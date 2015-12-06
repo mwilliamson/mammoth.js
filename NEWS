@@ -2,6 +2,8 @@
 
 * Avoid inserting newlines around inline elements when pretty-printing HTML.
 
+* CLI: print warnings to stderr.
+
 # 0.3.27
 
 * Fix recursive collapsing of elements.
