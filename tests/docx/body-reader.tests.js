@@ -284,6 +284,31 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value, []);
     });
     
+    test("can read imagedata elements with r:id attribute", function() {
+        var imagedataElement = new XmlElement("v:imagedata", {"r:id": "rId5", "o:title": "It's a hat"});
+        
+        var imageBuffer = new Buffer("Not an image at all!");
+        var reader = new BodyReader({
+            relationships: {
+                "rId5": {target: "media/hat.png"}
+            },
+            contentTypes: fakeContentTypes,
+            docxFile: createFakeDocxFile({
+                "word/media/hat.png": imageBuffer
+            })
+        });
+        var result = reader.readXmlElement(imagedataElement);
+        assert.deepEqual(result.messages, []);
+        var element = result.value;
+        assert.equal("image", element.type);
+        assert.equal(element.altText, "It's a hat");
+        assert.equal(element.contentType, "image/png");
+        return element.read()
+            .then(function(readValue) {
+                assert.equal(readValue, imageBuffer);
+            });
+    });
+    
     test("can read inline pictures", function() {
         var drawing = createInlineImage({
             blip: createEmbeddedBlip("rId5"),

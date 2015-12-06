@@ -4,6 +4,8 @@
 
 * CLI: print warnings to stderr.
 
+* Read v:imagedata with r:id attribute.
+
 * Read children of v:roundrect.
 
 * Ignore office-word:wrap, v:shadow and v:shapetype.
