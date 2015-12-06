@@ -20,13 +20,13 @@ describe("HTML write", function() {
     
     test("element attributes are HTML escaped", function() {
         assert.equal(
-            generateString(html.freshElement("p", {"x": "<"})),
+            generateString(html.freshElement("p", {"x": "<"}, [html.forceWrite])),
             '<p x="&lt;"></p>');
     });
     
     test("double quotes inside attributes are escaped", function() {
         assert.equal(
-            generateString(html.freshElement("p", {"x": '"'})),
+            generateString(html.freshElement("p", {"x": '"'}, [html.forceWrite])),
             '<p x="&quot;"></p>');
     });
     
