@@ -1,3 +1,9 @@
+# 0.3.30
+
+* Replace nomnom with argparse for CLI argument parsing. Usage should be the
+  same, but unknown arguments will now cause an exit with failure rather than
+  being ignored.
+
 # 0.3.29
 
 * Always use mc:Fallback when reading mc:AlternateContent elements.
