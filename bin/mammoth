@@ -20,7 +20,7 @@ outputGroup.addArgument(["output-path"], {
 });
 outputGroup.addArgument(["--output-dir"], {
     type: "string",
-    help: "Output directory for generated HTML and images. Images will be stored in separate files. Takes precedence over output-path."
+    help: "Output directory for generated HTML and images. Images will be stored in separate files. Mutually exclusive with output-path."
 });
 
 parser.addArgument(["--output-format"], {
