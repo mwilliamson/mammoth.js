@@ -1,5 +1,9 @@
 # 0.3.30
 
+* Improve support for lists made in LibreOffice. Specifically, this changes the
+  default style mapping for paragraphs with a style of "Normal" to have the
+  lowest precedence.
+
 * Replace nomnom with argparse for CLI argument parsing. Usage should be the
   same, but unknown arguments will now cause an exit with failure rather than
   being ignored.
