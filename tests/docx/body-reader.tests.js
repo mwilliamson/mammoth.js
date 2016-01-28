@@ -3,7 +3,8 @@ var path = require("path");
 
 var BodyReader = require("../../lib/docx/body-reader").BodyReader;
 var documents = require("../../lib/documents");
-var XmlElement = require("../../lib/xml").Element;
+var xml = require("../../lib/xml");
+var XmlElement = xml.Element;
 var Numbering = require("../../lib/docx/numbering-xml").Numbering;
 var Styles = require("../../lib/docx/styles-reader").Styles;
 var warning = require("../../lib/results").warning;
@@ -532,6 +533,12 @@ describe("readXmlElement: ", function() {
         ]);
         var result = readXmlElement(textbox, {styles: styles});
         assert.deepEqual(result.value[0].styleId, "second");
+    });
+    
+    test("text nodes are ignored when reading children", function() {
+        var runXml = new XmlElement("w:r", {}, [xml.text("[text]")]);
+        var run = readXmlElementValue(runXml);
+        assert.deepEqual(run, new documents.Run([]));
     });
 });
 
