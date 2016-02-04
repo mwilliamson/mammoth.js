@@ -14,12 +14,8 @@ var test = testing.test;
 var createFakeDocxFile = testing.createFakeDocxFile;
 
 function readXmlElement(element, options) {
-    var styles = {
-        findParagraphStyleById: function(id) {
-            return {};
-        }
-    };
-    options = options || {styles: styles};
+    options = Object.create(options || {});
+    options.styles = options.styles || new Styles({}, {});
     return new BodyReader(options).readXmlElement(element);
 }
 
@@ -90,10 +86,7 @@ describe("readXmlElement: ", function() {
         
         var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
         
-        var reader = new BodyReader({
-            numbering: numbering
-        });
-        var paragraph = reader.readXmlElement(paragraphXml).value;
+        var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering});
         assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
     });
     
