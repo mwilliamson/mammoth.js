@@ -46,7 +46,7 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(paragraph.styleId, null);
     });
     
-    test("paragraph has style ID read from paragraph properties if present", function() {
+    test("paragraph has style ID and name read from paragraph properties if present", function() {
         var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
         var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
         var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
@@ -55,17 +55,21 @@ describe("readXmlElement: ", function() {
         
         var paragraph = readXmlElementValue(paragraphXml, {styles: styles});
         assert.deepEqual(paragraph.styleId, "Heading1");
+        assert.deepEqual(paragraph.styleName, "Heading 1");
     });
     
-    test("paragraph has style name read from paragraph properties and styles", function() {
+    test("warning is emitted when paragraph style cannot be found", function() {
         var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
         var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
         var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
         
-        var styles = new Styles({"Heading1": {name: "Heading 1"}}, {});
+        var styles = new Styles({}, {});
         
-        var paragraph = readXmlElementValue(paragraphXml, {styles: styles});
-        assert.deepEqual(paragraph.styleName, "Heading 1");
+        var result = readXmlElement(paragraphXml, {styles: styles});
+        var paragraph = result.value;
+        assert.deepEqual(paragraph.styleId, "Heading1");
+        assert.deepEqual(paragraph.styleName, null);
+        assert.deepEqual(result.messages, [warning("Style with ID Heading1 was referenced but not defined in the document")]);
     });
     
     test("paragraph has justification read from paragraph properties if present", function() {
