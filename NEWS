@@ -1,3 +1,7 @@
+# 0.3.31
+
+* Handle references to missing styles when reading documents.
+
 # 0.3.30
 
 * Improve support for lists made in LibreOffice. Specifically, this changes the
