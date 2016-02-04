@@ -69,7 +69,7 @@ describe("readXmlElement: ", function() {
         var paragraph = result.value;
         assert.deepEqual(paragraph.styleId, "Heading1");
         assert.deepEqual(paragraph.styleName, null);
-        assert.deepEqual(result.messages, [warning("Style with ID Heading1 was referenced but not defined in the document")]);
+        assert.deepEqual(result.messages, [warning("Paragraph style with ID Heading1 was referenced but not defined in the document")]);
     });
     
     test("paragraph has justification read from paragraph properties if present", function() {
@@ -146,7 +146,7 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(run.styleId, null);
     });
     
-    test("run has style ID read from run properties if present", function() {
+    test("run has style ID and name read from run properties if present", function() {
         var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
         var runXml = runWithProperties([runStyleXml]);
         
@@ -154,16 +154,20 @@ describe("readXmlElement: ", function() {
         
         var run = readXmlElementValue(runXml, {styles: styles});
         assert.deepEqual(run.styleId, "Heading1Char");
+        assert.deepEqual(run.styleName, "Heading 1 Char");
     });
     
-    test("run has style name read from run properties and styles", function() {
+    test("warning is emitted when run style cannot be found", function() {
         var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
         var runXml = runWithProperties([runStyleXml]);
         
-        var styles = new Styles({}, {"Heading1Char": {name: "Heading 1 Char"}});
+        var styles = new Styles({}, {});
         
-        var run = readXmlElementValue(runXml, {styles: styles});
-        assert.deepEqual(run.styleName, "Heading 1 Char");
+        var result = readXmlElement(runXml, {styles: styles});
+        var run = result.value;
+        assert.deepEqual(run.styleId, "Heading1Char");
+        assert.deepEqual(run.styleName, null);
+        assert.deepEqual(result.messages, [warning("Run style with ID Heading1Char was referenced but not defined in the document")]);
     });
     
     test("isBold is false if bold element is not present", function() {
