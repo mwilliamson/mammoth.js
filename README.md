@@ -227,7 +227,7 @@ var options = {
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
 
-### Strikethrough
+#### Strikethrough
 
 By default, strikethrough text is wrapped in `<s>` tags.
 This behaviour can be changed by adding a style mapping for `strike`.
