@@ -227,15 +227,6 @@ var options = {
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
 
-The `convertUnderline` option is deprecated, and will be removed in Mammoth.js 1.0.
-The following behaves as the example above:
-
-```javascript
-var options = {
-    convertUnderline: mammoth.underline.element("em")
-};
-```
-
 ### Strikethrough
 
 By default, strikethrough text is wrapped in `<s>` tags.
@@ -336,9 +327,6 @@ Converts the source document to HTML.
   * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
     Set this option to an [image converter](#image-converters) to override the default behaviour.
     
-  * `convertUnderline`: deprecated in favour of using style mappings to describe how to convert underlined text.
-    Set this option to [`mammoth.underline.element(name)`](#underline) to override the default behaviour.
-  
   * `ignoreEmptyParagraphs`: by default, empty paragraphs are ignored.
     Set this option to `false` to preserve empty paragraphs in the output.
 
