@@ -106,6 +106,13 @@ describe("styleReader.readDocumentMatcher", function() {
         );
     });
     
+    test("reads italic", function() {
+        assertDocumentMatcher(
+            "i",
+            documentMatchers.italic
+        );
+    });
+    
     test("reads underline", function() {
         assertDocumentMatcher(
             "u",
