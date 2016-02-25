@@ -263,6 +263,21 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('italic runs can be configured with style mapping', function() {
+        var run = runOfText("Hello.", {isItalic: true});
+        var converter = new DocumentConverter({
+            styleMap: [
+                {
+                    from: documentMatchers.italic,
+                    to: htmlPaths.elements([htmlPaths.element("strong")])
+                }
+            ]
+        });
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<strong>Hello.</strong>");
+        });
+    });
+    
     test('run can be both bold and italic', function() {
         var run = runOfText("Hello.", {isBold: true, isItalic: true});
         var converter = new DocumentConverter();
