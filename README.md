@@ -39,15 +39,6 @@ The following features are currently supported:
 * Text boxes. The contents of the text box are treated as a separate paragraph
   that appears after the paragraph containing the text box.
 
-## Other supported platforms
-
-* [Python](https://github.com/mwilliamson/python-mammoth).
-  Available [on PyPI](https://pypi.python.org/pypi/mammoth).
-
-* [WordPress](https://wordpress.org/plugins/mammoth-docx-converter/).
-
-* [Java](https://github.com/mwilliamson/java-mammoth).
-
 ## Web demo
 
 The easiest way to try out mammoth is to use the web demo:
@@ -59,6 +50,15 @@ The easiest way to try out mammoth is to use the web demo:
 ## Installation
 
     npm install mammoth
+
+## Other supported platforms
+
+* [Python](https://github.com/mwilliamson/python-mammoth).
+  Available [on PyPI](https://pypi.python.org/pypi/mammoth).
+
+* [WordPress](https://wordpress.org/plugins/mammoth-docx-converter/).
+
+* [Java](https://github.com/mwilliamson/java-mammoth).
     
 ## Usage
 
