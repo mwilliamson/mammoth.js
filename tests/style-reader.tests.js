@@ -99,6 +99,13 @@ describe("styleReader.readDocumentMatcher", function() {
         );
     });
     
+    test("reads bold", function() {
+        assertDocumentMatcher(
+            "b",
+            documentMatchers.bold
+        );
+    });
+    
     test("reads underline", function() {
         assertDocumentMatcher(
             "u",
