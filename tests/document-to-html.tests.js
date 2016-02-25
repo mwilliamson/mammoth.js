@@ -140,11 +140,26 @@ describe('DocumentConverter', function() {
         });
     });
     
-    test('bold runs are wrapped in <strong> tags', function() {
+    test('bold runs are wrapped in <strong> tags by default', function() {
         var run = runOfText("Hello.", {isBold: true});
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
             assert.equal(result.value, "<strong>Hello.</strong>");
+        });
+    });
+    
+    test('bold runs can be configured with style mapping', function() {
+        var run = runOfText("Hello.", {isBold: true});
+        var converter = new DocumentConverter({
+            styleMap: [
+                {
+                    from: documentMatchers.bold,
+                    to: htmlPaths.elements([htmlPaths.element("em")])
+                }
+            ]
+        });
+        return converter.convertToHtml(run).then(function(result) {
+            assert.equal(result.value, "<em>Hello.</em>");
         });
     });
     
