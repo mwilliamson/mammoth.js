@@ -71,6 +71,12 @@ For instance:
 
 If no output file is specified, output is written to stdout instead.
 
+#### Text
+
+UTF-8 text is handled correctly however note the output is not wrapped in a document
+tag that would set the encoding. So opening the output file in a web browser may
+result in the UTF-8 encoded text failing to render correctly.
+
 #### Images
 
 By default, images are included inline in the output HTML.
