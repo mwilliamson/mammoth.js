@@ -71,11 +71,9 @@ For instance:
 
 If no output file is specified, output is written to stdout instead.
 
-#### Text
-
-UTF-8 text is handled correctly however note the output is not wrapped in a document
-tag that would set the encoding. So opening the output file in a web browser may
-result in the UTF-8 encoded text failing to render correctly.
+The output is an HTML fragment, rather than a full HTML document, encoded with UTF-8.
+Since the encoding is not explicitly set in the fragment,
+opening the output file in a web browser may cause Unicode characters to be rendered incorrectly if the browser doesn't default to UTF-8.
 
 #### Images
 
