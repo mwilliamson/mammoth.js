@@ -78,4 +78,18 @@ describe("simplify", function() {
                 nonFreshElement("blockquote", {}, [nonFreshElement("p", {}, [text("there")])])])),
             fragment([nonFreshElement("blockquote", {}, [nonFreshElement("p", {}, [text("Hello"), text("there")])])]));
     });
+    
+    test("empty elements are removed before collapsing", function() {
+        var freshPath = htmlPaths.elements([
+            htmlPaths.element("p", {}, {fresh: true})]);
+        var nonFreshPath = htmlPaths.elements([
+            htmlPaths.element("p", {}, {fresh: false})]);
+        assert.deepEqual(
+            html.simplify(fragment([
+                pathToNode(nonFreshPath, [text("Hello")]),
+                pathToNode(freshPath, []),
+                pathToNode(nonFreshPath, [text(" there")])])),
+            fragment([
+                pathToNode(nonFreshPath, [text("Hello"), text(" there")])]));
+    });
 });

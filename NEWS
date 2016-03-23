@@ -1,3 +1,7 @@
+# 0.3.33
+
+* Improve collapsing of elements when there are empty elements.
+
 # 0.3.32
 
 * Allow bold and italic style mappings to be configured.
