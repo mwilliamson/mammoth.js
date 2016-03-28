@@ -1,3 +1,7 @@
+# 1.0.0
+
+* Generated IDs no longer insert a hyphen after the ID prefix.
+
 # 0.3.33
 
 * Improve collapsing of elements when there are empty elements.

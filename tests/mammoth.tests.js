@@ -226,7 +226,7 @@ describe('mammoth', function() {
         // TODO: don't duplicate footnotes with multiple references
         var docxPath = path.join(__dirname, "test-data/footnotes.docx");
         var options = {
-            idPrefix: "doc-42"
+            idPrefix: "doc-42-"
         };
         return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
             var expectedOutput = '<p>Ouch' +
@@ -242,7 +242,7 @@ describe('mammoth', function() {
     test('endnotes are appended to text', function() {
         var docxPath = path.join(__dirname, "test-data/endnotes.docx");
         var options = {
-            idPrefix: "doc-42"
+            idPrefix: "doc-42-"
         };
         return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
             var expectedOutput = '<p>Ouch' +
@@ -258,7 +258,7 @@ describe('mammoth', function() {
     test('relationships are handled properly in footnotes', function() {
         var docxPath = path.join(__dirname, "test-data/footnote-hyperlink.docx");
         var options = {
-            idPrefix: "doc-42"
+            idPrefix: "doc-42-"
         };
         return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
             var expectedOutput =

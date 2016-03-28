@@ -346,7 +346,7 @@ describe('DocumentConverter', function() {
             {anchor: "_Peter"}
         );
         var converter = new DocumentConverter({
-            idPrefix: "doc-42"
+            idPrefix: "doc-42-"
         });
         return converter.convertToHtml(hyperlink).then(function(result) {
             assert.equal(result.value, '<a href="#doc-42-_Peter">Hello.</a>');
@@ -356,7 +356,7 @@ describe('DocumentConverter', function() {
     test('bookmarks are converted to anchors', function() {
         var bookmarkStart = new documents.BookmarkStart({name: "_Peter"});
         var converter = new DocumentConverter({
-            idPrefix: "doc-42"
+            idPrefix: "doc-42-"
         });
         var document = new documents.Document([bookmarkStart]);
         return converter.convertToHtml(document).then(function(result) {
@@ -426,7 +426,7 @@ describe('DocumentConverter', function() {
             noteId: "4"
         });
         var converter = new DocumentConverter({
-            idPrefix: "doc-42"
+            idPrefix: "doc-42-"
         });
         return converter.convertToHtml(footnoteReference).then(function(result) {
             assert.equal(result.value, '<sup><a href="#doc-42-footnote-4" id="doc-42-footnote-ref-4">[1]</a></sup>');
@@ -455,7 +455,7 @@ describe('DocumentConverter', function() {
         );
         
         var converter = new DocumentConverter({
-            idPrefix: "doc-42"
+            idPrefix: "doc-42-"
         });
         return converter.convertToHtml(document).then(function(result) {
             var expectedOutput = '<p>Knock knock<sup><a href="#doc-42-footnote-4" id="doc-42-footnote-ref-4">[1]</a></sup></p>' +
