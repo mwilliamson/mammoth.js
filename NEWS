@@ -1,5 +1,7 @@
 # 1.0.0
 
+* Remove deprecated convertUnderline option.
+
 * Generated IDs no longer insert a hyphen after the ID prefix.
 
 * The default ID prefix is now the empty string rather than a random number

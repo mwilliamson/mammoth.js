@@ -1,7 +1,6 @@
 var assert = require("assert");
 var promises = require("../lib/promises");
 
-var mammoth = require("../lib");
 var documents = require("../lib/documents");
 var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
 var test = require("./testing").test;
@@ -189,16 +188,6 @@ describe('DocumentConverter', function() {
         var converter = new DocumentConverter();
         return converter.convertToHtml(run).then(function(result) {
             assert.equal(result.value, "Hello.");
-        });
-    });
-    
-    test('underline runs can be wrapped in <u> tags using convertUnderline option', function() {
-        var run = runOfText("Hello.", {isUnderline: true});
-        var converter = new DocumentConverter({
-            convertUnderline: mammoth.underline.element("u")
-        });
-        return converter.convertToHtml(run).then(function(result) {
-            assert.equal(result.value, "<u>Hello.</u>");
         });
     });
     
