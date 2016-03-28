@@ -2,6 +2,9 @@
 
 * Generated IDs no longer insert a hyphen after the ID prefix.
 
+* The default ID prefix is now the empty string rather than a random number
+  followed by a hyphen.
+
 # 0.3.33
 
 * Improve collapsing of elements when there are empty elements.
