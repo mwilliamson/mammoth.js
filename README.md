@@ -376,6 +376,11 @@ Converts the source document to HTML.
     
   * `ignoreEmptyParagraphs`: by default, empty paragraphs are ignored.
     Set this option to `false` to preserve empty paragraphs in the output.
+    
+  * `idPrefix`:
+    a string to prepend to any generated IDs,
+    such as those used by bookmarks, footnotes and endnotes.
+    Defaults to an empty string.
 
 * Returns a promise containing a result.
   This result has the following properties:
