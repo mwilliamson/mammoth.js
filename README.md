@@ -336,6 +336,28 @@ var options = {
 };
 ```
 
+#### XML Style Mapping
+
+You can use the `xmlStyleMap` argument to apply custom styles based on XML properties that would normally be ignored. Each key-value pair defines a style name and a tester function that exposes the xml elements of the document. When the tester returns a 'truthy' value, the style name is applied to the element. 
+
+Let's say you wanted to recognize highlighed text and apply the style `highlight` to all runs with a `w:highlight` property:
+
+```javascript
+function isHighlighted(xmlElement) {
+  return !!xmlElement.first('w:highlight');
+}
+
+var options = {
+    styleMap: "r[style-name='highlight'] => span.highlight",
+    xmlStyleMap: {
+      "highlight": isHighlighted
+    }
+};
+```
+
+The `isHighlighted` callback is passed an object corresponding to the each element of the document XML.
+
+
 ### API
 
 #### `mammoth.convertToHtml(input, options)`
