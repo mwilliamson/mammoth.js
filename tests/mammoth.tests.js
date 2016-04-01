@@ -164,6 +164,21 @@ describe('mammoth', function() {
             assert.equal("<h1>Hello.</h1>", result.value);
         });
     });
+
+    test('options.xmlStyleMap applies custom styles', function() {
+        var docxPath = path.join(__dirname, "test-data/highlight.docx");
+        var options = {
+            styleMap: "r[style-name='highlight'] => span.highlight",
+            xmlStyleMap: {
+                'highlight': function(element) {
+                    return !!element.first('w:highlight');
+                }
+            }
+        };
+        return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
+            assert.equal("<p>I am text, <span class=\"highlight\">this part of me</span> is highlighted</p>", result.value);
+        });
+    });
     
     test('inline images are included in output', function() {
         var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
