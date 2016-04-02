@@ -212,10 +212,10 @@ For instance, the following would replicate the default behaviour:
 
 ```javascript
 var options = {
-    convertImage: mammoth.images.inline(function(element) {
-        return element.read("base64").then(function(imageBuffer) {
+    convertImage: mammoth.images.imgElement(function(image) {
+        return image.read("base64").then(function(imageBuffer) {
             return {
-                src: "data:" + element.contentType + ";base64," + imageBuffer
+                src: "data:" + image.contentType + ";base64," + imageBuffer
             };
         });
     })
@@ -459,9 +459,9 @@ Each message has the following properties:
 
 #### Image converters
 
-An inline image converter can be created by calling `mammoth.images.inline(func)`.
-This creates an inline `<img>` element for each image in the original docx.
-`func` should be a function that has one argument called `element`.
+An image converter can be created by calling `mammoth.images.imgElement(func)`.
+This creates an `<img>` element for each image in the original docx.
+`func` should be a function that has one argument `image`.
 This argument is the image element being converted,
 and has the following properties:
 
@@ -470,16 +470,18 @@ and has the following properties:
   
 * `contentType`: the content type of the image, such as `image/png`.
 
-`func` should return an object (or a promise containing an object) with a `src` property,
-which will be used as the `src` attribute on the `<img>` element.
+`func` should return an object (or a promise of an object) of attributes for the `<img>` element.
+At a minimum, this should include the `src` attribute.
+If any alt text is found for the image,
+this will be automatically added to the element's attributes.
 
 For instance, the following replicates the default image conversion:
 
 ```javascript
-mammoth.images.inline(function(element) {
-    return element.read("base64").then(function(imageBuffer) {
+mammoth.images.imgElement(function(image) {
+    return image.read("base64").then(function(imageBuffer) {
         return {
-            src: "data:" + element.contentType + ";base64," + imageBuffer
+            src: "data:" + image.contentType + ";base64," + imageBuffer
         };
     });
 })

@@ -174,7 +174,7 @@ describe('mammoth', function() {
     
     test('src of inline images can be changed', function() {
         var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
-        var convertImage = mammoth.images.inline(function(element) {
+        var convertImage = mammoth.images.imgElement(function(element) {
             return element.read("base64").then(function(encodedImage) {
                 return {src: encodedImage.substring(0, 2) + "," + element.contentType};
             });
