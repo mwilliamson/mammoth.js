@@ -477,7 +477,6 @@ var options = {
 ```
 
 The return value of `transformDocument` is used during HTML generation.
-The original document (and any child elements) can be safely modified.
 
 The above can be written more succinctly using the helper `mammoth.transforms.paragraph`:
 
