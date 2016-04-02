@@ -291,51 +291,6 @@ var options = {
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
 
-#### Document transforms
-
-Mammoth allows a document to be transformed before it is converted.
-For instance,
-suppose that document has not been semantically marked up,
-but you know that any centre-aligned paragraph should be a heading.
-You can use the `transformDocument` argument to modify the document appropriately:
-
-```javascript
-function transformElement(element) {
-    if (element.children) {
-        element.children.forEach(transformElement);
-    }
-    if (element.type === "paragraph") {
-        if (element.alignment === "center" && !element.styleId) {
-            element.styleId = "Heading2";
-        }
-    }
-    return element;
-}
-
-var options = {
-    transformDocument: transformElement
-};
-```
-
-The return value of `transformDocument` is used during HTML generation.
-The original document (and any child elements) can be safely modified.
-
-The above can be written more succinctly using the helper `mammoth.transforms.paragraph`:
-
-```javascript
-
-function transformParagraph(element) {
-    if (element.alignment === "center" && !element.styleId) {
-        element.styleId = "Heading2";
-    }
-    return element;
-}
-
-var options = {
-    transformDocument: mammoth.transforms.paragraph(transformParagraph)
-};
-```
-
 ### API
 
 #### `mammoth.convertToHtml(input, options)`
@@ -367,9 +322,6 @@ Converts the source document to HTML.
      the style map passed in `styleMap` is combined with the default style map.
      To stop using the default style map altogether,
      set `options.includeDefaultStyleMap` to `false`.
-  
-  * `transformDocument`: if set,
-    this function is applied to the document read from the docx file before the conversion to HTML.
     
   * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
     Set this option to an [image converter](#image-converters) to override the default behaviour.
@@ -381,6 +333,11 @@ Converts the source document to HTML.
     a string to prepend to any generated IDs,
     such as those used by bookmarks, footnotes and endnotes.
     Defaults to an empty string.
+  
+  * `transformDocument`: if set,
+    this function is applied to the document read from the docx file before the conversion to HTML.
+    The API for document transforms should be considered unstable.
+    See [document transforms](#document-transforms).
 
 * Returns a promise containing a result.
   This result has the following properties:
@@ -485,6 +442,57 @@ mammoth.images.imgElement(function(image) {
         };
     });
 })
+```
+
+### Document transforms
+
+**The API for document transforms should be considered unstable,
+and may change between any versions.
+If you rely on this behaviour,
+you should pin to a specific version of mammoth.js,
+and test carefully before updating.**
+
+Mammoth allows a document to be transformed before it is converted.
+For instance,
+suppose that document has not been semantically marked up,
+but you know that any centre-aligned paragraph should be a heading.
+You can use the `transformDocument` argument to modify the document appropriately:
+
+```javascript
+function transformElement(element) {
+    if (element.children) {
+        element.children.forEach(transformElement);
+    }
+    if (element.type === "paragraph") {
+        if (element.alignment === "center" && !element.styleId) {
+            element.styleId = "Heading2";
+        }
+    }
+    return element;
+}
+
+var options = {
+    transformDocument: transformElement
+};
+```
+
+The return value of `transformDocument` is used during HTML generation.
+The original document (and any child elements) can be safely modified.
+
+The above can be written more succinctly using the helper `mammoth.transforms.paragraph`:
+
+```javascript
+
+function transformParagraph(element) {
+    if (element.alignment === "center" && !element.styleId) {
+        element.styleId = "Heading2";
+    }
+    return element;
+}
+
+var options = {
+    transformDocument: mammoth.transforms.paragraph(transformParagraph)
+};
 ```
 
 #### `mammoth.transforms.paragraph(transformParagraph)`
