@@ -1,6 +1,7 @@
 var assert = require("assert");
 var path = require("path");
 var fs = require("fs");
+var _ = require("underscore");
 
 var mammoth = require("../");
 var promises = require("../lib/promises");
@@ -156,8 +157,7 @@ describe('mammoth', function() {
         });
         var options = {
             transformDocument: mammoth.transforms.paragraph(function(paragraph) {
-                paragraph.styleId = "Heading1";
-                return paragraph;
+                return _.extend(paragraph, {styleId: "Heading1"});
             })
         };
         return mammoth.convertToHtml({file: docxFile}, options).then(function(result) {

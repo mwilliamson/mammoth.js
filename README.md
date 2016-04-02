@@ -461,14 +461,23 @@ You can use the `transformDocument` argument to modify the document appropriatel
 ```javascript
 function transformElement(element) {
     if (element.children) {
-        element.children.forEach(transformElement);
+        var children = _.map(element.children, transformElement);
+        element = extend(element, {children: children});
     }
+    
     if (element.type === "paragraph") {
-        if (element.alignment === "center" && !element.styleId) {
-            element.styleId = "Heading2";
-        }
+        element = transformParagraph(element);
     }
+    
     return element;
+}
+
+function transformParagraph(element) {
+    if (element.alignment === "center" && !element.styleId) {
+        return extend(element, {styleId: "Heading2"});
+    } else {
+        return element;
+    }
 }
 
 var options = {
@@ -481,12 +490,12 @@ The return value of `transformDocument` is used during HTML generation.
 The above can be written more succinctly using the helper `mammoth.transforms.paragraph`:
 
 ```javascript
-
 function transformParagraph(element) {
     if (element.alignment === "center" && !element.styleId) {
-        element.styleId = "Heading2";
+        return extend(element, {styleId: "Heading2"});
+    } else {
+        return element;
     }
-    return element;
 }
 
 var options = {
