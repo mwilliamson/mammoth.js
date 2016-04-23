@@ -462,7 +462,7 @@ You can use the `transformDocument` argument to modify the document appropriatel
 function transformElement(element) {
     if (element.children) {
         var children = _.map(element.children, transformElement);
-        element = extend(element, {children: children});
+        element = {...element, children: children};
     }
     
     if (element.type === "paragraph") {
@@ -474,7 +474,7 @@ function transformElement(element) {
 
 function transformParagraph(element) {
     if (element.alignment === "center" && !element.styleId) {
-        return extend(element, {styleId: "Heading2"});
+        return {...element, styleId: "Heading2"};
     } else {
         return element;
     }
@@ -492,7 +492,7 @@ The above can be written more succinctly using the helper `mammoth.transforms.pa
 ```javascript
 function transformParagraph(element) {
     if (element.alignment === "center" && !element.styleId) {
-        return extend(element, {styleId: "Heading2"});
+        return {...element, styleId: "Heading2"};
     } else {
         return element;
     }
