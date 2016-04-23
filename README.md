@@ -507,8 +507,7 @@ var options = {
 
 Returns a function that can be used as the `transformDocument` option.
 This will apply the function `transformParagraph` to each paragraph element.
-`transformParagraph` should return the new paragraph,
-and is allowed to mutate the original paragraph.
+`transformParagraph` should return the new paragraph.
 
 ## Writing style maps
 
