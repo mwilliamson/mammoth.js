@@ -672,6 +672,11 @@ You can nest elements to any depth.
 
 ## Upgrading to later versions
 
+### 1.0.0
+
+The `convertUnderline` option is no longer supported.
+Use style mappings to control how underlines are handled.
+
 ### 0.3.0
 
 If you've defined custom style maps or used a document transform,
