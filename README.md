@@ -59,6 +59,9 @@ The easiest way to try out mammoth is to use the web demo:
 * [WordPress](https://wordpress.org/plugins/mammoth-docx-converter/).
 
 * [Java](https://github.com/mwilliamson/java-mammoth).
+
+* [.NET](https://github.com/mwilliamson/dotnet-mammoth).
+  Available [on NuGet](https://www.nuget.org/packages/Mammoth/).
     
 ## Usage
 
