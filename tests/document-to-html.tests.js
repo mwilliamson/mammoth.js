@@ -400,6 +400,23 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('table cells are written with colSpan if not equal to one', function() {
+        var table = new documents.Table([
+            new documents.TableRow([
+                new documents.TableCell([paragraphOfText("Top left")], {colSpan: 2}),
+                new documents.TableCell([paragraphOfText("Top right")])
+            ])
+        ]);
+        var converter = new DocumentConverter();
+        
+        return converter.convertToHtml(table).then(function(result) {
+            var expectedHtml = "<table>" +
+                "<tr><td colspan=\"2\"><p>Top left</p></td><td><p>Top right</p></td></tr>" +
+                "</table>";
+            assert.equal(result.value, expectedHtml);
+        });
+    });
+    
     test('line break is converted to <br>', function() {
         var lineBreak = new documents.LineBreak();
         var converter = new DocumentConverter();
