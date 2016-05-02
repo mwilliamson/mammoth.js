@@ -243,7 +243,7 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.value, new documents.Tab());
     });
     
-    test("w:table is read as document table element", function() {
+    test("w:tbl is read as document table element", function() {
         var tableXml = new XmlElement("w:tbl", {}, [
             new XmlElement("w:tr", {}, [
                 new XmlElement("w:tc", {}, [
