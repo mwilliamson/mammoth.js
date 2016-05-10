@@ -45,7 +45,8 @@
   },
   "scripts": {
     "pretest": "jshint lib tests",
-    "test": "mocha tests --recursive"
+    "test": "mocha tests --recursive",
+    "prepublish": "make mammoth.browser.min.js"
   },
   "license": "BSD-2-Clause"
 }
