@@ -261,24 +261,6 @@ describe("readXmlElement: ", function() {
         ]));
     });
     
-    test("w:tbl is read as document table element", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            new XmlElement("w:tr", {}, [
-                new XmlElement("w:tc", {}, [
-                    new XmlElement("w:p", {}, [])
-                ])
-            ])
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.value, new documents.Table([
-            new documents.TableRow([
-                new documents.TableCell([
-                    new documents.Paragraph([])
-                ])
-            ])
-        ]));
-    });
-    
     test("w:gridSpan is read as colSpan for table cell", function() {
         var tableXml = new XmlElement("w:tbl", {}, [
             new XmlElement("w:tr", {}, [
