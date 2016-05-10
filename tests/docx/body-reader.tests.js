@@ -328,6 +328,18 @@ describe("readXmlElement: ", function() {
         ]));
     });
     
+    test("no merging if merged cells do not line up", function() {
+        var tableXml = new XmlElement("w:tbl", {}, [
+            row(emptyCell(gridSpan("2"), vMerge("restart"))),
+            row(emptyCell(), emptyCell(vMerge("continue")))
+        ]);
+        var result = readXmlElement(tableXml);
+        assert.deepEqual(result.value, new documents.Table([
+            docRow([docEmptyCell({colSpan: 2})]),
+            docRow([docEmptyCell(), docEmptyCell()]),
+        ]));
+    });
+    
     test("warning if non-row in table", function() {
         var tableXml = new XmlElement("w:tbl", {}, [
             new XmlElement("w:p")
