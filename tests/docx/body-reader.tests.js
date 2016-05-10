@@ -282,6 +282,94 @@ describe("readXmlElement: ", function() {
         ]));
     });
     
+    test("w:vMerge is read as rowSpan for table cell", function() {
+        var tableXml = new XmlElement("w:tbl", {}, [
+            row(emptyCell()),
+            row(emptyCell(vMerge("restart"))),
+            row(emptyCell(vMerge("continue"))),
+            row(emptyCell(vMerge("continue"))),
+            row(emptyCell())
+        ]);
+        var result = readXmlElement(tableXml);
+        assert.deepEqual(result.value, new documents.Table([
+            docRow([docEmptyCell()]),
+            docRow([docEmptyCell({rowSpan: 3})]),
+            docRow([]),
+            docRow([]),
+            docRow([docEmptyCell()])
+        ]));
+    });
+    
+    test("w:vMerge without val is treated as continue", function() {
+        var tableXml = new XmlElement("w:tbl", {}, [
+            row(emptyCell(vMerge("restart"))),
+            row(emptyCell(vMerge())),
+        ]);
+        var result = readXmlElement(tableXml);
+        assert.deepEqual(result.value, new documents.Table([
+            docRow([docEmptyCell({rowSpan: 2})]),
+            docRow([])
+        ]));
+    });
+    
+    test("w:vMerge accounts for cells spanning columns", function() {
+        var tableXml = new XmlElement("w:tbl", {}, [
+            row(emptyCell(), emptyCell(), emptyCell(vMerge("restart"))),
+            row(emptyCell(gridSpan("2")), emptyCell(vMerge("continue"))),
+            row(emptyCell(), emptyCell(), emptyCell(vMerge("continue"))),
+            row(emptyCell(), emptyCell(), emptyCell())
+        ]);
+        var result = readXmlElement(tableXml);
+        assert.deepEqual(result.value, new documents.Table([
+            docRow([docEmptyCell(), docEmptyCell(), docEmptyCell({rowSpan: 3})]),
+            docRow([docEmptyCell({colSpan: 2})]),
+            docRow([docEmptyCell(), docEmptyCell()]),
+            docRow([docEmptyCell(), docEmptyCell(), docEmptyCell()])
+        ]));
+    });
+    
+    test("warning if non-row in table", function() {
+        var tableXml = new XmlElement("w:tbl", {}, [
+            new XmlElement("w:p")
+        ]);
+        var result = readXmlElement(tableXml);
+        assert.deepEqual(result.messages, [warning("unexpected non-row element in table, cell merging may be incorrect")]);
+    });
+    
+    test("warning if non-cell in table", function() {
+        var tableXml = new XmlElement("w:tbl", {}, [
+            row(new XmlElement("w:p"))
+        ]);
+        var result = readXmlElement(tableXml);
+        assert.deepEqual(result.messages, [warning("unexpected non-cell element in table row, cell merging may be incorrect")]);
+    });
+    
+    function row() {
+        return new XmlElement("w:tr", {}, Array.prototype.slice.call(arguments));
+    }
+    
+    function emptyCell() {
+        return new XmlElement("w:tc", {}, [
+            new XmlElement("w:tcPr", {}, Array.prototype.slice.call(arguments))
+        ]);
+    }
+    
+    function vMerge(val) {
+        return new XmlElement("w:vMerge", {"w:val": val}, []);
+    }
+    
+    function gridSpan(val) {
+        return new XmlElement("w:gridSpan", {"w:val": val});
+    }
+    
+    function docRow(children) {
+        return new documents.TableRow(children);
+    }
+    
+    function docEmptyCell(properties) {
+        return new documents.TableCell([], properties);
+    }
+    
     test("emits warning on unrecognised element", function() {
         var unrecognisedElement = new XmlElement("w:not-an-element");
         var result = readXmlElement(unrecognisedElement);

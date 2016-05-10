@@ -1,3 +1,7 @@
+# 1.0.2
+
+* Add support for table cells spanning multiple rows.
+
 # 1.0.1
 
 * Add support for table cells spanning multiple columns.
