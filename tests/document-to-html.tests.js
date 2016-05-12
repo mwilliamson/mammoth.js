@@ -417,6 +417,22 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('table cells are written with rowSpan if not equal to one', function() {
+        var table = new documents.Table([
+            new documents.TableRow([
+                new documents.TableCell([], {rowSpan: 2})
+            ])
+        ]);
+        var converter = new DocumentConverter();
+        
+        return converter.convertToHtml(table).then(function(result) {
+            var expectedHtml = "<table>" +
+                "<tr><td rowspan=\"2\"></td></tr>" +
+                "</table>";
+            assert.equal(result.value, expectedHtml);
+        });
+    });
+    
     test('line break is converted to <br>', function() {
         var lineBreak = new documents.LineBreak();
         var converter = new DocumentConverter();
