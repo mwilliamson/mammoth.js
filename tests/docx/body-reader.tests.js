@@ -328,7 +328,7 @@ describe("readXmlElement: ", function() {
         ]));
     });
     
-    test("no merging if merged cells do not line up", function() {
+    test("no vertical cell merging if merged cells do not line up", function() {
         var tableXml = new XmlElement("w:tbl", {}, [
             row(emptyCell(gridSpan("2"), vMerge("restart"))),
             row(emptyCell(), emptyCell(vMerge("continue")))
@@ -348,7 +348,7 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.messages, [warning("unexpected non-row element in table, cell merging may be incorrect")]);
     });
     
-    test("warning if non-cell in table", function() {
+    test("warning if non-cell in table row", function() {
         var tableXml = new XmlElement("w:tbl", {}, [
             row(new XmlElement("w:p"))
         ]);
