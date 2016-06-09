@@ -530,7 +530,7 @@ describe('DocumentConverter', function() {
         var converter = new DocumentConverter({
             convertImage: function(element, messages, callback) {
                 element.read("utf8").then(function(altText) {
-                    callback(null, Html.selfClosingElement("img", {alt: altText}));
+                    callback(null, [Html.selfClosingElement("img", {alt: altText})]);
                 });
             }
         });

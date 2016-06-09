@@ -39,6 +39,6 @@ describe("HTML write", function() {
 
 function generateString(node) {
     var writer = writers.writer();
-    html.write(writer, node);
+    html.write(writer, [node]);
     return writer.asString();
 }
