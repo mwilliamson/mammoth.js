@@ -528,9 +528,9 @@ describe('DocumentConverter', function() {
             contentType: "image/png"
         });
         var converter = new DocumentConverter({
-            convertImage: function(element, messages, callback) {
-                element.read("utf8").then(function(altText) {
-                    callback(null, [Html.selfClosingElement("img", {alt: altText})]);
+            convertImage: function(element, messages) {
+                return element.read("utf8").then(function(altText) {
+                    return [Html.selfClosingElement("img", {alt: altText})];
                 });
             }
         });

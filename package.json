@@ -17,11 +17,10 @@
     "url": "https://github.com/mwilliamson/mammoth.js.git"
   },
   "dependencies": {
-    "bluebird": "~2.3.11",
+    "bluebird": "~3.4.0",
     "sax": "~1.1.1",
     "underscore": "~1.6.0",
     "lop": "~0.3.0",
-    "async": "~0.2.6",
     "argparse": "~1.0.3",
     "jszip": "~2.5.0",
     "xmlbuilder": "~2.6.4",
