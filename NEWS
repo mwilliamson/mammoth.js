@@ -3,6 +3,8 @@
 * Add support for w:sdt elements. This allows the bodies of content controls,
   such as bibliographies, to be converted.
 
+* Avoid stack overflows when elements have many children.
+
 # 1.0.3
 
 * Actually add support for table cells spanning multiple rows.
