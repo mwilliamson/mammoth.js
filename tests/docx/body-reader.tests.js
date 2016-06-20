@@ -656,6 +656,16 @@ describe("readXmlElement: ", function() {
         var result = readXmlElement(textbox, {styles: styles});
         assert.deepEqual(result.value[0].styleId, "second");
     });
+
+    test("w:sdtContent is used when w:sdt is read", function() {
+        var element = xml.element("w:sdt", {}, [
+            xml.element("w:sdtContent", {}, [
+                xml.element("w:t", {}, [xml.text("Blackdown")])
+            ])
+        ]);
+        var result = readXmlElement(element);
+        assert.deepEqual(result.value, [new documents.Text("Blackdown")]);
+    });
     
     test("text nodes are ignored when reading children", function() {
         var runXml = new XmlElement("w:r", {}, [xml.text("[text]")]);
