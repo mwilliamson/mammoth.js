@@ -9,9 +9,7 @@ npm-install:
 	npm install
 
 mammoth.browser.js:
-	-rm $@ -f
-	node_modules/.bin/node-license-sniffer . --recurse --js-comment >> $@
-	node_modules/.bin/browserify lib/index.js --standalone mammoth >> $@
+	node_modules/.bin/browserify lib/index.js --standalone mammoth -p browserify-prepend-licenses > $@
 
 mammoth.browser.min.js: mammoth.browser.js
 	node_modules/.bin/uglifyjs mammoth.browser.js -c > $@
