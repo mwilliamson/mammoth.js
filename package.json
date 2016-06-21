@@ -20,7 +20,7 @@
     "bluebird": "~3.4.0",
     "sax": "~1.1.1",
     "underscore": "~1.6.0",
-    "lop": "~0.3.0",
+    "lop": "~0.4.0",
     "argparse": "~1.0.3",
     "jszip": "~2.5.0",
     "xmlbuilder": "~2.6.4",
