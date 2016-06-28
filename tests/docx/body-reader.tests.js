@@ -303,7 +303,7 @@ describe("readXmlElement: ", function() {
     test("w:vMerge without val is treated as continue", function() {
         var tableXml = new XmlElement("w:tbl", {}, [
             row(emptyCell(vMerge("restart"))),
-            row(emptyCell(vMerge())),
+            row(emptyCell(vMerge()))
         ]);
         var result = readXmlElement(tableXml);
         assert.deepEqual(result.value, new documents.Table([
@@ -336,7 +336,7 @@ describe("readXmlElement: ", function() {
         var result = readXmlElement(tableXml);
         assert.deepEqual(result.value, new documents.Table([
             docRow([docEmptyCell({colSpan: 2})]),
-            docRow([docEmptyCell(), docEmptyCell()]),
+            docRow([docEmptyCell(), docEmptyCell()])
         ]));
     });
     

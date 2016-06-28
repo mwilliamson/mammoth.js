@@ -33,7 +33,8 @@
     "duck": "~0.1.11",
     "uglify-js": "~2.4.8",
     "temp": "~0.7.0",
-    "jshint": "^2.5.2"
+    "eslint": "2.13.1",
+    "eslint-config-airbnb-base": "3.0.1"
   },
   "browser": {
     "./lib/unzip.js": "./browser/unzip.js",
@@ -43,9 +44,26 @@
     "mammoth": "bin/mammoth"
   },
   "scripts": {
-    "pretest": "jshint lib tests",
+    "pretest": "eslint lib tests",
     "test": "mocha tests --recursive",
     "prepublish": "make mammoth.browser.min.js"
   },
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "eslintConfig": {
+    "extends": "eslint:recommended",
+
+    "rules": {
+      "indent": ["error", 4],
+      "no-unused-vars": ["error", {"args": "none"}],
+      "object-curly-spacing": ["error", "never"]
+    },
+
+    "globals": {
+      "Buffer": false,
+      "console": true,
+      "exports": true,
+      "module": true,
+      "require": false
+    }
+  }
 }

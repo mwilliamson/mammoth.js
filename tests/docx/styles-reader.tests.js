@@ -45,7 +45,7 @@ describe('readStylesXml', function() {
     test('character and table styles are distinct', function() {
         var styles = readStylesXml({
             root: new XmlElement("w:styles", {}, [
-                styleElement("table", "Heading1", "Heading 1"),
+                styleElement("table", "Heading1", "Heading 1")
             ])
         });
         assert.equal(styles.findCharacterStyleById("Heading1"), null);

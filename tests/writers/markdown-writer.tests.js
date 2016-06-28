@@ -69,7 +69,7 @@ describe('markdown-writer', function() {
 
     test('anchor tags are written as hyperlinks', function() {
         var writer = mdWriter.writer();
-        writer.open("a", { "href": "http://example.com" });
+        writer.open("a", {"href": "http://example.com"});
         writer.text("Hello");
         writer.close("a");
         return assert.equal(writer.asString(), "[Hello](http://example.com)");
@@ -101,19 +101,19 @@ describe('markdown-writer', function() {
 
     test('can generate images', function() {
         var writer = mdWriter.writer();
-        writer.selfClosing("img", { "src": "http://example.com/image.jpg", "alt": "Alt Text" });
+        writer.selfClosing("img", {"src": "http://example.com/image.jpg", "alt": "Alt Text"});
         return assert.equal(writer.asString(), "![Alt Text](http://example.com/image.jpg)");
     });
 
     test('can generate images with missing alt attribute', function() {
         var writer = mdWriter.writer();
-        writer.selfClosing("img", { "src": "http://example.com/image.jpg" });
+        writer.selfClosing("img", {"src": "http://example.com/image.jpg"});
         return assert.equal(writer.asString(), "![](http://example.com/image.jpg)");
     });
 
     test('can generate images with missing src attribute', function() {
         var writer = mdWriter.writer();
-        writer.selfClosing("img", { "alt": "Alt Text" });
+        writer.selfClosing("img", {"alt": "Alt Text"});
         return assert.equal(writer.asString(), "![Alt Text]()");
     });
 

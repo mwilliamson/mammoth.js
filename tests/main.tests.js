@@ -78,7 +78,7 @@ function runMammoth() {
     // TODO: proper escaping of args
     var command = processArgs.join(" ");
     child_process.exec(command, function(error, stdout, stderr) {
-        console.log(stderr);
+        console.log(stderr); // eslint-disable-line no-console
         assert.equal(error, null);
         deferred.resolve({output: stdout, stderrOutput: stderr});
     });

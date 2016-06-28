@@ -63,7 +63,7 @@ describe('DocumentConverter', function() {
     
     test('uses style mappings to pick HTML element for docx paragraph', function() {
         var document = new documents.Document([
-            paragraphOfText("Hello.", "Heading1", "Heading 1"),
+            paragraphOfText("Hello.", "Heading1", "Heading 1")
         ]);
         var converter = new DocumentConverter({
             styleMap: [
@@ -80,7 +80,7 @@ describe('DocumentConverter', function() {
     
     test('mappings for style names are case insensitive', function() {
         var document = new documents.Document([
-            paragraphOfText("Hello.", "Heading1", "heading 1"),
+            paragraphOfText("Hello.", "Heading1", "heading 1")
         ]);
         var converter = new DocumentConverter({
             styleMap: [
@@ -114,7 +114,7 @@ describe('DocumentConverter', function() {
     
     test('warning is emitted if paragraph style is unrecognised', function() {
         var document = new documents.Document([
-            paragraphOfText("Hello.", "Heading1", "Heading 1"),
+            paragraphOfText("Hello.", "Heading1", "Heading 1")
         ]);
         var converter = new DocumentConverter();
         return converter.convertToHtml(document).then(function(result) {
