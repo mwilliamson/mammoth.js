@@ -1,5 +1,5 @@
 var assert = require("assert");
-var child_process = require("child_process");
+var child_process = require("child_process"); // eslint-disable-line camelcase
 var path = require("path");
 var fs = require("fs");
 
@@ -77,7 +77,7 @@ function runMammoth() {
     var processArgs = ["node", "bin/mammoth"].concat(args);
     // TODO: proper escaping of args
     var command = processArgs.join(" ");
-    child_process.exec(command, function(error, stdout, stderr) {
+    child_process.exec(command, function(error, stdout, stderr) { // eslint-disable-line camelcase
         console.log(stderr); // eslint-disable-line no-console
         assert.equal(error, null);
         deferred.resolve({output: stdout, stderrOutput: stderr});

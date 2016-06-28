@@ -36,7 +36,7 @@ describe('mammoth', function() {
     
     test('should read docx xml files with unicode byte order mark', function() {
         var docxPath = path.join(__dirname, "test-data/utf8-bom.docx");
-        return mammoth.convertToHtml({path: docxPath}).then(function (result) {
+        return mammoth.convertToHtml({path: docxPath}).then(function(result) {
             assert.equal(result.value, "<p>This XML has a byte order mark.</p>");
             assert.deepEqual(result.messages, []);
         });

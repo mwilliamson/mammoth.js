@@ -74,7 +74,9 @@ describe("uriToPath", function() {
     });
     
     test("when host is set but not localhost then path cannot be found", function() {
-        assert.throws(function() { uriToPath("file://example/a/b/c"); }, /Could not convert URI to path: file:\/\/example\/a\/b\/c/);
+        assert.throws(function() {
+            uriToPath("file://example/a/b/c");
+        }, /Could not convert URI to path: file:\/\/example\/a\/b\/c/);
     });
     
     test("leading slash is not dropped on Windows file URIs when platform is not Windows", function() {
