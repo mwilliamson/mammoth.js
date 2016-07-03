@@ -127,6 +127,13 @@ describe("styleReader.readDocumentMatcher", function() {
         );
     });
     
+    test("reads comment-reference", function() {
+        assertDocumentMatcher(
+            "comment-reference",
+            documentMatchers.commentReference
+        );
+    });
+    
     function assertDocumentMatcher(input, expected) {
         assert.deepEqual(readDocumentMatcher(input), results.success(expected));
     }
