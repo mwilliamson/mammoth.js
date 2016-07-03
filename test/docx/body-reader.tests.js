@@ -607,6 +607,16 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.messages, [warning("Unsupported break type: page")]);
     });
     
+    test("w:footnoteReference has ID read", function() {
+        var referenceXml = new XmlElement("w:footnoteReference", {"w:id": "4"});
+        var result = readXmlElement(referenceXml);
+        assert.deepEqual(
+            result.value,
+            documents.noteReference({noteType: "footnote", noteId: "4"})
+        );
+        assert.deepEqual(result.messages, []);
+    });
+    
     test("emits warning on unrecognised element", function() {
         var unrecognisedElement = new XmlElement("w:not-an-element");
         var result = readXmlElement(unrecognisedElement);
