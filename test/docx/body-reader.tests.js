@@ -381,18 +381,6 @@ describe("readXmlElement: ", function() {
     function docEmptyCell(properties) {
         return new documents.TableCell([], properties);
     }
-    
-    test("emits warning on unrecognised element", function() {
-        var unrecognisedElement = new XmlElement("w:not-an-element");
-        var result = readXmlElement(unrecognisedElement);
-        assert.deepEqual(
-            result.messages,
-            [{
-                type: "warning",
-                message: "An unrecognised element was ignored: w:not-an-element"
-            }]
-        );
-    });
 
     test("w:bookmarkStart is read as a bookmarkStart", function() {
         var bookmarkStart = new XmlElement("w:bookmarkStart", {"w:name": "_Peter", "w:id": "42"});
@@ -617,6 +605,18 @@ describe("readXmlElement: ", function() {
         var result = readXmlElement(breakXml);
         assert.deepEqual(result.value, []);
         assert.deepEqual(result.messages, [warning("Unsupported break type: page")]);
+    });
+    
+    test("emits warning on unrecognised element", function() {
+        var unrecognisedElement = new XmlElement("w:not-an-element");
+        var result = readXmlElement(unrecognisedElement);
+        assert.deepEqual(
+            result.messages,
+            [{
+                type: "warning",
+                message: "An unrecognised element was ignored: w:not-an-element"
+            }]
+        );
     });
     
     test("w:bookmarkEnd is ignored without warning", function() {
