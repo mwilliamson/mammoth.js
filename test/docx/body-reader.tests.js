@@ -617,6 +617,7 @@ describe("readXmlElement: ", function() {
                 message: "An unrecognised element was ignored: w:not-an-element"
             }]
         );
+        assert.deepEqual(result.value, []);
     });
     
     test("w:bookmarkEnd is ignored without warning", function() {
