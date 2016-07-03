@@ -612,18 +612,18 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.messages, []);
     });
     
-    test("w:bookmarkEnd is ignored without warning", function() {
-        var ignoredElement = new XmlElement("w:bookmarkEnd");
-        var result = readXmlElement(ignoredElement);
-        assert.deepEqual(result.messages, []);
-        assert.deepEqual([], result.value);
-    });
-    
     test("warning on breaks that aren't line breaks", function() {
         var breakXml = new XmlElement("w:br", {"w:type": "page"}, []);
         var result = readXmlElement(breakXml);
         assert.deepEqual(result.value, []);
         assert.deepEqual(result.messages, [warning("Unsupported break type: page")]);
+    });
+    
+    test("w:bookmarkEnd is ignored without warning", function() {
+        var ignoredElement = new XmlElement("w:bookmarkEnd");
+        var result = readXmlElement(ignoredElement);
+        assert.deepEqual(result.messages, []);
+        assert.deepEqual([], result.value);
     });
 
     test("text boxes have content appended after containing paragraph", function() {
