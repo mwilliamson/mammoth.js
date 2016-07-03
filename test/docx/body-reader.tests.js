@@ -617,6 +617,16 @@ describe("readXmlElement: ", function() {
         assert.deepEqual(result.messages, []);
     });
     
+    test("w:commentReference has ID read", function() {
+        var referenceXml = new XmlElement("w:commentReference", {"w:id": "4"});
+        var result = readXmlElement(referenceXml);
+        assert.deepEqual(
+            result.value,
+            documents.commentReference({commentId: "4"})
+        );
+        assert.deepEqual(result.messages, []);
+    });
+    
     test("emits warning on unrecognised element", function() {
         var unrecognisedElement = new XmlElement("w:not-an-element");
         var result = readXmlElement(unrecognisedElement);
