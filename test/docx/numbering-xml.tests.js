@@ -7,8 +7,8 @@ var test = require("../testing").test;
 
 describe('readNumberingXml', function() {
     test('w:num element inherits levels from w:abstractNum', function() {
-        var numbering = readNumberingXml({
-            root: new XmlElement("w:numbering", {}, [
+        var numbering = readNumberingXml(
+            new XmlElement("w:numbering", {}, [
                 new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
                     new XmlElement("w:lvl", {"w:ilvl": "0"}, [
                         new XmlElement("w:numFmt", {"w:val": "bullet"})
@@ -21,7 +21,7 @@ describe('readNumberingXml', function() {
                     new XmlElement("w:abstractNumId", {"w:val": "42"})
                 ])
             ])
-        });
+        );
         duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
             isOrdered: false
         }));

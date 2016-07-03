@@ -20,7 +20,7 @@ describe("office-xml-reader", function() {
             '</mc:AlternateContent>' +
             '</numbering>';
         return officeXmlReader.read(xmlString).then(function(element) {
-            assert.deepEqual(element.root.children, [xml.element("fallback")]);
+            assert.deepEqual(element.children, [xml.element("fallback")]);
         });
     });
 });

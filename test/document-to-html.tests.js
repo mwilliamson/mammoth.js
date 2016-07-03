@@ -513,8 +513,7 @@ describe('DocumentConverter', function() {
             .then(function(result) {
                 return xml.readString(result.value);
             })
-            .then(function(htmlImageElementDocument) {
-                var htmlImageElement = htmlImageElementDocument.root;
+            .then(function(htmlImageElement) {
                 assert.equal(htmlImageElement.attributes.alt, "It's a hat");
             });
     });

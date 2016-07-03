@@ -7,28 +7,28 @@ var test = require("../testing").test;
 
 describe('readContentTypesFromXml', function() {
     test('reads default-per-extension from XML', function() {
-        var contentTypes = readContentTypesFromXml({
-            root: new XmlElement("content-types:Types", {}, [
+        var contentTypes = readContentTypesFromXml(
+            new XmlElement("content-types:Types", {}, [
                 new XmlElement("content-types:Default", {Extension: "png", ContentType: "image/png"})
             ])
-        });
+        );
         assert.equal(contentTypes.findContentType("word/media/hat.png"), "image/png");
     });
     
     test('reads overrides in preference to defaults', function() {
-        var contentTypes = readContentTypesFromXml({
-            root: new XmlElement("content-types:Types", {}, [
+        var contentTypes = readContentTypesFromXml(
+            new XmlElement("content-types:Types", {}, [
                 new XmlElement("content-types:Default", {Extension: "png", ContentType: "image/png"}),
                 new XmlElement("content-types:Override", {PartName: "/word/media/hat.png", ContentType: "image/hat"})
             ])
-        });
+        );
         assert.equal(contentTypes.findContentType("word/media/hat.png"), "image/hat");
     });
     
     test('fallback content types have common image types', function() {
-        var contentTypes = readContentTypesFromXml({
-            root: new XmlElement("content-types:Types", {}, [])
-        });
+        var contentTypes = readContentTypesFromXml(
+            new XmlElement("content-types:Types", {}, [])
+        );
         assert.equal(contentTypes.findContentType("word/media/hat.png"), "image/png");
         assert.equal(contentTypes.findContentType("word/media/hat.gif"), "image/gif");
         assert.equal(contentTypes.findContentType("word/media/hat.jpg"), "image/jpeg");
@@ -39,9 +39,9 @@ describe('readContentTypesFromXml', function() {
     });
     
     test('fallback content types are case insensitive on extension', function() {
-        var contentTypes = readContentTypesFromXml({
-            root: new XmlElement("content-types:Types", {}, [])
-        });
+        var contentTypes = readContentTypesFromXml(
+            new XmlElement("content-types:Types", {}, [])
+        );
         assert.equal(contentTypes.findContentType("word/media/hat.PnG"), "image/png");
     });
 });

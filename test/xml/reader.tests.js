@@ -7,31 +7,30 @@ var test = require("../testing").test;
 describe('xmlreader.readString', function() {
     test('should read self-closing element', function() {
         return xmlreader.readString("<body/>").then(function(result) {
-            assert.deepEqual({type: "element", name: "body", attributes: {}, children: []}, result.root);
+            assert.deepEqual({type: "element", name: "body", attributes: {}, children: []}, result);
         });
     });
     
     test('should read empty element with separate closing tag', function() {
         return xmlreader.readString("<body></body>").then(function(result) {
-            assert.deepEqual({type: "element", name: "body", attributes: {}, children: []}, result.root);
+            assert.deepEqual({type: "element", name: "body", attributes: {}, children: []}, result);
         });
     });
     
     test('should read attributes of tags', function() {
         return xmlreader.readString('<body name="bob"/>').then(function(result) {
-            assert.deepEqual({name: "bob"}, result.root.attributes);
+            assert.deepEqual({name: "bob"}, result.attributes);
         });
     });
     
     test('can read text element', function() {
         return xmlreader.readString('<body>Hello!</body>').then(function(result) {
-            assert.deepEqual({type: "text", value: "Hello!"}, result.root.children[0]);
+            assert.deepEqual({type: "text", value: "Hello!"}, result.children[0]);
         });
     });
     
     test('should read element with children', function() {
-        return xmlreader.readString("<body><a/><b/></body>").then(function(result) {
-            var root = result.root;
+        return xmlreader.readString("<body><a/><b/></body>").then(function(root) {
             assert.equal(2, root.children.length);
             assert.equal("a", root.children[0].name);
             assert.equal("b", root.children[1].name);
@@ -40,7 +39,7 @@ describe('xmlreader.readString', function() {
 
     test('unmapped namespaces URIs are included in braces as prefix', function() {
         return xmlreader.readString('<w:body xmlns:w="word"/>').then(function(result) {
-            assert.deepEqual(result.root.name, "{word}body");
+            assert.deepEqual(result.name, "{word}body");
         });
     });
 
@@ -50,7 +49,7 @@ describe('xmlreader.readString', function() {
         };
         
         return xmlreader.readString('<w:body xmlns:w="word"/>', namespaceMap).then(function(result) {
-            assert.deepEqual(result.root.name, "x:body");
+            assert.deepEqual(result.name, "x:body");
         });
     });
 
@@ -60,20 +59,20 @@ describe('xmlreader.readString', function() {
         };
         var xmlString = '<w:body xmlns:w="word" w:val="Hello!"/>';
         return xmlreader.readString(xmlString, namespaceMap).then(function(result) {
-            assert.deepEqual(result.root.attributes["x:val"], "Hello!");
+            assert.deepEqual(result.attributes["x:val"], "Hello!");
         });
     });
     
     test('can find first element with name', function() {
         return xmlreader.readString('<body><a/><b index="1"/><b index="2"/></body>').then(function(result) {
-            var first = result.root.first("b");
+            var first = result.first("b");
             assert.equal("1", first.attributes.index);
         });
     });
     
     test('whitespace between xml declaration and root tag is ignored', function() {
         return xmlreader.readString('<?xml version="1.0" ?>\n<body/>').then(function(result) {
-            assert.deepEqual("body", result.root.name);
+            assert.deepEqual("body", result.name);
         });
     });
     
