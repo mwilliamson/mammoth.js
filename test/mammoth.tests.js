@@ -269,6 +269,25 @@ describe('mammoth', function() {
         });
     });
     
+    test('when style mapping is defined for comment references then comments are included', function() {
+        var docxPath = path.join(__dirname, "test-data/comments.docx");
+        var options = {
+            idPrefix: "doc-42-",
+            styleMap: "comment-reference => sup"
+        };
+        return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
+            var expectedOutput = (
+                '<p>Ouch' +
+                '<sup><a href="#doc-42-comment-0" id="doc-42-comment-ref-0">[MW1]</a></sup>.' +
+                '<sup><a href="#doc-42-comment-2" id="doc-42-comment-ref-2">[MW2]</a></sup></p>' +
+                '<dl><dt id="doc-42-comment-0">Comment [MW1]</dt><dd><p>A tachyon walks into a bar. <a href="#doc-42-comment-ref-0">↑</a></p></dd>' +
+                '<dt id="doc-42-comment-2">Comment [MW2]</dt><dd><p>Fin. <a href="#doc-42-comment-ref-2">↑</a></p></dd></dl>'
+            );
+            assert.equal(result.value, expectedOutput);
+            assert.deepEqual(result.messages, []);
+        });
+    });
+    
     test('textboxes are read', function() {
         var docxPath = path.join(__dirname, "test-data/text-box.docx");
         return mammoth.convertToHtml({path: docxPath}).then(function(result) {
