@@ -54,6 +54,10 @@ describe('styleReader.readHtmlPath', function() {
         assertHtmlPath("p:fresh", expected);
     });
     
+    test('reads ignore element', function() {
+        assertHtmlPath("!", htmlPaths.ignore);
+    });
+
     function assertHtmlPath(input, expected) {
         assert.deepEqual(readHtmlPath(input), results.success(expected));
     }
