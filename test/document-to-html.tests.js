@@ -486,6 +486,26 @@ describe('DocumentConverter', function() {
         });
     });
     
+    test('comments are ignored by default', function() {
+        var reference = documents.commentReference("4");
+        var comment = documents.comment({
+            commentId: "4",
+            body: [paragraphOfText("Who's there?")]
+        });
+        var document = documents.document([
+            documents.paragraph([
+                runOfText("Knock knock"),
+                documents.run([reference])
+            ])
+        ], {comments: [comment]});
+        
+        var converter = new DocumentConverter({});
+        return converter.convertToHtml(document).then(function(result) {
+            assert.equal(result.value, '<p>Knock knock</p>');
+        });
+        
+    });
+    
     test('images are written with data URIs', function() {
         var imageBuffer = new Buffer("Not an image at all!");
         var image = new documents.Image({
