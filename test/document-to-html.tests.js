@@ -486,7 +486,7 @@ test('footnotes are included after the main body', function() {
 });
 
 test('comments are ignored by default', function() {
-    var reference = documents.commentReference("4");
+    var reference = documents.commentReference({commentId: "4"});
     var comment = documents.comment({
         commentId: "4",
         body: [paragraphOfText("Who's there?")]
@@ -503,7 +503,37 @@ test('comments are ignored by default', function() {
         assert.equal(result.value, '<p>Knock knock</p>');
         assert.deepEqual(result.messages, []);
     });
+});
     
+test('comment references are linked to comment after main body', function() {
+    var reference = documents.commentReference({commentId: "4"});
+    var comment = documents.comment({
+        commentId: "4",
+        body: [paragraphOfText("Who's there?")],
+        authorName: "The Piemaker",
+        authorInitials: "TP"
+    });
+    var document = documents.document([
+        documents.paragraph([
+            runOfText("Knock knock"),
+            documents.run([reference])
+        ])
+    ], {comments: [comment]});
+    
+    var converter = new DocumentConverter({
+        idPrefix: "doc-42-",
+        styleMap: [
+            {from: documentMatchers.commentReference, to: htmlPaths.element("sup")}
+        ]
+    });
+    return converter.convertToHtml(document).then(function(result) {
+        var expectedHtml = (
+            '<p>Knock knock<sup><a href="#doc-42-comment-4" id="doc-42-comment-ref-4">[TP1]</a></sup></p>' +
+            '<dl><dt id="doc-42-comment-4">Comment [TP1]</dt><dd><p>Who\'s there? <a href="#doc-42-comment-ref-4">↑</a></p></dd></dl>'
+        );
+        assert.equal(result.value, expectedHtml);
+        assert.deepEqual(result.messages, []);
+    });
 });
 
 test('images are written with data URIs', function() {
