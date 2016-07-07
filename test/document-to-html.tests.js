@@ -502,6 +502,7 @@ describe('DocumentConverter', function() {
         var converter = new DocumentConverter({});
         return converter.convertToHtml(document).then(function(result) {
             assert.equal(result.value, '<p>Knock knock</p>');
+            assert.deepEqual(result.messages, []);
         });
         
     });
