@@ -8,7 +8,6 @@ var htmlPaths = require("../../lib/html-paths");
 
 var nonFreshElement = html.nonFreshElement;
 var text = html.text;
-var pathToNodes = html.pathToNodes;
 
 describe("simplify", function() {
     test("empty text nodes are removed", function() {
@@ -112,4 +111,10 @@ function simplifyNode(node) {
 
 function concat() {
     return _.flatten(arguments, true);
+}
+
+function pathToNodes(path, nodes) {
+    return path.wrap(function() {
+        return nodes;
+    });
 }
