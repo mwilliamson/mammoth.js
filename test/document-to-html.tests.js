@@ -2,7 +2,9 @@ var assert = require("assert");
 var promises = require("../lib/promises");
 
 var documents = require("../lib/documents");
-var DocumentConverter = require("../lib/document-to-html").DocumentConverter;
+var documentToHtml = require("../lib/document-to-html");
+var DocumentConverter = documentToHtml.DocumentConverter;
+var commentAuthorLabel = documentToHtml.commentAuthorLabel;
 var test = require("./test")(module);
 var htmlPaths = require("../lib/html-paths");
 var xml = require("../lib/xml");
@@ -612,3 +614,13 @@ function runOfText(text, properties) {
     var textElement = new documents.Text(text);
     return new documents.Run([textElement], properties);
 }
+
+test('when initials are not blank then comment author label is initials', function() {
+    assert.equal(commentAuthorLabel({authorInitials: "TP"}), "TP")
+});
+
+test('when initials are blank then comment author label is blank', function() {
+    assert.equal(commentAuthorLabel({authorInitials: ""}), "")
+    assert.equal(commentAuthorLabel({authorInitials: undefined}), "")
+    assert.equal(commentAuthorLabel({authorInitials: null}), "")
+});
