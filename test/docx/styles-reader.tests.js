@@ -2,75 +2,72 @@ var assert = require("assert");
 
 var readStylesXml = require("../../lib/docx/styles-reader").readStylesXml;
 var XmlElement = require("../../lib/xml").Element;
-var test = require("../testing").test;
+var test = require("../test")(module);
 
 
-describe('readStylesXml', function() {
-    test('paragraph style is null if no style with that ID exists', function() {
-        var styles = readStylesXml(
-            new XmlElement("w:styles", {}, [])
-        );
-        assert.equal(styles.findParagraphStyleById("Heading1"), null);
-    });
-    
-    test('paragraph style can be found by ID', function() {
-        var styles = readStylesXml(
-            new XmlElement("w:styles", {}, [
-                paragraphStyleElement("Heading1", "Heading 1")
-            ])
-        );
-        assert.equal(styles.findParagraphStyleById("Heading1").styleId, "Heading1");
-    });
-    
-    test('character style can be found by ID', function() {
-        var styles = readStylesXml(
-            new XmlElement("w:styles", {}, [
-                characterStyleElement("Heading1Char", "Heading 1 Char")
-            ])
-        );
-        assert.equal(styles.findCharacterStyleById("Heading1Char").styleId, "Heading1Char");
-    });
-    
-    test('paragraph and character styles are distinct', function() {
-        var styles = readStylesXml(
-            new XmlElement("w:styles", {}, [
-                paragraphStyleElement("Heading1", "Heading 1"),
-                characterStyleElement("Heading1Char", "Heading 1 Char")
-            ])
-        );
-        assert.equal(styles.findCharacterStyleById("Heading1"), null);
-        assert.equal(styles.findParagraphStyleById("Heading1Char"), null);
-    });
-    
-    test('character and table styles are distinct', function() {
-        var styles = readStylesXml(
-            new XmlElement("w:styles", {}, [
-                styleElement("table", "Heading1", "Heading 1")
-            ])
-        );
-        assert.equal(styles.findCharacterStyleById("Heading1"), null);
-    });
-    
-    test('styles include names', function() {
-        var styles = readStylesXml(
-            new XmlElement("w:styles", {}, [
-                paragraphStyleElement("Heading1", "Heading 1")
-            ])
-        );
-        assert.equal(styles.findParagraphStyleById("Heading1").name, "Heading 1");
-    });
+test('paragraph style is null if no style with that ID exists', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [])
+    );
+    assert.equal(styles.findParagraphStyleById("Heading1"), null);
+});
 
-    test('style name is null if w:name element does not exist', function() {
-        var styles = readStylesXml(
-            new XmlElement("w:styles", {}, [
-                styleWithoutWNameElement("paragraph", "Heading1"),
-                styleWithoutWNameElement("character", "Heading1Char")
-            ])
-        );
-        assert.equal(styles.findParagraphStyleById("Heading1").name, null);
-        assert.equal(styles.findCharacterStyleById("Heading1Char").name, null);
-    });
+test('paragraph style can be found by ID', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [
+            paragraphStyleElement("Heading1", "Heading 1")
+        ])
+    );
+    assert.equal(styles.findParagraphStyleById("Heading1").styleId, "Heading1");
+});
 
+test('character style can be found by ID', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [
+            characterStyleElement("Heading1Char", "Heading 1 Char")
+        ])
+    );
+    assert.equal(styles.findCharacterStyleById("Heading1Char").styleId, "Heading1Char");
+});
+
+test('paragraph and character styles are distinct', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [
+            paragraphStyleElement("Heading1", "Heading 1"),
+            characterStyleElement("Heading1Char", "Heading 1 Char")
+        ])
+    );
+    assert.equal(styles.findCharacterStyleById("Heading1"), null);
+    assert.equal(styles.findParagraphStyleById("Heading1Char"), null);
+});
+
+test('character and table styles are distinct', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [
+            styleElement("table", "Heading1", "Heading 1")
+        ])
+    );
+    assert.equal(styles.findCharacterStyleById("Heading1"), null);
+});
+
+test('styles include names', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [
+            paragraphStyleElement("Heading1", "Heading 1")
+        ])
+    );
+    assert.equal(styles.findParagraphStyleById("Heading1").name, "Heading 1");
+});
+
+test('style name is null if w:name element does not exist', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [
+            styleWithoutWNameElement("paragraph", "Heading1"),
+            styleWithoutWNameElement("character", "Heading1Char")
+        ])
+    );
+    assert.equal(styles.findParagraphStyleById("Heading1").name, null);
+    assert.equal(styles.findCharacterStyleById("Heading1Char").name, null);
 });
 
 function paragraphStyleElement(id, name) {
