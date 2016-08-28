@@ -368,3 +368,13 @@ test('extractRawText can use .docx files represented by a Buffer', function() {
             assert.deepEqual(result.messages, []);
         });
 });
+
+
+test('should throw error if file is not a valid docx document', function() {
+    var docxPath = path.join(__dirname, "test-data/empty.zip");
+    return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+        assert.ok(false, "Expected error");
+    }, function(error) {
+        assert.equal(error.message, "Could not find word/document.xml in ZIP file. Are you sure this is a valid .docx file?");
+    });
+});

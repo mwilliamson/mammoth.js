@@ -1,3 +1,7 @@
+# 1.2.0
+
+* Throw more informative error when word/document.xml cannot be found.
+
 # 1.1.0
 
 * Add support for comments.
