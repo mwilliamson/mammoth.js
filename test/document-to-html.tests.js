@@ -590,6 +590,28 @@ test('can add custom handler for images', function() {
     });
 });
 
+test('when custom image handler throws error then error is stored in error message', function() {
+    var error = new Error("Failed to convert image");
+    var image = new documents.Image({
+        readImage: function(encoding) {
+            return promises.when(new Buffer().toString(encoding));
+        },
+        contentType: "image/png"
+    });
+    var converter = new DocumentConverter({
+        convertImage: function(element, messages) {
+            throw error;
+        }
+    });
+    return converter.convertToHtml(image).then(function(result) {
+        assert.equal(result.value, '');
+        assert.equal(result.messages.length, 1);
+        var message = result.messages[0];
+        assert.equal("error", message.type);
+        assert.equal("Failed to convert image", message.message);
+    });
+});
+
 test('long documents do not cause stack overflow', function() {
     var paragraphs = [];
     for (var i = 0; i < 1000; i++) {
