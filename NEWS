@@ -2,6 +2,9 @@
 
 * Throw more informative error when word/document.xml cannot be found.
 
+* Generate messages of type "error" instead of "warning" when image conversion
+  throws an exception.
+
 # 1.1.0
 
 * Add support for comments.
