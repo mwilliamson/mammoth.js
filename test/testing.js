@@ -3,21 +3,11 @@ var fs = require("fs");
 var promises = require("../lib/promises");
 var _ = require("underscore");
 
-exports.test = test;
 exports.testPath = testPath;
 exports.testData = testData;
 exports.createFakeDocxFile = createFakeDocxFile;
 exports.createFakeFiles = createFakeFiles;
 
-
-function test(name, func) {
-    it(name, function(done) {
-        var result = func();
-        promises.when(result).then(function() {
-            done();
-        }).done();
-    });
-}
 
 function testPath(filename) {
     return path.join(__dirname, "test-data", filename);

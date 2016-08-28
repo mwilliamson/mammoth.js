@@ -7,13 +7,13 @@ var Files = require("../../lib/docx/files").Files;
 var uriToPath = require("../../lib/docx/files").uriToPath;
 
 var testing = require("../testing");
-var test = testing.test;
+var test = require("../test")(module);
 
 var readFile = promises.promisify(fs.readFile.bind(fs));
 
 
-describe("Files", function() {
-    test("can open files with file URI", function() {
+test("Files", {
+    "can open files with file URI": function() {
         var filePath = path.resolve(testing.testPath("tiny-picture.png"));
         var files = new Files(null);
         return files.read("file:///" + filePath.replace(/^\//, ""), "base64").then(function(contents) {
@@ -21,9 +21,9 @@ describe("Files", function() {
                 assert.deepEqual(contents, expectedContents);
             });
         });
-    });
+    },
     
-    test("can open files with relative URI", function() {
+    "can open files with relative URI": function() {
         var filePath = path.resolve(testing.testPath("tiny-picture.png"));
         var files = new Files(testing.testPath("."));
         return files.read("tiny-picture.png", "base64").then(function(contents) {
@@ -31,21 +31,21 @@ describe("Files", function() {
                 assert.deepEqual(contents, expectedContents);
             });
         });
-    });
+    },
     
-    test("given base is not set when opening relative uri then error is raised", function() {
+    "given base is not set when opening relative uri then error is raised": function() {
         var files = new Files(null);
         return assertError(files.read("not-a-real-file.png", "base64"), function(err) {
             assert.equal(err.message, "could not find external image 'not-a-real-file.png', path of input document is unknown");
         });
-    });
+    },
     
-    test("error if relative uri cannot be opened", function() {
+    "error if relative uri cannot be opened": function() {
         var files = new Files("/tmp");
         return assertError(files.read("not-a-real-file.png", "base64"), function(err) {
             assertRegex(err.message, /could not open external image: 'not-a-real-file.png' \(document directory: '\/tmp'\)\nENOENT.*\/tmp\/not-a-real-file.png.*/);
         });
-    });
+    }
 });
 
 function assertError(promise, func) {
@@ -59,36 +59,36 @@ function assertRegex(actual, expected) {
 }
 
 
-describe("uriToPath", function() {
-    test("leading slash is retained on non-Windows file URIs", function() {
+test("uriToPath", {
+    "leading slash is retained on non-Windows file URIs": function() {
         assert.equal(uriToPath("file:///a/b/c", "linux"), "/a/b/c");
         assert.equal(uriToPath("file:///a/b/c", "win32"), "/a/b/c");
-    });
+    },
     
-    test("URI is unquoted", function() {
+    "URI is unquoted": function() {
         assert.equal(uriToPath("file:///a%20b"), "/a b");
-    });
+    },
     
-    test("when host is set to localhost then path can be found", function() {
+    "when host is set to localhost then path can be found": function() {
         assert.equal(uriToPath("file://localhost/a/b/c"), "/a/b/c");
-    });
+    },
     
-    test("when host is set but not localhost then path cannot be found", function() {
+    "when host is set but not localhost then path cannot be found": function() {
         assert.throws(function() {
             uriToPath("file://example/a/b/c");
         }, /Could not convert URI to path: file:\/\/example\/a\/b\/c/);
-    });
+    },
     
-    test("leading slash is not dropped on Windows file URIs when platform is not Windows", function() {
+    "leading slash is not dropped on Windows file URIs when platform is not Windows": function() {
         assert.equal(uriToPath("file:///c:/a", "linux"), "/c:/a");
-    });
+    },
     
-    test("leading slash is dropped on Windows file URIs when platform is Windows", function() {
+    "leading slash is dropped on Windows file URIs when platform is Windows": function() {
         assert.equal(uriToPath("file:///c:/a", "win32"), "c:/a");
         assert.equal(uriToPath("file:///C:/a", "win32"), "C:/a");
-    });
+    },
     
-    test("relative URI is unquoted", function() {
+    "relative URI is unquoted": function() {
         assert.equal(uriToPath("a%20b/c"), "a b/c");
-    });
+    }
 });

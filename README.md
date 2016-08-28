@@ -39,6 +39,8 @@ The following features are currently supported:
 * Text boxes. The contents of the text box are treated as a separate paragraph
   that appears after the paragraph containing the text box.
 
+* Comments.
+
 ## Web demo
 
 The easiest way to try out mammoth is to use the web demo:
@@ -294,6 +296,27 @@ var options = {
 };
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
+
+#### Comments
+
+By default, comments are ignored.
+To include comments in the generated HTML,
+add a style mapping for `comment-reference`.
+For instance:
+
+```javascript
+var mammoth = require("mammoth");
+
+var options = {
+    styleMap: [
+        "comment-reference => sup"
+    ]
+};
+mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+```
+
+Comments will be appended to the end of the document,
+with links to the comments wrapped using the specified style mapping.
 
 ### API
 

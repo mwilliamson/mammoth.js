@@ -1,3 +1,11 @@
+# 1.2.0
+
+* Throw more informative error when word/document.xml cannot be found.
+
+# 1.1.0
+
+* Add support for comments.
+
 # 1.0.4
 
 * Add support for w:sdt elements. This allows the bodies of content controls,

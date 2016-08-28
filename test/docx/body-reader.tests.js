@@ -10,7 +10,7 @@ var Styles = require("../../lib/docx/styles-reader").Styles;
 var warning = require("../../lib/results").warning;
 
 var testing = require("../testing");
-var test = testing.test;
+var test = require("../test")(module);
 var createFakeDocxFile = testing.createFakeDocxFile;
 
 function readXmlElement(element, options) {
@@ -35,664 +35,662 @@ var fakeContentTypes = {
     }
 };
 
-describe("readXmlElement: ", function() {
-    test("paragraph has no style if it has no properties", function() {
-        var paragraphXml = new XmlElement("w:p", {}, []);
-        var paragraph = readXmlElementValue(paragraphXml);
-        assert.deepEqual(paragraph.styleId, null);
-    });
-    
-    test("paragraph has style ID and name read from paragraph properties if present", function() {
-        var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
-        var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
-        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-        
-        var styles = new Styles({"Heading1": {name: "Heading 1"}}, {});
-        
-        var paragraph = readXmlElementValue(paragraphXml, {styles: styles});
-        assert.deepEqual(paragraph.styleId, "Heading1");
-        assert.deepEqual(paragraph.styleName, "Heading 1");
-    });
-    
-    test("warning is emitted when paragraph style cannot be found", function() {
-        var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
-        var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
-        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-        
-        var styles = new Styles({}, {});
-        
-        var result = readXmlElement(paragraphXml, {styles: styles});
-        var paragraph = result.value;
-        assert.deepEqual(paragraph.styleId, "Heading1");
-        assert.deepEqual(paragraph.styleName, null);
-        assert.deepEqual(result.messages, [warning("Paragraph style with ID Heading1 was referenced but not defined in the document")]);
-    });
-    
-    test("paragraph has justification read from paragraph properties if present", function() {
-        var justificationXml = new XmlElement("w:jc", {"w:val": "center"}, []);
-        var propertiesXml = new XmlElement("w:pPr", {}, [justificationXml]);
-        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-        var paragraph = readXmlElementValue(paragraphXml);
-        assert.deepEqual(paragraph.alignment, "center");
-    });
-    
-    test("paragraph has numbering properties from paragraph properties if present", function() {
-        var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
-            new XmlElement("w:ilvl", {"w:val": "1"}),
-            new XmlElement("w:numId", {"w:val": "42"})
-        ]);
-        var propertiesXml = new XmlElement("w:pPr", {}, [numberingPropertiesXml]);
-        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-        
-        var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
-        
-        var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering});
-        assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
-    });
-    
-    test("numbering properties are converted to numbering at specified level", function() {
-        var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
-            new XmlElement("w:ilvl", {"w:val": "1"}),
-            new XmlElement("w:numId", {"w:val": "42"})
-        ]);
-        
-        var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
-        
-        var reader = new BodyReader({
-            numbering: numbering
-        });
-        var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
-        assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
-    });
-    
-    test("numbering properties are ignored if w:ilvl is missing", function() {
-        var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
-            new XmlElement("w:numId", {"w:val": "42"})
-        ]);
-        
-        var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
-        
-        var reader = new BodyReader({
-            numbering: numbering
-        });
-        var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
-        assert.equal(numberingLevel, null);
-    });
-    
-    test("numbering properties are ignored if w:numId is missing", function() {
-        var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
-            new XmlElement("w:ilvl", {"w:val": "1"})
-        ]);
-        
-        var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
-        
-        var reader = new BodyReader({
-            numbering: numbering
-        });
-        var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
-        assert.equal(numberingLevel, null);
-    });
-    
-    test("run has no style if it has no properties", function() {
-        var runXml = runWithProperties([]);
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run.styleId, null);
-    });
-    
-    test("run has style ID and name read from run properties if present", function() {
-        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
-        var runXml = runWithProperties([runStyleXml]);
-        
-        var styles = new Styles({}, {"Heading1Char": {name: "Heading 1 Char"}});
-        
-        var run = readXmlElementValue(runXml, {styles: styles});
-        assert.deepEqual(run.styleId, "Heading1Char");
-        assert.deepEqual(run.styleName, "Heading 1 Char");
-    });
-    
-    test("warning is emitted when run style cannot be found", function() {
-        var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
-        var runXml = runWithProperties([runStyleXml]);
-        
-        var styles = new Styles({}, {});
-        
-        var result = readXmlElement(runXml, {styles: styles});
-        var run = result.value;
-        assert.deepEqual(run.styleId, "Heading1Char");
-        assert.deepEqual(run.styleName, null);
-        assert.deepEqual(result.messages, [warning("Run style with ID Heading1Char was referenced but not defined in the document")]);
-    });
-    
-    test("isBold is false if bold element is not present", function() {
-        var runXml = runWithProperties([]);
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run.isBold, false);
-    });
-    
-    test("isBold is true if bold element is present", function() {
-        var boldXml = new XmlElement("w:b");
-        var runXml = runWithProperties([boldXml]);
-        var run = readXmlElementValue(runXml);
-        assert.equal(run.isBold, true);
-    });
+test("paragraph has no style if it has no properties", function() {
+    var paragraphXml = new XmlElement("w:p", {}, []);
+    var paragraph = readXmlElementValue(paragraphXml);
+    assert.deepEqual(paragraph.styleId, null);
+});
 
-    test("isUnderline is false if underline element is not present", function() {
-        var runXml = runWithProperties([]);
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run.isUnderline, false);
-    });
+test("paragraph has style ID and name read from paragraph properties if present", function() {
+    var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
+    var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
+    var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+    
+    var styles = new Styles({"Heading1": {name: "Heading 1"}}, {});
+    
+    var paragraph = readXmlElementValue(paragraphXml, {styles: styles});
+    assert.deepEqual(paragraph.styleId, "Heading1");
+    assert.deepEqual(paragraph.styleName, "Heading 1");
+});
 
-    test("isUnderline is true if underline element is present", function() {
-        var underlineXml = new XmlElement("w:u");
-        var runXml = runWithProperties([underlineXml]);
-        var run = readXmlElementValue(runXml);
-        assert.equal(run.isUnderline, true);
-    });
+test("warning is emitted when paragraph style cannot be found", function() {
+    var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
+    var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
+    var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+    
+    var styles = new Styles({}, {});
+    
+    var result = readXmlElement(paragraphXml, {styles: styles});
+    var paragraph = result.value;
+    assert.deepEqual(paragraph.styleId, "Heading1");
+    assert.deepEqual(paragraph.styleName, null);
+    assert.deepEqual(result.messages, [warning("Paragraph style with ID Heading1 was referenced but not defined in the document")]);
+});
 
-    test("isStrikethrough is false if strikethrough element is not present", function() {
-        var runXml = runWithProperties([]);
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run.isStrikethrough, false);
-    });
+test("paragraph has justification read from paragraph properties if present", function() {
+    var justificationXml = new XmlElement("w:jc", {"w:val": "center"}, []);
+    var propertiesXml = new XmlElement("w:pPr", {}, [justificationXml]);
+    var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+    var paragraph = readXmlElementValue(paragraphXml);
+    assert.deepEqual(paragraph.alignment, "center");
+});
 
-    test("isStrikethrough is true if strikethrough element is present", function() {
-        var strikethroughXml = new XmlElement("w:strike");
-        var runXml = runWithProperties([strikethroughXml]);
-        var run = readXmlElementValue(runXml);
-        assert.equal(run.isStrikethrough, true);
-    });
+test("paragraph has numbering properties from paragraph properties if present", function() {
+    var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+        new XmlElement("w:ilvl", {"w:val": "1"}),
+        new XmlElement("w:numId", {"w:val": "42"})
+    ]);
+    var propertiesXml = new XmlElement("w:pPr", {}, [numberingPropertiesXml]);
+    var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+    
+    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+    
+    var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering});
+    assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
+});
 
-    test("isItalic is false if bold element is not present", function() {
-        var runXml = runWithProperties([]);
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run.isItalic, false);
-    });
+test("numbering properties are converted to numbering at specified level", function() {
+    var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+        new XmlElement("w:ilvl", {"w:val": "1"}),
+        new XmlElement("w:numId", {"w:val": "42"})
+    ]);
     
-    test("isItalic is true if bold element is present", function() {
-        var italicXml = new XmlElement("w:i");
-        var runXml = runWithProperties([italicXml]);
-        var run = readXmlElementValue(runXml);
-        assert.equal(run.isItalic, true);
-    });
+    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
     
-    test("run has baseline vertical alignment by default", function() {
-        var runXml = runWithProperties([]);
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.baseline);
+    var reader = new BodyReader({
+        numbering: numbering
     });
+    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
+});
+
+test("numbering properties are ignored if w:ilvl is missing", function() {
+    var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+        new XmlElement("w:numId", {"w:val": "42"})
+    ]);
     
-    test("run has vertical alignment read from properties", function() {
-        var verticalAlignmentXml = new XmlElement("w:vertAlign", {"w:val": "superscript"});
-        var runXml = runWithProperties([verticalAlignmentXml]);
-        
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.superscript);
+    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+    
+    var reader = new BodyReader({
+        numbering: numbering
     });
+    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    assert.equal(numberingLevel, null);
+});
+
+test("numbering properties are ignored if w:numId is missing", function() {
+    var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+        new XmlElement("w:ilvl", {"w:val": "1"})
+    ]);
     
-    test("run properties not included as child of run", function() {
-        var runStyleXml = new XmlElement("w:rStyle");
-        var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
-        var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
-        var result = readXmlElement(runXml);
-        assert.deepEqual(result.value.children, []);
+    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+    
+    var reader = new BodyReader({
+        numbering: numbering
     });
+    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    assert.equal(numberingLevel, null);
+});
+
+test("run has no style if it has no properties", function() {
+    var runXml = runWithProperties([]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.styleId, null);
+});
+
+test("run has style ID and name read from run properties if present", function() {
+    var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
+    var runXml = runWithProperties([runStyleXml]);
     
-    test("w:tab is read as document tab element", function() {
-        var tabXml = new XmlElement("w:tab");
-        var result = readXmlElement(tabXml);
-        assert.deepEqual(result.value, new documents.Tab());
-    });
+    var styles = new Styles({}, {"Heading1Char": {name: "Heading 1 Char"}});
     
-    test("w:tbl is read as document table element", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            new XmlElement("w:tr", {}, [
-                new XmlElement("w:tc", {}, [
-                    new XmlElement("w:p", {}, [])
-                ])
+    var run = readXmlElementValue(runXml, {styles: styles});
+    assert.deepEqual(run.styleId, "Heading1Char");
+    assert.deepEqual(run.styleName, "Heading 1 Char");
+});
+
+test("warning is emitted when run style cannot be found", function() {
+    var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
+    var runXml = runWithProperties([runStyleXml]);
+    
+    var styles = new Styles({}, {});
+    
+    var result = readXmlElement(runXml, {styles: styles});
+    var run = result.value;
+    assert.deepEqual(run.styleId, "Heading1Char");
+    assert.deepEqual(run.styleName, null);
+    assert.deepEqual(result.messages, [warning("Run style with ID Heading1Char was referenced but not defined in the document")]);
+});
+
+test("isBold is false if bold element is not present", function() {
+    var runXml = runWithProperties([]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.isBold, false);
+});
+
+test("isBold is true if bold element is present", function() {
+    var boldXml = new XmlElement("w:b");
+    var runXml = runWithProperties([boldXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isBold, true);
+});
+
+test("isUnderline is false if underline element is not present", function() {
+    var runXml = runWithProperties([]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.isUnderline, false);
+});
+
+test("isUnderline is true if underline element is present", function() {
+    var underlineXml = new XmlElement("w:u");
+    var runXml = runWithProperties([underlineXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isUnderline, true);
+});
+
+test("isStrikethrough is false if strikethrough element is not present", function() {
+    var runXml = runWithProperties([]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.isStrikethrough, false);
+});
+
+test("isStrikethrough is true if strikethrough element is present", function() {
+    var strikethroughXml = new XmlElement("w:strike");
+    var runXml = runWithProperties([strikethroughXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isStrikethrough, true);
+});
+
+test("isItalic is false if bold element is not present", function() {
+    var runXml = runWithProperties([]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.isItalic, false);
+});
+
+test("isItalic is true if bold element is present", function() {
+    var italicXml = new XmlElement("w:i");
+    var runXml = runWithProperties([italicXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isItalic, true);
+});
+
+test("run has baseline vertical alignment by default", function() {
+    var runXml = runWithProperties([]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.baseline);
+});
+
+test("run has vertical alignment read from properties", function() {
+    var verticalAlignmentXml = new XmlElement("w:vertAlign", {"w:val": "superscript"});
+    var runXml = runWithProperties([verticalAlignmentXml]);
+    
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.superscript);
+});
+
+test("run properties not included as child of run", function() {
+    var runStyleXml = new XmlElement("w:rStyle");
+    var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
+    var runXml = new XmlElement("w:r", {}, [runPropertiesXml]);
+    var result = readXmlElement(runXml);
+    assert.deepEqual(result.value.children, []);
+});
+
+test("w:tab is read as document tab element", function() {
+    var tabXml = new XmlElement("w:tab");
+    var result = readXmlElement(tabXml);
+    assert.deepEqual(result.value, new documents.Tab());
+});
+
+test("w:tbl is read as document table element", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        new XmlElement("w:tr", {}, [
+            new XmlElement("w:tc", {}, [
+                new XmlElement("w:p", {}, [])
             ])
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.value, new documents.Table([
-            new documents.TableRow([
-                new documents.TableCell([
-                    new documents.Paragraph([])
-                ])
+        ])
+    ]);
+    var result = readXmlElement(tableXml);
+    assert.deepEqual(result.value, new documents.Table([
+        new documents.TableRow([
+            new documents.TableCell([
+                new documents.Paragraph([])
             ])
-        ]));
-    });
-    
-    test("w:gridSpan is read as colSpan for table cell", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            new XmlElement("w:tr", {}, [
-                new XmlElement("w:tc", {}, [
-                    new XmlElement("w:tcPr", {}, [
-                        new XmlElement("w:gridSpan", {"w:val": "2"})
-                    ]),
-                    new XmlElement("w:p", {}, [])
-                ])
-            ])
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.value, new documents.Table([
-            new documents.TableRow([
-                new documents.TableCell([
-                    new documents.Paragraph([])
-                ], {colSpan: 2})
-            ])
-        ]));
-    });
-    
-    test("w:vMerge is read as rowSpan for table cell", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            row(emptyCell()),
-            row(emptyCell(vMerge("restart"))),
-            row(emptyCell(vMerge("continue"))),
-            row(emptyCell(vMerge("continue"))),
-            row(emptyCell())
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.value, new documents.Table([
-            docRow([docEmptyCell()]),
-            docRow([docEmptyCell({rowSpan: 3})]),
-            docRow([]),
-            docRow([]),
-            docRow([docEmptyCell()])
-        ]));
-    });
-    
-    test("w:vMerge without val is treated as continue", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            row(emptyCell(vMerge("restart"))),
-            row(emptyCell(vMerge()))
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.value, new documents.Table([
-            docRow([docEmptyCell({rowSpan: 2})]),
-            docRow([])
-        ]));
-    });
-    
-    test("w:vMerge accounts for cells spanning columns", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            row(emptyCell(), emptyCell(), emptyCell(vMerge("restart"))),
-            row(emptyCell(gridSpan("2")), emptyCell(vMerge("continue"))),
-            row(emptyCell(), emptyCell(), emptyCell(vMerge("continue"))),
-            row(emptyCell(), emptyCell(), emptyCell())
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.value, new documents.Table([
-            docRow([docEmptyCell(), docEmptyCell(), docEmptyCell({rowSpan: 3})]),
-            docRow([docEmptyCell({colSpan: 2})]),
-            docRow([docEmptyCell(), docEmptyCell()]),
-            docRow([docEmptyCell(), docEmptyCell(), docEmptyCell()])
-        ]));
-    });
-    
-    test("no vertical cell merging if merged cells do not line up", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            row(emptyCell(gridSpan("2"), vMerge("restart"))),
-            row(emptyCell(), emptyCell(vMerge("continue")))
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.value, new documents.Table([
-            docRow([docEmptyCell({colSpan: 2})]),
-            docRow([docEmptyCell(), docEmptyCell()])
-        ]));
-    });
-    
-    test("warning if non-row in table", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            new XmlElement("w:p")
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.messages, [warning("unexpected non-row element in table, cell merging may be incorrect")]);
-    });
-    
-    test("warning if non-cell in table row", function() {
-        var tableXml = new XmlElement("w:tbl", {}, [
-            row(new XmlElement("w:p"))
-        ]);
-        var result = readXmlElement(tableXml);
-        assert.deepEqual(result.messages, [warning("unexpected non-cell element in table row, cell merging may be incorrect")]);
-    });
-    
-    function row() {
-        return new XmlElement("w:tr", {}, Array.prototype.slice.call(arguments));
-    }
-    
-    function emptyCell() {
-        return new XmlElement("w:tc", {}, [
-            new XmlElement("w:tcPr", {}, Array.prototype.slice.call(arguments))
-        ]);
-    }
-    
-    function vMerge(val) {
-        return new XmlElement("w:vMerge", {"w:val": val}, []);
-    }
-    
-    function gridSpan(val) {
-        return new XmlElement("w:gridSpan", {"w:val": val});
-    }
-    
-    function docRow(children) {
-        return new documents.TableRow(children);
-    }
-    
-    function docEmptyCell(properties) {
-        return new documents.TableCell([], properties);
-    }
+        ])
+    ]));
+});
 
-    test("w:bookmarkStart is read as a bookmarkStart", function() {
-        var bookmarkStart = new XmlElement("w:bookmarkStart", {"w:name": "_Peter", "w:id": "42"});
-        var result = readXmlElement(bookmarkStart);
-        assert.deepEqual(result.value.name, "_Peter");
-        assert.deepEqual(result.value.type, "bookmarkStart");
-    });
+test("w:gridSpan is read as colSpan for table cell", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        new XmlElement("w:tr", {}, [
+            new XmlElement("w:tc", {}, [
+                new XmlElement("w:tcPr", {}, [
+                    new XmlElement("w:gridSpan", {"w:val": "2"})
+                ]),
+                new XmlElement("w:p", {}, [])
+            ])
+        ])
+    ]);
+    var result = readXmlElement(tableXml);
+    assert.deepEqual(result.value, new documents.Table([
+        new documents.TableRow([
+            new documents.TableCell([
+                new documents.Paragraph([])
+            ], {colSpan: 2})
+        ])
+    ]));
+});
+
+test("w:vMerge is read as rowSpan for table cell", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        row(emptyCell()),
+        row(emptyCell(vMerge("restart"))),
+        row(emptyCell(vMerge("continue"))),
+        row(emptyCell(vMerge("continue"))),
+        row(emptyCell())
+    ]);
+    var result = readXmlElement(tableXml);
+    assert.deepEqual(result.value, new documents.Table([
+        docRow([docEmptyCell()]),
+        docRow([docEmptyCell({rowSpan: 3})]),
+        docRow([]),
+        docRow([]),
+        docRow([docEmptyCell()])
+    ]));
+});
+
+test("w:vMerge without val is treated as continue", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        row(emptyCell(vMerge("restart"))),
+        row(emptyCell(vMerge()))
+    ]);
+    var result = readXmlElement(tableXml);
+    assert.deepEqual(result.value, new documents.Table([
+        docRow([docEmptyCell({rowSpan: 2})]),
+        docRow([])
+    ]));
+});
+
+test("w:vMerge accounts for cells spanning columns", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        row(emptyCell(), emptyCell(), emptyCell(vMerge("restart"))),
+        row(emptyCell(gridSpan("2")), emptyCell(vMerge("continue"))),
+        row(emptyCell(), emptyCell(), emptyCell(vMerge("continue"))),
+        row(emptyCell(), emptyCell(), emptyCell())
+    ]);
+    var result = readXmlElement(tableXml);
+    assert.deepEqual(result.value, new documents.Table([
+        docRow([docEmptyCell(), docEmptyCell(), docEmptyCell({rowSpan: 3})]),
+        docRow([docEmptyCell({colSpan: 2})]),
+        docRow([docEmptyCell(), docEmptyCell()]),
+        docRow([docEmptyCell(), docEmptyCell(), docEmptyCell()])
+    ]));
+});
+
+test("no vertical cell merging if merged cells do not line up", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        row(emptyCell(gridSpan("2"), vMerge("restart"))),
+        row(emptyCell(), emptyCell(vMerge("continue")))
+    ]);
+    var result = readXmlElement(tableXml);
+    assert.deepEqual(result.value, new documents.Table([
+        docRow([docEmptyCell({colSpan: 2})]),
+        docRow([docEmptyCell(), docEmptyCell()])
+    ]));
+});
+
+test("warning if non-row in table", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        new XmlElement("w:p")
+    ]);
+    var result = readXmlElement(tableXml);
+    assert.deepEqual(result.messages, [warning("unexpected non-row element in table, cell merging may be incorrect")]);
+});
+
+test("warning if non-cell in table row", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        row(new XmlElement("w:p"))
+    ]);
+    var result = readXmlElement(tableXml);
+    assert.deepEqual(result.messages, [warning("unexpected non-cell element in table row, cell merging may be incorrect")]);
+});
+
+function row() {
+    return new XmlElement("w:tr", {}, Array.prototype.slice.call(arguments));
+}
+
+function emptyCell() {
+    return new XmlElement("w:tc", {}, [
+        new XmlElement("w:tcPr", {}, Array.prototype.slice.call(arguments))
+    ]);
+}
+
+function vMerge(val) {
+    return new XmlElement("w:vMerge", {"w:val": val}, []);
+}
+
+function gridSpan(val) {
+    return new XmlElement("w:gridSpan", {"w:val": val});
+}
+
+function docRow(children) {
+    return new documents.TableRow(children);
+}
+
+function docEmptyCell(properties) {
+    return new documents.TableCell([], properties);
+}
+
+test("w:bookmarkStart is read as a bookmarkStart", function() {
+    var bookmarkStart = new XmlElement("w:bookmarkStart", {"w:name": "_Peter", "w:id": "42"});
+    var result = readXmlElement(bookmarkStart);
+    assert.deepEqual(result.value.name, "_Peter");
+    assert.deepEqual(result.value.type, "bookmarkStart");
+});
+
+test('_GoBack bookmark is ignored', function() {
+    var bookmarkStart = new XmlElement("w:bookmarkStart", {"w:name": "_GoBack"});
+    var result = readXmlElement(bookmarkStart);
+    assert.deepEqual(result.value, []);
+});
+
+test("can read imagedata elements with r:id attribute", function() {
+    var imagedataElement = new XmlElement("v:imagedata", {"r:id": "rId5", "o:title": "It's a hat"});
     
-    test('_GoBack bookmark is ignored', function() {
-        var bookmarkStart = new XmlElement("w:bookmarkStart", {"w:name": "_GoBack"});
-        var result = readXmlElement(bookmarkStart);
-        assert.deepEqual(result.value, []);
+    var imageBuffer = new Buffer("Not an image at all!");
+    var reader = new BodyReader({
+        relationships: {
+            "rId5": {target: "media/hat.png"}
+        },
+        contentTypes: fakeContentTypes,
+        docxFile: createFakeDocxFile({
+            "word/media/hat.png": imageBuffer
+        })
     });
-    
-    test("can read imagedata elements with r:id attribute", function() {
-        var imagedataElement = new XmlElement("v:imagedata", {"r:id": "rId5", "o:title": "It's a hat"});
-        
-        var imageBuffer = new Buffer("Not an image at all!");
-        var reader = new BodyReader({
-            relationships: {
-                "rId5": {target: "media/hat.png"}
-            },
-            contentTypes: fakeContentTypes,
-            docxFile: createFakeDocxFile({
-                "word/media/hat.png": imageBuffer
-            })
+    var result = reader.readXmlElement(imagedataElement);
+    assert.deepEqual(result.messages, []);
+    var element = result.value;
+    assert.equal("image", element.type);
+    assert.equal(element.altText, "It's a hat");
+    assert.equal(element.contentType, "image/png");
+    return element.read()
+        .then(function(readValue) {
+            assert.equal(readValue, imageBuffer);
         });
-        var result = reader.readXmlElement(imagedataElement);
-        assert.deepEqual(result.messages, []);
-        var element = result.value;
-        assert.equal("image", element.type);
-        assert.equal(element.altText, "It's a hat");
-        assert.equal(element.contentType, "image/png");
-        return element.read()
-            .then(function(readValue) {
-                assert.equal(readValue, imageBuffer);
-            });
+});
+
+test("can read inline pictures", function() {
+    var drawing = createInlineImage({
+        blip: createEmbeddedBlip("rId5"),
+        description: "It's a hat"
     });
     
-    test("can read inline pictures", function() {
-        var drawing = createInlineImage({
-            blip: createEmbeddedBlip("rId5"),
-            description: "It's a hat"
-        });
-        
-        var imageBuffer = new Buffer("Not an image at all!");
-        var reader = new BodyReader({
-            relationships: {
-                "rId5": {target: "media/hat.png"}
-            },
-            contentTypes: fakeContentTypes,
-            docxFile: createFakeDocxFile({
-                "word/media/hat.png": imageBuffer
-            })
-        });
-        var result = reader.readXmlElement(drawing);
-        assert.deepEqual(result.messages, []);
-        var element = single(result.value);
-        assert.equal("image", element.type);
-        assert.equal(element.altText, "It's a hat");
-        assert.equal(element.contentType, "image/png");
-        return element.read()
-            .then(function(readValue) {
-                assert.equal(readValue, imageBuffer);
-            });
+    var imageBuffer = new Buffer("Not an image at all!");
+    var reader = new BodyReader({
+        relationships: {
+            "rId5": {target: "media/hat.png"}
+        },
+        contentTypes: fakeContentTypes,
+        docxFile: createFakeDocxFile({
+            "word/media/hat.png": imageBuffer
+        })
     });
-    
-    test("can read anchored pictures", function() {
-        var drawing = new XmlElement("w:drawing", {}, [
-            new XmlElement("wp:anchor", {}, [
-                new XmlElement("wp:docPr", {descr: "It's a hat"}),
-                new XmlElement("a:graphic", {}, [
-                    new XmlElement("a:graphicData", {}, [
-                        new XmlElement("pic:pic", {}, [
-                            new XmlElement("pic:blipFill", {}, [
-                                new XmlElement("a:blip", {"r:embed": "rId5"})
-                            ])
+    var result = reader.readXmlElement(drawing);
+    assert.deepEqual(result.messages, []);
+    var element = single(result.value);
+    assert.equal("image", element.type);
+    assert.equal(element.altText, "It's a hat");
+    assert.equal(element.contentType, "image/png");
+    return element.read()
+        .then(function(readValue) {
+            assert.equal(readValue, imageBuffer);
+        });
+});
+
+test("can read anchored pictures", function() {
+    var drawing = new XmlElement("w:drawing", {}, [
+        new XmlElement("wp:anchor", {}, [
+            new XmlElement("wp:docPr", {descr: "It's a hat"}),
+            new XmlElement("a:graphic", {}, [
+                new XmlElement("a:graphicData", {}, [
+                    new XmlElement("pic:pic", {}, [
+                        new XmlElement("pic:blipFill", {}, [
+                            new XmlElement("a:blip", {"r:embed": "rId5"})
                         ])
                     ])
                 ])
             ])
-        ]);
-        
-        var imageBuffer = new Buffer("Not an image at all!");
-        var reader = new BodyReader({
-            relationships: {
-                "rId5": {target: "media/hat.png"}
-            },
-            contentTypes: fakeContentTypes,
-            docxFile: createFakeDocxFile({
-                "word/media/hat.png": imageBuffer
-            })
+        ])
+    ]);
+    
+    var imageBuffer = new Buffer("Not an image at all!");
+    var reader = new BodyReader({
+        relationships: {
+            "rId5": {target: "media/hat.png"}
+        },
+        contentTypes: fakeContentTypes,
+        docxFile: createFakeDocxFile({
+            "word/media/hat.png": imageBuffer
+        })
+    });
+    var result = reader.readXmlElement(drawing);
+    assert.deepEqual(result.messages, []);
+    var element = single(result.value);
+    assert.equal("image", element.type);
+    assert.equal(element.altText, "It's a hat");
+    return element.read()
+        .then(function(readValue) {
+            assert.equal(readValue, imageBuffer);
         });
-        var result = reader.readXmlElement(drawing);
-        assert.deepEqual(result.messages, []);
-        var element = single(result.value);
-        assert.equal("image", element.type);
-        assert.equal(element.altText, "It's a hat");
-        return element.read()
-            .then(function(readValue) {
-                assert.equal(readValue, imageBuffer);
-            });
-    });
-    
-    test("can read linked pictures", function() {
-        var drawing = createInlineImage({
-            blip: createLinkedBlip("rId5"),
-            description: "It's a hat"
-        });
-        
-        var imageBuffer = new Buffer("Not an image at all!");
-        var reader = new BodyReader({
-            relationships: {
-                "rId5": {target: "file:///media/hat.png"}
-            },
-            contentTypes: fakeContentTypes,
-            files: testing.createFakeFiles({
-                "file:///media/hat.png": imageBuffer
-            })
-        });
-        var result = reader.readXmlElement(drawing);
-        assert.deepEqual(result.messages, []);
-        var element = single(result.value);
-        assert.equal("image", element.type);
-        assert.equal(element.altText, "It's a hat");
-        assert.equal(element.contentType, "image/png");
-        return element.read()
-            .then(function(readValue) {
-                assert.equal(readValue, imageBuffer);
-            });
-    });
-    
-    test("warning if unsupported image type", function() {
-        var drawing = createInlineImage({
-            blip: createEmbeddedBlip("rId5"),
-            description: "It's a hat"
-        });
-        
-        var imageBuffer = new Buffer("Not an image at all!");
-        var reader = new BodyReader({
-            relationships: {
-                "rId5": {target: "media/hat.emf"}
-            },
-            contentTypes: fakeContentTypes,
-            docxFile: createFakeDocxFile({
-                "word/media/hat.emf": imageBuffer
-            })
-        });
-        var result = reader.readXmlElement(drawing);
-        assert.deepEqual(result.messages, [warning("Image of type image/x-emf is unlikely to display in web browsers")]);
-        var element = single(result.value);
-        assert.equal(element.contentType, "image/x-emf");
-    });
-    
-    test("no elements created if image cannot be found in w:drawing", function() {
-        var drawing = new XmlElement("w:drawing", {}, []);
-        
-        var reader = new BodyReader({});
-        var result = reader.readXmlElement(drawing);
-        assert.deepEqual(result.messages, []);
-        assert.deepEqual(result.value, []);
-    });
-    
-    test("no elements created if image cannot be found in wp:inline", function() {
-        var drawing = new XmlElement("wp:inline", {}, []);
-        
-        var reader = new BodyReader({});
-        var result = reader.readXmlElement(drawing);
-        assert.deepEqual(result.messages, []);
-        assert.deepEqual(result.value, []);
-    });
-    
-    test("children of w:ins are converted normally", function() {
-        var runXml = new XmlElement("w:r", {}, []);
-        var insXml = new XmlElement("w:ins", {}, [runXml]);
-        var result = readXmlElement(insXml);
-        assert.deepEqual(result.value[0].type, "run");
-    });
-    
-    test("children of w:smartTag are converted normally", function() {
-        var runXml = new XmlElement("w:r", {}, []);
-        var smartTagXml = new XmlElement("w:smartTag", {}, [runXml]);
-        var result = readXmlElement(smartTagXml);
-        assert.deepEqual(result.value[0].type, "run");
-    });
-    
-    test("w:hyperlink is read as document hyperlink if it has a relationship ID", function() {
-        var runXml = new XmlElement("w:r", {}, []);
-        var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
-        var relationships = {
-            "r42": {target: "http://example.com"}
-        };
-        var result = readXmlElement(hyperlinkXml, {relationships: relationships});
-        assert.deepEqual(result.value.href, "http://example.com");
-        assert.deepEqual(result.value.children[0].type, "run");
-    });
+});
 
-    test("w:hyperlink is read as document hyperlink if it has an anchor", function() {
-        var runXml = new XmlElement("w:r", {}, []);
-        var hyperlinkXml = new XmlElement("w:hyperlink", {"w:anchor": "_Peter"}, [runXml]);
-        var result = readXmlElement(hyperlinkXml);
-        assert.deepEqual(result.value.anchor, "_Peter");
-        assert.deepEqual(result.value.children[0].type, "run");
+test("can read linked pictures", function() {
+    var drawing = createInlineImage({
+        blip: createLinkedBlip("rId5"),
+        description: "It's a hat"
     });
+    
+    var imageBuffer = new Buffer("Not an image at all!");
+    var reader = new BodyReader({
+        relationships: {
+            "rId5": {target: "file:///media/hat.png"}
+        },
+        contentTypes: fakeContentTypes,
+        files: testing.createFakeFiles({
+            "file:///media/hat.png": imageBuffer
+        })
+    });
+    var result = reader.readXmlElement(drawing);
+    assert.deepEqual(result.messages, []);
+    var element = single(result.value);
+    assert.equal("image", element.type);
+    assert.equal(element.altText, "It's a hat");
+    assert.equal(element.contentType, "image/png");
+    return element.read()
+        .then(function(readValue) {
+            assert.equal(readValue, imageBuffer);
+        });
+});
 
-    test("w:hyperlink is ignored if it does not have a relationship ID nor anchor", function() {
-        var runXml = new XmlElement("w:r", {}, []);
-        var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
-        var result = readXmlElement(hyperlinkXml);
-        assert.deepEqual(result.value[0].type, "run");
+test("warning if unsupported image type", function() {
+    var drawing = createInlineImage({
+        blip: createEmbeddedBlip("rId5"),
+        description: "It's a hat"
     });
     
-    test("w:br is read as line break", function() {
-        var breakXml = new XmlElement("w:br", {}, []);
-        var result = readXmlElement(breakXml);
-        assert.deepEqual(result.value.type, "lineBreak");
-        assert.deepEqual(result.messages, []);
+    var imageBuffer = new Buffer("Not an image at all!");
+    var reader = new BodyReader({
+        relationships: {
+            "rId5": {target: "media/hat.emf"}
+        },
+        contentTypes: fakeContentTypes,
+        docxFile: createFakeDocxFile({
+            "word/media/hat.emf": imageBuffer
+        })
     });
-    
-    test("warning on breaks that aren't line breaks", function() {
-        var breakXml = new XmlElement("w:br", {"w:type": "page"}, []);
-        var result = readXmlElement(breakXml);
-        assert.deepEqual(result.value, []);
-        assert.deepEqual(result.messages, [warning("Unsupported break type: page")]);
-    });
-    
-    test("w:footnoteReference has ID read", function() {
-        var referenceXml = new XmlElement("w:footnoteReference", {"w:id": "4"});
-        var result = readXmlElement(referenceXml);
-        assert.deepEqual(
-            result.value,
-            documents.noteReference({noteType: "footnote", noteId: "4"})
-        );
-        assert.deepEqual(result.messages, []);
-    });
-    
-    test("w:commentReference has ID read", function() {
-        var referenceXml = new XmlElement("w:commentReference", {"w:id": "4"});
-        var result = readXmlElement(referenceXml);
-        assert.deepEqual(
-            result.value,
-            documents.commentReference({commentId: "4"})
-        );
-        assert.deepEqual(result.messages, []);
-    });
-    
-    test("emits warning on unrecognised element", function() {
-        var unrecognisedElement = new XmlElement("w:not-an-element");
-        var result = readXmlElement(unrecognisedElement);
-        assert.deepEqual(
-            result.messages,
-            [{
-                type: "warning",
-                message: "An unrecognised element was ignored: w:not-an-element"
-            }]
-        );
-        assert.deepEqual(result.value, []);
-    });
-    
-    test("w:bookmarkEnd is ignored without warning", function() {
-        var ignoredElement = new XmlElement("w:bookmarkEnd");
-        var result = readXmlElement(ignoredElement);
-        assert.deepEqual(result.messages, []);
-        assert.deepEqual([], result.value);
-    });
+    var result = reader.readXmlElement(drawing);
+    assert.deepEqual(result.messages, [warning("Image of type image/x-emf is unlikely to display in web browsers")]);
+    var element = single(result.value);
+    assert.equal(element.contentType, "image/x-emf");
+});
 
-    test("text boxes have content appended after containing paragraph", function() {
-        var textbox = new XmlElement("w:pict", {}, [
-            new XmlElement("v:shape", {}, [
-                new XmlElement("v:textbox", {}, [
-                    new XmlElement("w:txbxContent", {}, [
-                        paragraphWithStyleId("textbox-content")
-                    ])
+test("no elements created if image cannot be found in w:drawing", function() {
+    var drawing = new XmlElement("w:drawing", {}, []);
+    
+    var reader = new BodyReader({});
+    var result = reader.readXmlElement(drawing);
+    assert.deepEqual(result.messages, []);
+    assert.deepEqual(result.value, []);
+});
+
+test("no elements created if image cannot be found in wp:inline", function() {
+    var drawing = new XmlElement("wp:inline", {}, []);
+    
+    var reader = new BodyReader({});
+    var result = reader.readXmlElement(drawing);
+    assert.deepEqual(result.messages, []);
+    assert.deepEqual(result.value, []);
+});
+
+test("children of w:ins are converted normally", function() {
+    var runXml = new XmlElement("w:r", {}, []);
+    var insXml = new XmlElement("w:ins", {}, [runXml]);
+    var result = readXmlElement(insXml);
+    assert.deepEqual(result.value[0].type, "run");
+});
+
+test("children of w:smartTag are converted normally", function() {
+    var runXml = new XmlElement("w:r", {}, []);
+    var smartTagXml = new XmlElement("w:smartTag", {}, [runXml]);
+    var result = readXmlElement(smartTagXml);
+    assert.deepEqual(result.value[0].type, "run");
+});
+
+test("w:hyperlink is read as document hyperlink if it has a relationship ID", function() {
+    var runXml = new XmlElement("w:r", {}, []);
+    var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
+    var relationships = {
+        "r42": {target: "http://example.com"}
+    };
+    var result = readXmlElement(hyperlinkXml, {relationships: relationships});
+    assert.deepEqual(result.value.href, "http://example.com");
+    assert.deepEqual(result.value.children[0].type, "run");
+});
+
+test("w:hyperlink is read as document hyperlink if it has an anchor", function() {
+    var runXml = new XmlElement("w:r", {}, []);
+    var hyperlinkXml = new XmlElement("w:hyperlink", {"w:anchor": "_Peter"}, [runXml]);
+    var result = readXmlElement(hyperlinkXml);
+    assert.deepEqual(result.value.anchor, "_Peter");
+    assert.deepEqual(result.value.children[0].type, "run");
+});
+
+test("w:hyperlink is ignored if it does not have a relationship ID nor anchor", function() {
+    var runXml = new XmlElement("w:r", {}, []);
+    var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
+    var result = readXmlElement(hyperlinkXml);
+    assert.deepEqual(result.value[0].type, "run");
+});
+
+test("w:br is read as line break", function() {
+    var breakXml = new XmlElement("w:br", {}, []);
+    var result = readXmlElement(breakXml);
+    assert.deepEqual(result.value.type, "lineBreak");
+    assert.deepEqual(result.messages, []);
+});
+
+test("warning on breaks that aren't line breaks", function() {
+    var breakXml = new XmlElement("w:br", {"w:type": "page"}, []);
+    var result = readXmlElement(breakXml);
+    assert.deepEqual(result.value, []);
+    assert.deepEqual(result.messages, [warning("Unsupported break type: page")]);
+});
+
+test("w:footnoteReference has ID read", function() {
+    var referenceXml = new XmlElement("w:footnoteReference", {"w:id": "4"});
+    var result = readXmlElement(referenceXml);
+    assert.deepEqual(
+        result.value,
+        documents.noteReference({noteType: "footnote", noteId: "4"})
+    );
+    assert.deepEqual(result.messages, []);
+});
+
+test("w:commentReference has ID read", function() {
+    var referenceXml = new XmlElement("w:commentReference", {"w:id": "4"});
+    var result = readXmlElement(referenceXml);
+    assert.deepEqual(
+        result.value,
+        documents.commentReference({commentId: "4"})
+    );
+    assert.deepEqual(result.messages, []);
+});
+
+test("emits warning on unrecognised element", function() {
+    var unrecognisedElement = new XmlElement("w:not-an-element");
+    var result = readXmlElement(unrecognisedElement);
+    assert.deepEqual(
+        result.messages,
+        [{
+            type: "warning",
+            message: "An unrecognised element was ignored: w:not-an-element"
+        }]
+    );
+    assert.deepEqual(result.value, []);
+});
+
+test("w:bookmarkEnd is ignored without warning", function() {
+    var ignoredElement = new XmlElement("w:bookmarkEnd");
+    var result = readXmlElement(ignoredElement);
+    assert.deepEqual(result.messages, []);
+    assert.deepEqual([], result.value);
+});
+
+test("text boxes have content appended after containing paragraph", function() {
+    var textbox = new XmlElement("w:pict", {}, [
+        new XmlElement("v:shape", {}, [
+            new XmlElement("v:textbox", {}, [
+                new XmlElement("w:txbxContent", {}, [
+                    paragraphWithStyleId("textbox-content")
                 ])
             ])
-        ]);
-        var paragraph = new XmlElement("w:p", {}, [
-            new XmlElement("w:r", {}, [textbox])
-        ]);
-        var result = readXmlElement(paragraph);
-        assert.deepEqual(result.value[1].styleId, "textbox-content");
-    });
+        ])
+    ]);
+    var paragraph = new XmlElement("w:p", {}, [
+        new XmlElement("w:r", {}, [textbox])
+    ]);
+    var result = readXmlElement(paragraph);
+    assert.deepEqual(result.value[1].styleId, "textbox-content");
+});
 
-    test("mc:Fallback is used when mc:AlternateContent is read", function() {
-        var styles = new Styles({"first": {name: "First"}, "second": {name: "Second"}}, {});
-        var textbox = new XmlElement("mc:AlternateContent", {}, [
-            new XmlElement("mc:Choice", {"Requires": "wps"}, [
-                paragraphWithStyleId("first")
-            ]),
-            new XmlElement("mc:Fallback", {}, [
-                paragraphWithStyleId("second")
-            ])
-        ]);
-        var result = readXmlElement(textbox, {styles: styles});
-        assert.deepEqual(result.value[0].styleId, "second");
-    });
+test("mc:Fallback is used when mc:AlternateContent is read", function() {
+    var styles = new Styles({"first": {name: "First"}, "second": {name: "Second"}}, {});
+    var textbox = new XmlElement("mc:AlternateContent", {}, [
+        new XmlElement("mc:Choice", {"Requires": "wps"}, [
+            paragraphWithStyleId("first")
+        ]),
+        new XmlElement("mc:Fallback", {}, [
+            paragraphWithStyleId("second")
+        ])
+    ]);
+    var result = readXmlElement(textbox, {styles: styles});
+    assert.deepEqual(result.value[0].styleId, "second");
+});
 
-    test("w:sdtContent is used when w:sdt is read", function() {
-        var element = xml.element("w:sdt", {}, [
-            xml.element("w:sdtContent", {}, [
-                xml.element("w:t", {}, [xml.text("Blackdown")])
-            ])
-        ]);
-        var result = readXmlElement(element);
-        assert.deepEqual(result.value, [new documents.Text("Blackdown")]);
-    });
-    
-    test("text nodes are ignored when reading children", function() {
-        var runXml = new XmlElement("w:r", {}, [xml.text("[text]")]);
-        var run = readXmlElementValue(runXml);
-        assert.deepEqual(run, new documents.Run([]));
-    });
+test("w:sdtContent is used when w:sdt is read", function() {
+    var element = xml.element("w:sdt", {}, [
+        xml.element("w:sdtContent", {}, [
+            xml.element("w:t", {}, [xml.text("Blackdown")])
+        ])
+    ]);
+    var result = readXmlElement(element);
+    assert.deepEqual(result.value, [new documents.Text("Blackdown")]);
+});
+
+test("text nodes are ignored when reading children", function() {
+    var runXml = new XmlElement("w:r", {}, [xml.text("[text]")]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run, new documents.Run([]));
 });
 
 function paragraphWithStyleId(styleId) {
