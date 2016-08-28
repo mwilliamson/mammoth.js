@@ -437,9 +437,12 @@ mammoth.embedStyleMap({path: sourcePath}, "p[style-name='Section Title'] => h1:f
 
 Each message has the following properties:
 
-* `type`: a string representing the type of the message, such as `"warning"`
+* `type`: a string representing the type of the message, such as `"warning"` or
+  `"error"`
 
 * `message`: a string containing the actual message
+
+* `error` (optional): the thrown exception that caused this message, if any
 
 #### Image converters
 

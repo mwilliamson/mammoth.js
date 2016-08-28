@@ -609,6 +609,7 @@ test('when custom image handler throws error then error is stored in error messa
         var message = result.messages[0];
         assert.equal("error", message.type);
         assert.equal("Failed to convert image", message.message);
+        assert.equal(error, message.error);
     });
 });
 
