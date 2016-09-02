@@ -414,12 +414,17 @@ function isSuccess(valueMatcher) {
 }
 
 function isImage(options) {
-    return allOf(
-        hasProperties(_.extend({type: "image"}, _.omit(options, "buffer"))),
-        new FeatureMatcher(willBe(options.buffer), "buffer", "buffer", function(element) {
-            return element.read();
-        })
-    );
+    var matcher = hasProperties(_.extend({type: "image"}, _.omit(options, "buffer")));
+    if (options.buffer) {
+        return allOf(
+            matcher,
+            new FeatureMatcher(willBe(options.buffer), "buffer", "buffer", function(element) {
+                return element.read();
+            })
+        );
+    } else {
+        return matcher;
+    }
 }
 
 function readEmbeddedImage(element) {
@@ -474,9 +479,7 @@ test("alt text title is used if alt text description is blank", function() {
     var result = readEmbeddedImage(drawing);
     
     return promiseThat(result, isSuccess(contains(isImage({
-        altText: "It's a hat",
-        contentType: "image/png",
-        buffer: IMAGE_BUFFER
+        altText: "It's a hat"
     }))));
 });
 
@@ -490,9 +493,7 @@ test("alt text description is preferred to alt text title", function() {
     var result = readEmbeddedImage(drawing);
     
     return promiseThat(result, isSuccess(contains(isImage({
-        altText: "It's a hat",
-        contentType: "image/png",
-        buffer: IMAGE_BUFFER
+        altText: "It's a hat"
     }))));
 });
 
