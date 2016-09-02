@@ -469,6 +469,19 @@ test("can read inline pictures", function() {
     }))));
 });
 
+test("alt text title is used if alt text description is missing", function() {
+    var drawing = createInlineImage({
+        blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),
+        title: "It's a hat"
+    });
+    
+    var result = readEmbeddedImage(drawing);
+    
+    return promiseThat(result, isSuccess(contains(isImage({
+        altText: "It's a hat"
+    }))));
+});
+
 test("alt text title is used if alt text description is blank", function() {
     var drawing = createInlineImage({
         blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),

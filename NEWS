@@ -1,3 +1,8 @@
+# 1.2.1
+
+* Use alt text title as alt text for images when the alt text description is
+  missing entirely.
+
 # 1.2.0
 
 * Throw more informative error when word/document.xml cannot be found.
