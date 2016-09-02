@@ -398,7 +398,7 @@ test("can read imagedata elements with r:id attribute", function() {
     var imagedataElement = new XmlElement("v:imagedata", {"r:id": "rId5", "o:title": "It's a hat"});
     
     var imageBuffer = new Buffer("Not an image at all!");
-    var reader = new BodyReader({
+    var element = readXmlElementValue(imagedataElement, {
         relationships: {
             "rId5": {target: "media/hat.png"}
         },
@@ -407,9 +407,6 @@ test("can read imagedata elements with r:id attribute", function() {
             "word/media/hat.png": imageBuffer
         })
     });
-    var result = reader.readXmlElement(imagedataElement);
-    assert.deepEqual(result.messages, []);
-    var element = result.value;
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
     assert.equal(element.contentType, "image/png");
@@ -426,7 +423,7 @@ test("can read inline pictures", function() {
     });
     
     var imageBuffer = new Buffer("Not an image at all!");
-    var reader = new BodyReader({
+    var element = single(readXmlElementValue(drawing, {
         relationships: {
             "rId5": {target: "media/hat.png"}
         },
@@ -434,10 +431,7 @@ test("can read inline pictures", function() {
         docxFile: createFakeDocxFile({
             "word/media/hat.png": imageBuffer
         })
-    });
-    var result = reader.readXmlElement(drawing);
-    assert.deepEqual(result.messages, []);
-    var element = single(result.value);
+    }));
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
     assert.equal(element.contentType, "image/png");
@@ -464,7 +458,7 @@ test("can read anchored pictures", function() {
     ]);
     
     var imageBuffer = new Buffer("Not an image at all!");
-    var reader = new BodyReader({
+    var element = single(readXmlElementValue(drawing, {
         relationships: {
             "rId5": {target: "media/hat.png"}
         },
@@ -472,10 +466,7 @@ test("can read anchored pictures", function() {
         docxFile: createFakeDocxFile({
             "word/media/hat.png": imageBuffer
         })
-    });
-    var result = reader.readXmlElement(drawing);
-    assert.deepEqual(result.messages, []);
-    var element = single(result.value);
+    }));
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
     return element.read()
@@ -491,7 +482,7 @@ test("can read linked pictures", function() {
     });
     
     var imageBuffer = new Buffer("Not an image at all!");
-    var reader = new BodyReader({
+    var element = single(readXmlElementValue(drawing, {
         relationships: {
             "rId5": {target: "file:///media/hat.png"}
         },
@@ -499,10 +490,7 @@ test("can read linked pictures", function() {
         files: testing.createFakeFiles({
             "file:///media/hat.png": imageBuffer
         })
-    });
-    var result = reader.readXmlElement(drawing);
-    assert.deepEqual(result.messages, []);
-    var element = single(result.value);
+    }));
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
     assert.equal(element.contentType, "image/png");
@@ -519,7 +507,7 @@ test("warning if unsupported image type", function() {
     });
     
     var imageBuffer = new Buffer("Not an image at all!");
-    var reader = new BodyReader({
+    var result = readXmlElement(drawing, {
         relationships: {
             "rId5": {target: "media/hat.emf"}
         },
@@ -528,7 +516,6 @@ test("warning if unsupported image type", function() {
             "word/media/hat.emf": imageBuffer
         })
     });
-    var result = reader.readXmlElement(drawing);
     assert.deepEqual(result.messages, [warning("Image of type image/x-emf is unlikely to display in web browsers")]);
     var element = single(result.value);
     assert.equal(element.contentType, "image/x-emf");
@@ -537,8 +524,7 @@ test("warning if unsupported image type", function() {
 test("no elements created if image cannot be found in w:drawing", function() {
     var drawing = new XmlElement("w:drawing", {}, []);
     
-    var reader = new BodyReader({});
-    var result = reader.readXmlElement(drawing);
+    var result = readXmlElement(drawing);
     assert.deepEqual(result.messages, []);
     assert.deepEqual(result.value, []);
 });
@@ -546,8 +532,7 @@ test("no elements created if image cannot be found in w:drawing", function() {
 test("no elements created if image cannot be found in wp:inline", function() {
     var drawing = new XmlElement("wp:inline", {}, []);
     
-    var reader = new BodyReader({});
-    var result = reader.readXmlElement(drawing);
+    var result = readXmlElement(drawing);
     assert.deepEqual(result.messages, []);
     assert.deepEqual(result.value, []);
 });
