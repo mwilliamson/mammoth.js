@@ -33,7 +33,8 @@
     "duck": "~0.1.11",
     "uglify-js": "~2.4.8",
     "temp": "~0.7.0",
-    "eslint": "2.13.1"
+    "eslint": "2.13.1",
+    "hamjest": "2.13.0"
   },
   "browser": {
     "./lib/unzip.js": "./browser/unzip.js",

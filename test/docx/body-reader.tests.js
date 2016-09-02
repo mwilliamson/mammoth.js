@@ -1,6 +1,14 @@
 var assert = require("assert");
 var path = require("path");
 
+var _ = require("underscore");
+var hamjest = require("hamjest");
+var promiseThat = hamjest.promiseThat;
+var allOf = hamjest.allOf;
+var hasProperties = hamjest.hasProperties;
+var willBe = hamjest.willBe;
+var FeatureMatcher = hamjest.FeatureMatcher;
+
 var BodyReader = require("../../lib/docx/body-reader").BodyReader;
 var documents = require("../../lib/documents");
 var xml = require("../../lib/xml");
@@ -395,6 +403,16 @@ test('_GoBack bookmark is ignored', function() {
 });
 
 var IMAGE_BUFFER = new Buffer("Not an image at all!");
+var IMAGE_RELATIONSHIP_ID = "rId5";
+
+function isImage(options) {
+    return allOf(
+        hasProperties(_.omit(options, "buffer")),
+        new FeatureMatcher(willBe(options.buffer), "buffer", "buffer", function(element) {
+            return element.read();
+        })
+    );
+}
 
 test("can read imagedata elements with r:id attribute", function() {
     var imagedataElement = new XmlElement("v:imagedata", {"r:id": "rId5", "o:title": "It's a hat"});
@@ -408,10 +426,12 @@ test("can read imagedata elements with r:id attribute", function() {
             "word/media/hat.png": IMAGE_BUFFER
         })
     });
-    assert.equal("image", element.type);
-    assert.equal(element.altText, "It's a hat");
-    assert.equal(element.contentType, "image/png");
-    return assertImageBuffer(element, IMAGE_BUFFER);
+    return promiseThat(element, isImage({
+        type: "image",
+        altText: "It's a hat",
+        contentType: "image/png",
+        buffer: IMAGE_BUFFER
+    }));
 });
 
 test("can read inline pictures", function() {
@@ -429,10 +449,12 @@ test("can read inline pictures", function() {
             "word/media/hat.png": IMAGE_BUFFER
         })
     }));
-    assert.equal("image", element.type);
-    assert.equal(element.altText, "It's a hat");
-    assert.equal(element.contentType, "image/png");
-    return assertImageBuffer(element, IMAGE_BUFFER);
+    return promiseThat(element, isImage({
+        type: "image",
+        altText: "It's a hat",
+        contentType: "image/png",
+        buffer: IMAGE_BUFFER
+    }));
 });
 
 test("can read anchored pictures", function() {
@@ -460,9 +482,12 @@ test("can read anchored pictures", function() {
             "word/media/hat.png": IMAGE_BUFFER
         })
     }));
-    assert.equal("image", element.type);
-    assert.equal(element.altText, "It's a hat");
-    return assertImageBuffer(element, IMAGE_BUFFER);
+    return promiseThat(element, isImage({
+        type: "image",
+        altText: "It's a hat",
+        contentType: "image/png",
+        buffer: IMAGE_BUFFER
+    }));
 });
 
 test("can read linked pictures", function() {
@@ -480,10 +505,12 @@ test("can read linked pictures", function() {
             "file:///media/hat.png": IMAGE_BUFFER
         })
     }));
-    assert.equal("image", element.type);
-    assert.equal(element.altText, "It's a hat");
-    assert.equal(element.contentType, "image/png");
-    return assertImageBuffer(element, IMAGE_BUFFER);
+    return promiseThat(element, isImage({
+        type: "image",
+        altText: "It's a hat",
+        contentType: "image/png",
+        buffer: IMAGE_BUFFER
+    }));
 });
 
 test("warning if unsupported image type", function() {
