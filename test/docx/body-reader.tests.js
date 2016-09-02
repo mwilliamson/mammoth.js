@@ -5,6 +5,7 @@ var _ = require("underscore");
 var hamjest = require("hamjest");
 var promiseThat = hamjest.promiseThat;
 var allOf = hamjest.allOf;
+var contains = hamjest.contains;
 var hasProperties = hamjest.hasProperties;
 var willBe = hamjest.willBe;
 var FeatureMatcher = hamjest.FeatureMatcher;
@@ -405,6 +406,13 @@ test('_GoBack bookmark is ignored', function() {
 var IMAGE_BUFFER = new Buffer("Not an image at all!");
 var IMAGE_RELATIONSHIP_ID = "rId5";
 
+function isSuccess(valueMatcher) {
+    return hasProperties({
+        messages: [],
+        value: valueMatcher
+    });
+}
+
 function isImage(options) {
     return allOf(
         hasProperties(_.omit(options, "buffer")),
@@ -414,10 +422,8 @@ function isImage(options) {
     );
 }
 
-test("can read imagedata elements with r:id attribute", function() {
-    var imagedataElement = new XmlElement("v:imagedata", {"r:id": "rId5", "o:title": "It's a hat"});
-    
-    var element = readXmlElementValue(imagedataElement, {
+function readEmbeddedImage(element) {
+    return readXmlElement(element, {
         relationships: {
             "rId5": {target: "media/hat.png"}
         },
@@ -426,35 +432,38 @@ test("can read imagedata elements with r:id attribute", function() {
             "word/media/hat.png": IMAGE_BUFFER
         })
     });
-    return promiseThat(element, isImage({
+}
+
+test("can read imagedata elements with r:id attribute", function() {
+    var imagedataElement = new XmlElement("v:imagedata", {
+        "r:id": IMAGE_RELATIONSHIP_ID,
+        "o:title": "It's a hat"
+    });
+    
+    var result = readEmbeddedImage(imagedataElement);
+    
+    return promiseThat(result, isSuccess(isImage({
         type: "image",
         altText: "It's a hat",
         contentType: "image/png",
         buffer: IMAGE_BUFFER
-    }));
+    })));
 });
 
 test("can read inline pictures", function() {
     var drawing = createInlineImage({
-        blip: createEmbeddedBlip("rId5"),
+        blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),
         description: "It's a hat"
     });
     
-    var element = single(readXmlElementValue(drawing, {
-        relationships: {
-            "rId5": {target: "media/hat.png"}
-        },
-        contentTypes: fakeContentTypes,
-        docxFile: createFakeDocxFile({
-            "word/media/hat.png": IMAGE_BUFFER
-        })
-    }));
-    return promiseThat(element, isImage({
+    var result = readEmbeddedImage(drawing);
+    
+    return promiseThat(result, isSuccess(contains(isImage({
         type: "image",
         altText: "It's a hat",
         contentType: "image/png",
         buffer: IMAGE_BUFFER
-    }));
+    }))));
 });
 
 test("can read anchored pictures", function() {
@@ -465,7 +474,7 @@ test("can read anchored pictures", function() {
                 new XmlElement("a:graphicData", {}, [
                     new XmlElement("pic:pic", {}, [
                         new XmlElement("pic:blipFill", {}, [
-                            new XmlElement("a:blip", {"r:embed": "rId5"})
+                            new XmlElement("a:blip", {"r:embed": IMAGE_RELATIONSHIP_ID})
                         ])
                     ])
                 ])
@@ -473,21 +482,14 @@ test("can read anchored pictures", function() {
         ])
     ]);
     
-    var element = single(readXmlElementValue(drawing, {
-        relationships: {
-            "rId5": {target: "media/hat.png"}
-        },
-        contentTypes: fakeContentTypes,
-        docxFile: createFakeDocxFile({
-            "word/media/hat.png": IMAGE_BUFFER
-        })
-    }));
-    return promiseThat(element, isImage({
+    var result = readEmbeddedImage(drawing);
+    
+    return promiseThat(result, isSuccess(contains(isImage({
         type: "image",
         altText: "It's a hat",
         contentType: "image/png",
         buffer: IMAGE_BUFFER
-    }));
+    }))));
 });
 
 test("can read linked pictures", function() {
