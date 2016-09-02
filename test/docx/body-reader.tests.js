@@ -394,17 +394,18 @@ test('_GoBack bookmark is ignored', function() {
     assert.deepEqual(result.value, []);
 });
 
+var IMAGE_BUFFER = new Buffer("Not an image at all!");
+
 test("can read imagedata elements with r:id attribute", function() {
     var imagedataElement = new XmlElement("v:imagedata", {"r:id": "rId5", "o:title": "It's a hat"});
     
-    var imageBuffer = new Buffer("Not an image at all!");
     var element = readXmlElementValue(imagedataElement, {
         relationships: {
             "rId5": {target: "media/hat.png"}
         },
         contentTypes: fakeContentTypes,
         docxFile: createFakeDocxFile({
-            "word/media/hat.png": imageBuffer
+            "word/media/hat.png": IMAGE_BUFFER
         })
     });
     assert.equal("image", element.type);
@@ -412,7 +413,7 @@ test("can read imagedata elements with r:id attribute", function() {
     assert.equal(element.contentType, "image/png");
     return element.read()
         .then(function(readValue) {
-            assert.equal(readValue, imageBuffer);
+            assert.equal(readValue, IMAGE_BUFFER);
         });
 });
 
@@ -422,14 +423,13 @@ test("can read inline pictures", function() {
         description: "It's a hat"
     });
     
-    var imageBuffer = new Buffer("Not an image at all!");
     var element = single(readXmlElementValue(drawing, {
         relationships: {
             "rId5": {target: "media/hat.png"}
         },
         contentTypes: fakeContentTypes,
         docxFile: createFakeDocxFile({
-            "word/media/hat.png": imageBuffer
+            "word/media/hat.png": IMAGE_BUFFER
         })
     }));
     assert.equal("image", element.type);
@@ -437,7 +437,7 @@ test("can read inline pictures", function() {
     assert.equal(element.contentType, "image/png");
     return element.read()
         .then(function(readValue) {
-            assert.equal(readValue, imageBuffer);
+            assert.equal(readValue, IMAGE_BUFFER);
         });
 });
 
@@ -457,21 +457,20 @@ test("can read anchored pictures", function() {
         ])
     ]);
     
-    var imageBuffer = new Buffer("Not an image at all!");
     var element = single(readXmlElementValue(drawing, {
         relationships: {
             "rId5": {target: "media/hat.png"}
         },
         contentTypes: fakeContentTypes,
         docxFile: createFakeDocxFile({
-            "word/media/hat.png": imageBuffer
+            "word/media/hat.png": IMAGE_BUFFER
         })
     }));
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
     return element.read()
         .then(function(readValue) {
-            assert.equal(readValue, imageBuffer);
+            assert.equal(readValue, IMAGE_BUFFER);
         });
 });
 
@@ -481,14 +480,13 @@ test("can read linked pictures", function() {
         description: "It's a hat"
     });
     
-    var imageBuffer = new Buffer("Not an image at all!");
     var element = single(readXmlElementValue(drawing, {
         relationships: {
             "rId5": {target: "file:///media/hat.png"}
         },
         contentTypes: fakeContentTypes,
         files: testing.createFakeFiles({
-            "file:///media/hat.png": imageBuffer
+            "file:///media/hat.png": IMAGE_BUFFER
         })
     }));
     assert.equal("image", element.type);
@@ -496,7 +494,7 @@ test("can read linked pictures", function() {
     assert.equal(element.contentType, "image/png");
     return element.read()
         .then(function(readValue) {
-            assert.equal(readValue, imageBuffer);
+            assert.equal(readValue, IMAGE_BUFFER);
         });
 });
 
@@ -506,14 +504,13 @@ test("warning if unsupported image type", function() {
         description: "It's a hat"
     });
     
-    var imageBuffer = new Buffer("Not an image at all!");
     var result = readXmlElement(drawing, {
         relationships: {
             "rId5": {target: "media/hat.emf"}
         },
         contentTypes: fakeContentTypes,
         docxFile: createFakeDocxFile({
-            "word/media/hat.emf": imageBuffer
+            "word/media/hat.emf": IMAGE_BUFFER
         })
     });
     assert.deepEqual(result.messages, [warning("Image of type image/x-emf is unlikely to display in web browsers")]);
