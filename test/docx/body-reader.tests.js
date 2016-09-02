@@ -411,10 +411,7 @@ test("can read imagedata elements with r:id attribute", function() {
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
     assert.equal(element.contentType, "image/png");
-    return element.read()
-        .then(function(readValue) {
-            assert.equal(readValue, IMAGE_BUFFER);
-        });
+    return assertImageBuffer(element, IMAGE_BUFFER);
 });
 
 test("can read inline pictures", function() {
@@ -435,10 +432,7 @@ test("can read inline pictures", function() {
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
     assert.equal(element.contentType, "image/png");
-    return element.read()
-        .then(function(readValue) {
-            assert.equal(readValue, IMAGE_BUFFER);
-        });
+    return assertImageBuffer(element, IMAGE_BUFFER);
 });
 
 test("can read anchored pictures", function() {
@@ -468,10 +462,7 @@ test("can read anchored pictures", function() {
     }));
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
-    return element.read()
-        .then(function(readValue) {
-            assert.equal(readValue, IMAGE_BUFFER);
-        });
+    return assertImageBuffer(element, IMAGE_BUFFER);
 });
 
 test("can read linked pictures", function() {
@@ -492,10 +483,7 @@ test("can read linked pictures", function() {
     assert.equal("image", element.type);
     assert.equal(element.altText, "It's a hat");
     assert.equal(element.contentType, "image/png");
-    return element.read()
-        .then(function(readValue) {
-            assert.equal(readValue, IMAGE_BUFFER);
-        });
+    return assertImageBuffer(element, IMAGE_BUFFER);
 });
 
 test("warning if unsupported image type", function() {
@@ -722,4 +710,11 @@ function createEmbeddedBlip(relationshipId) {
 
 function createLinkedBlip(relationshipId) {
     return new XmlElement("a:blip", {"r:link": relationshipId});
+}
+
+function assertImageBuffer(element, expectedImageBuffer) {
+    return element.read()
+        .then(function(readValue) {
+            assert.equal(readValue, expectedImageBuffer);
+        });
 }
