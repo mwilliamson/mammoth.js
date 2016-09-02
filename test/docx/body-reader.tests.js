@@ -415,7 +415,7 @@ function isSuccess(valueMatcher) {
 
 function isImage(options) {
     return allOf(
-        hasProperties(_.omit(options, "buffer")),
+        hasProperties(_.extend({type: "image"}, _.omit(options, "buffer"))),
         new FeatureMatcher(willBe(options.buffer), "buffer", "buffer", function(element) {
             return element.read();
         })
@@ -443,7 +443,6 @@ test("can read imagedata elements with r:id attribute", function() {
     var result = readEmbeddedImage(imagedataElement);
     
     return promiseThat(result, isSuccess(isImage({
-        type: "image",
         altText: "It's a hat",
         contentType: "image/png",
         buffer: IMAGE_BUFFER
@@ -459,7 +458,6 @@ test("can read inline pictures", function() {
     var result = readEmbeddedImage(drawing);
     
     return promiseThat(result, isSuccess(contains(isImage({
-        type: "image",
         altText: "It's a hat",
         contentType: "image/png",
         buffer: IMAGE_BUFFER
@@ -485,7 +483,6 @@ test("can read anchored pictures", function() {
     var result = readEmbeddedImage(drawing);
     
     return promiseThat(result, isSuccess(contains(isImage({
-        type: "image",
         altText: "It's a hat",
         contentType: "image/png",
         buffer: IMAGE_BUFFER
@@ -508,7 +505,6 @@ test("can read linked pictures", function() {
         })
     }));
     return promiseThat(element, isImage({
-        type: "image",
         altText: "It's a hat",
         contentType: "image/png",
         buffer: IMAGE_BUFFER
