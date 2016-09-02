@@ -4,6 +4,9 @@
 
 * Generate messages of type "error" instead of "warning" when image conversion
   throws an exception.
+  
+* Use alt text title as alt text for images when the alt text description is
+  blank.
 
 # 1.1.0
 

@@ -464,6 +464,38 @@ test("can read inline pictures", function() {
     }))));
 });
 
+test("alt text title is used if alt text description is blank", function() {
+    var drawing = createInlineImage({
+        blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),
+        description: " ",
+        title: "It's a hat"
+    });
+    
+    var result = readEmbeddedImage(drawing);
+    
+    return promiseThat(result, isSuccess(contains(isImage({
+        altText: "It's a hat",
+        contentType: "image/png",
+        buffer: IMAGE_BUFFER
+    }))));
+});
+
+test("alt text description is preferred to alt text title", function() {
+    var drawing = createInlineImage({
+        blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),
+        description: "It's a hat",
+        title: "hat"
+    });
+    
+    var result = readEmbeddedImage(drawing);
+    
+    return promiseThat(result, isSuccess(contains(isImage({
+        altText: "It's a hat",
+        contentType: "image/png",
+        buffer: IMAGE_BUFFER
+    }))));
+});
+
 test("can read anchored pictures", function() {
     var drawing = new XmlElement("w:drawing", {}, [
         new XmlElement("wp:anchor", {}, [
@@ -715,7 +747,7 @@ function single(array) {
 function createInlineImage(options) {
     return new XmlElement("w:drawing", {}, [
         new XmlElement("wp:inline", {}, [
-            new XmlElement("wp:docPr", {descr: options.description}),
+            new XmlElement("wp:docPr", {descr: options.description, title: options.title}),
             new XmlElement("a:graphic", {}, [
                 new XmlElement("a:graphicData", {}, [
                     new XmlElement("pic:pic", {}, [
