@@ -38,6 +38,13 @@ test('lines starting with # in custom style map are ignored', function() {
     assert.deepEqual(standardOptions.styleMap, options.styleMap.slice(1));
 });
 
+test('blank lines in custom style map are ignored', function() {
+    var options = readOptions({
+        styleMap: "\n\n"
+    });
+    assert.deepEqual(standardOptions.styleMap, options.styleMap);
+});
+
 test('default style mappings are ignored if includeDefaultStyleMap is false', function() {
     var options = readOptions({
         styleMap: "p.SectionTitle => h2",

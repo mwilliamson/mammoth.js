@@ -1,3 +1,7 @@
+# 1.2.2
+
+* Ignore blank lines in style map.
+
 # 1.2.1
 
 * Use alt text title as alt text for images when the alt text description is
