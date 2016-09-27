@@ -162,6 +162,13 @@ test("styleReader.read", {
                 to: htmlPaths.empty
             }
         );
+    },
+    
+    "error when not all input is consumed": function() {
+        assert.deepEqual(
+            readStyle("r => span a"),
+            new results.Result(null, [results.warning("Did not understand this style mapping, so ignored it: r => span a\nError was at character number 10: Expected end but got whitespace")])
+        );
     }
 });
 

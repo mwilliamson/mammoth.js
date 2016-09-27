@@ -1,3 +1,8 @@
+# 1.2.3
+
+* Expect end token when parsing style mappings. This causes warnings to be
+  emitted instead of silenting ignoring unparsed tokens.
+
 # 1.2.2
 
 * Ignore blank lines in style map.
