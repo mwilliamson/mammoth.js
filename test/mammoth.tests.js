@@ -379,3 +379,10 @@ test('should throw error if file is not a valid docx document', function() {
         assert.equal(error.message, "Could not find word/document.xml in ZIP file. Are you sure this is a valid .docx file?");
     });
 });
+
+test('should not crash when there is an empty r-id attribute', function() {
+    var docxPath = path.join(__dirname, "test-data/empty-r-id.docx");
+    return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
+        assert.equal(result.value, '<p><a id="OLE_LINK3"></a>\n</p>');
+    });
+});
