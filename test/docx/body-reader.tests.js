@@ -22,6 +22,8 @@ var testing = require("../testing");
 var test = require("../test")(module);
 var createFakeDocxFile = testing.createFakeDocxFile;
 
+var mammoth = require("../../");
+
 function readXmlElement(element, options) {
     options = Object.create(options || {});
     options.styles = options.styles || new Styles({}, {});
@@ -732,6 +734,13 @@ test("text nodes are ignored when reading children", function() {
     var runXml = new XmlElement("w:r", {}, [xml.text("[text]")]);
     var run = readXmlElementValue(runXml);
     assert.deepEqual(run, new documents.Run([]));
+});
+
+test('should not crash when there is an empty r-id attribute', function() {
+    var docxPath = path.join(__dirname, "../test-data/empty-r-id.docx");
+    return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
+        assert.equal(result.value, '<p><a id="OLE_LINK3"></a>\n</p>');
+    });
 });
 
 function paragraphWithStyleId(styleId) {
