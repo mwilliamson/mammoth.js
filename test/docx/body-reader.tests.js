@@ -456,6 +456,14 @@ test("can read imagedata elements with r:id attribute", function() {
     })));
 });
 
+test("when v:imagedata element has no relationship ID then it is ignored", function() {
+    var imagedataElement = new XmlElement("v:imagedata");
+    
+    var result = readXmlElement(imagedataElement);
+    
+    assert.deepEqual(result.value, []);
+});
+
 test("can read inline pictures", function() {
     var drawing = createInlineImage({
         blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),
@@ -734,13 +742,6 @@ test("text nodes are ignored when reading children", function() {
     var runXml = new XmlElement("w:r", {}, [xml.text("[text]")]);
     var run = readXmlElementValue(runXml);
     assert.deepEqual(run, new documents.Run([]));
-});
-
-test('should not crash when there is an empty r-id attribute', function() {
-    var docxPath = path.join(__dirname, "../test-data/empty-r-id.docx");
-    return mammoth.convertToHtml({path: docxPath}, {prettyPrint: true}).then(function(result) {
-        assert.equal(result.value, '<p><a id="OLE_LINK3"></a>\n</p>');
-    });
 });
 
 function paragraphWithStyleId(styleId) {
