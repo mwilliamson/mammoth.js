@@ -456,12 +456,13 @@ test("can read imagedata elements with r:id attribute", function() {
     })));
 });
 
-test("when v:imagedata element has no relationship ID then it is ignored", function() {
+test("when v:imagedata element has no relationship ID then it is ignored with warning", function() {
     var imagedataElement = new XmlElement("v:imagedata");
     
     var result = readXmlElement(imagedataElement);
     
     assert.deepEqual(result.value, []);
+    assert.deepEqual(result.messages, [warning("A v:imagedata element without a relationship ID was ignored")]);
 });
 
 test("can read inline pictures", function() {
