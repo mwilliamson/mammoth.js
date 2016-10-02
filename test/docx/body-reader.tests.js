@@ -22,8 +22,6 @@ var testing = require("../testing");
 var test = require("../test")(module);
 var createFakeDocxFile = testing.createFakeDocxFile;
 
-var mammoth = require("../../");
-
 function readXmlElement(element, options) {
     options = Object.create(options || {});
     options.styles = options.styles || new Styles({}, {});
