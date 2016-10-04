@@ -1,3 +1,8 @@
+# 1.2.5
+
+* Ignore bold, italic, underline and strikethrough elements that have a value of
+  false or 0.
+
 # 1.2.4
 
 * Ignore v:imagedata elements without relationship ID with warning.

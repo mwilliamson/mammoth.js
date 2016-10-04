@@ -184,6 +184,13 @@ test("isBold is true if bold element is present", function() {
     assert.equal(run.isBold, true);
 });
 
+test("isBold is false if bold element is present and w:val is false", function() {
+    var boldXml = new XmlElement("w:b", {"w:val": "false"});
+    var runXml = runWithProperties([boldXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isBold, false);
+});
+
 test("isUnderline is false if underline element is not present", function() {
     var runXml = runWithProperties([]);
     var run = readXmlElementValue(runXml);
@@ -221,6 +228,43 @@ test("isItalic is true if bold element is present", function() {
     var runXml = runWithProperties([italicXml]);
     var run = readXmlElementValue(runXml);
     assert.equal(run.isItalic, true);
+});
+
+var booleanRunProperties = [
+    {name: "isBold", tagName: "w:b"},
+    {name: "isUnderline", tagName: "w:u"},
+    {name: "isItalic", tagName: "w:i"},
+    {name: "isStrikethrough", tagName: "w:strike"},
+];
+
+booleanRunProperties.forEach(function(runProperty) {
+    test(runProperty.name + " is false if " + runProperty.tagName + " is present and w:val is false", function() {
+        var propertyXml = new XmlElement(runProperty.tagName, {"w:val": "false"});
+        var runXml = runWithProperties([propertyXml]);
+        var run = readXmlElementValue(runXml);
+        assert.equal(run[runProperty.name], false);
+    });
+    
+    test(runProperty.name + " is false if " + runProperty.tagName + " is present and w:val is 0", function() {
+        var propertyXml = new XmlElement(runProperty.tagName, {"w:val": "0"});
+        var runXml = runWithProperties([propertyXml]);
+        var run = readXmlElementValue(runXml);
+        assert.equal(run[runProperty.name], false);
+    });
+    
+    test(runProperty.name + " is true if " + runProperty.tagName + " is present and w:val is true", function() {
+        var propertyXml = new XmlElement(runProperty.tagName, {"w:val": "true"});
+        var runXml = runWithProperties([propertyXml]);
+        var run = readXmlElementValue(runXml);
+        assert.equal(run[runProperty.name], true);
+    });
+    
+    test(runProperty.name + " is true if " + runProperty.tagName + " is present and w:val is 1", function() {
+        var propertyXml = new XmlElement(runProperty.tagName, {"w:val": "1"});
+        var runXml = runWithProperties([propertyXml]);
+        var run = readXmlElementValue(runXml);
+        assert.equal(run[runProperty.name], true);
+    });
 });
 
 test("run has baseline vertical alignment by default", function() {
