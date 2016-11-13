@@ -82,6 +82,14 @@ test('style map can be expressed as array of style mappings', function() {
 });
 
 test('embedded style map is used if present', function() {
+    var docxPath = path.join(__dirname, "test-data/embedded-style-map.docx");
+    return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+        assert.equal(result.value, "<h1>Walking on imported air</h1>");
+        assert.deepEqual(result.messages, []);
+    });
+});
+
+test('embedded style map can be written and then read', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
     return promises.nfcall(fs.readFile, docxPath)
         .then(function(buffer) {
