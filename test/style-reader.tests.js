@@ -40,6 +40,13 @@ test('styleReader.readHtmlPath', {
         assertHtmlPath("p.tip", expected);
     },
     
+    'reads class with escaped colon': function() {
+        var expected = htmlPaths.elements([
+            htmlPaths.element("p", {"class": "a:b"})
+        ]);
+        assertHtmlPath("p.a\\:b", expected);
+    },
+
     'reads multiple classes on element': function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip help"})
