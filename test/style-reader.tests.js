@@ -67,6 +67,13 @@ test('styleReader.readHtmlPath', {
         ]);
         assertHtmlPath("p:separator('x')", expected);
     },
+    
+    'reads separator with escape sequence': function() {
+        var expected = htmlPaths.elements([
+            htmlPaths.element("p", {}, {separator: "\r\n\t\'\\"})
+        ]);
+        assertHtmlPath("p:separator('\\r\\n\\t\\'\\\\')", expected);
+    },
 
     'reads ignore element': function() {
         assertHtmlPath("!", htmlPaths.ignore);
