@@ -103,6 +103,22 @@ test("empty elements are removed before collapsing", function() {
     );
 });
 
+test("when separator is present then separator is prepended to collapsed element", function() {
+    var unseparatedPath = htmlPaths.elements([
+        htmlPaths.element("pre", {}, {fresh: false})
+    ]);
+    var separatedPath = htmlPaths.elements([
+        htmlPaths.element("pre", {}, {fresh: false, separator: "\n"})
+    ]);
+    assert.deepEqual(
+        html.simplify(concat(
+            pathToNodes(unseparatedPath, [text("Hello")]),
+            pathToNodes(separatedPath, [text(" the"), text("re")])
+        )),
+        pathToNodes(unseparatedPath, [text("Hello"), text("\n"), text(" the"), text("re")])
+    );
+});
+
 function simplifyNode(node) {
     return html.simplify([node]);
 }
