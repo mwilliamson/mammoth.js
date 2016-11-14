@@ -61,6 +61,13 @@ test('styleReader.readHtmlPath', {
         assertHtmlPath("p:fresh", expected);
     },
     
+    'reads separator for elements': function() {
+        var expected = htmlPaths.elements([
+            htmlPaths.element("p", {}, {separator: "x"})
+        ]);
+        assertHtmlPath("p:separator('x')", expected);
+    },
+
     'reads ignore element': function() {
         assertHtmlPath("!", htmlPaths.ignore);
     }
