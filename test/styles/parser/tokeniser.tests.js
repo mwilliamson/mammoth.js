@@ -31,6 +31,10 @@ test("strings are tokenised", function() {
     assertTokens("'Tristan'", [isToken("string", "Tristan")]);
 });
 
+test("unterminated strings are tokenised", function() {
+    assertTokens("'Tristan", [isToken("unterminated-string", "Tristan")]);
+});
+
 test("arrows are tokenised", function() {
     assertTokens("=>", [isToken("arrow")]);
 });
