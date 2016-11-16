@@ -1,3 +1,11 @@
+# 1.3.0
+
+* Add default style mappings for Heading 5 and Heading 6.
+
+* Allow escape sequences in style IDs, style names and CSS class names.
+
+* Allow a separator to be specified when HTML elements are collapsed.
+
 # 1.2.5
 
 * Ignore bold, italic, underline and strikethrough elements that have a value of
