@@ -6,6 +6,11 @@ var hasProperties = hamjest.hasProperties;
 var tokenise = require("../../../lib/styles/parser/tokeniser").tokenise;
 var test = require("../../test")(module);
 
+
+test("unknown tokens are tokenised", function() {
+    assertTokens("~", [isToken("unrecognisedCharacter", "~")]);
+});
+
 test("empty string is tokenised to end of file token", function() {
     assertTokens("", []);
 });
