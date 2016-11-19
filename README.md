@@ -346,7 +346,7 @@ Converts the source document to HTML.
      See "Writing style maps" for a reference to the syntax for style maps.
 
   * `includeEmbeddedStyleMap`: by default,
-     if the document contains an embedded style, then it is combined with the default style map.
+     if the document contains an embedded style map, then it is combined with the default style map.
      To ignore any embedded style maps,
      set `options.includeEmbeddedStyleMap` to `false`.
 
