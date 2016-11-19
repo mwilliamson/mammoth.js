@@ -281,6 +281,14 @@ test("run has vertical alignment read from properties", function() {
     assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.superscript);
 });
 
+test("run has font read from properties", function() {
+    var fontXml = new XmlElement("w:rFonts", {"w:ascii": "Arial"});
+    var runXml = runWithProperties([fontXml]);
+    
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.font, "Arial");
+});
+
 test("run properties not included as child of run", function() {
     var runStyleXml = new XmlElement("w:rStyle");
     var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
