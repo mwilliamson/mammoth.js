@@ -701,6 +701,27 @@ Modifiers must be used in the correct order:
 h1.section-title:fresh
 ```
 
+#### Separators
+
+To specify a separator to place between the contents of paragraphs that are collapsed together,
+use `:separator('SEPARATOR STRING')`.
+
+For instance, suppose a document contains a block of code where each line of code is a paragraph with the style `Code Block`.
+We can write a style mapping to map such paragraphs to `<pre>` elements:
+
+```
+p[style-name='Code Block'] => pre
+```
+
+Since `pre` isn't marked as `:fresh`,
+consecutive `pre` elements will be collapsed together.
+However, this results in the code all being on one line.
+We can use `:separator` to insert a newline between each line of code:
+
+```
+p[style-name='Code Block'] => pre:separator('\n')
+```
+
 #### Nested elements
 
 Use `>` to specify nested elements.
