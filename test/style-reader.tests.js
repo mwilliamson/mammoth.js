@@ -99,7 +99,7 @@ test("styleReader.readDocumentMatcher", {
     "reads paragraph with style name": function() {
         assertDocumentMatcher(
             "p[style-name='Heading 1']",
-            documentMatchers.paragraph({styleName: "Heading 1"})
+            documentMatchers.paragraph({styleName: documentMatchers.equalTo("Heading 1")})
         );
     },
     

@@ -19,10 +19,17 @@ test("paragraph style ID only matches paragraphs with that style ID", function()
 });
 
 test("paragraph style name only matches paragraphs with that style name", function() {
-    var matcher = documentMatchers.paragraph({styleName: "Heading 1"});
+    var matcher = documentMatchers.paragraph({styleName: documentMatchers.equalTo("Heading 1")});
     assert.ok(!matcher.matches(new Paragraph()));
     assert.ok(matcher.matches(paragraphWithStyle("Heading1", "Heading 1")));
     assert.ok(!matcher.matches(paragraphWithStyle("Heading2", "Heading 2")));
+});
+
+test("paragraph style name matching is case insensitive", function() {
+    var matcher = documentMatchers.paragraph({styleName: documentMatchers.equalTo("heading 1")});
+    assert.ok(!matcher.matches(new Paragraph()));
+    assert.ok(matcher.matches(paragraphWithStyle("Heading1", "heaDING 1")));
+    assert.ok(!matcher.matches(paragraphWithStyle("Heading2", "heaDING 2")));
 });
 
 test("ordered-list(index) matches an ordered list with specified level index", function() {

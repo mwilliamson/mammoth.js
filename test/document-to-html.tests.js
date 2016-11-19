@@ -69,7 +69,7 @@ test('uses style mappings to pick HTML element for docx paragraph', function() {
     var converter = new DocumentConverter({
         styleMap: [
             {
-                from: documentMatchers.paragraph({styleName: "Heading 1"}),
+                from: documentMatchers.paragraph({styleName: documentMatchers.equalTo("Heading 1")}),
                 to: htmlPaths.topLevelElement("h1")
             }
         ]
@@ -86,7 +86,7 @@ test('mappings for style names are case insensitive', function() {
     var converter = new DocumentConverter({
         styleMap: [
             {
-                from: documentMatchers.paragraph({styleName: "Heading 1"}),
+                from: documentMatchers.paragraph({styleName: documentMatchers.equalTo("Heading 1")}),
                 to: htmlPaths.topLevelElement("h1")
             }
         ]
@@ -301,7 +301,7 @@ test('run styles are converted to HTML if mapping exists', function() {
     var converter = new DocumentConverter({
         styleMap: [
             {
-                from: documentMatchers.run({styleName: "Heading 1 Char"}),
+                from: documentMatchers.run({styleName: documentMatchers.equalTo("Heading 1 Char")}),
                 to: htmlPaths.elements(["strong"])
             }
         ]
