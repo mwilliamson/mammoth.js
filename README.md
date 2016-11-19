@@ -345,6 +345,11 @@ Converts the source document to HTML.
      each element is expected to be a string representing a single style mapping.
      See "Writing style maps" for a reference to the syntax for style maps.
 
+  * `includeEmbeddedStyleMap`: by default,
+     if the document contains an embedded style, then it is combined with the default style map.
+     To ignore any embedded style maps,
+     set `options.includeEmbeddedStyleMap` to `false`.
+
   * `includeDefaultStyleMap`: by default,
      the style map passed in `styleMap` is combined with the default style map.
      To stop using the default style map altogether,
@@ -407,7 +412,7 @@ Each paragraph is followed by two newlines.
 Given an existing docx file,
 `embedStyleMap` will generate a new docx file with the passed style map embedded.
 When the new docx file is read by Mammoth,
-it will use the embedded style if no explicit style map is provided.
+it will use the embedded style map.
 
 * `input`: an object describing the source document.
   On node.js, the following inputs are supported:

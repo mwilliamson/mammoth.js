@@ -10,6 +10,11 @@
 
 * Allow a separator to be specified when HTML elements are collapsed.
 
+* Add includeEmbeddedStyleMap option to allow embedded style maps to be
+  disabled.
+
+* Include embedded styles when explicit style map is passed.
+
 # 1.2.5
 
 * Ignore bold, italic, underline and strikethrough elements that have a value of
