@@ -89,6 +89,17 @@ test('embedded style map is used if present', function() {
     });
 });
 
+test('explicit style map takes precedence over embedded style map', function() {
+    var docxPath = path.join(__dirname, "test-data/embedded-style-map.docx");
+    var options = {
+        styleMap: ["p => p"]
+    };
+    return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
+        assert.equal(result.value, "<p>Walking on imported air</p>");
+        assert.deepEqual(result.messages, []);
+    });
+});
+
 test('embedded style map can be written and then read', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
     return promises.nfcall(fs.readFile, docxPath)
