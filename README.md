@@ -605,6 +605,13 @@ For instance, to match a paragraph with the style name `Heading 1`:
 p[style-name='Heading 1']
 ```
 
+You can also match a style name by prefix.
+For instance, to match a paragraph where the style name starts with `Heading`:
+
+```
+p[style-name^='Heading']
+```
+
 Styles can also be referenced by style ID.
 This is the ID used internally in the .docx file.
 To match a paragraph or run with a specific style ID,
