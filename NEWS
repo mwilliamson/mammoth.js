@@ -1,5 +1,9 @@
 # 1.3.0
 
+* Allow style names to be mapped by prefix. For instance:
+
+      r[style-name^='Code '] => code
+
 * Add default style mappings for Heading 5 and Heading 6.
 
 * Allow escape sequences in style IDs, style names and CSS class names.
