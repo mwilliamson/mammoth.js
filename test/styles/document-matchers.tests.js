@@ -25,13 +25,6 @@ test("paragraph style name only matches paragraphs with that style name", functi
     assert.ok(!matcher.matches(paragraphWithStyle("Heading2", "Heading 2")));
 });
 
-test("paragraph style name matching is case insensitive", function() {
-    var matcher = documentMatchers.paragraph({styleName: documentMatchers.equalTo("heading 1")});
-    assert.ok(!matcher.matches(new Paragraph()));
-    assert.ok(matcher.matches(paragraphWithStyle("Heading1", "heaDING 1")));
-    assert.ok(!matcher.matches(paragraphWithStyle("Heading2", "heaDING 2")));
-});
-
 test("ordered-list(index) matches an ordered list with specified level index", function() {
     var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 1}});
     assert.ok(!matcher.matches(new Paragraph()));
@@ -55,3 +48,23 @@ test("matchers for lists with index 0 do not match elements that are not lists",
 function paragraphWithStyle(styleId, styleName) {
     return new Paragraph([], {styleId: styleId, styleName: styleName});
 }
+
+
+test("equalTo matcher is case insensitive", function() {
+    var matcher = documentMatchers.equalTo("Heading 1");
+    assert.ok(matcher.operator(matcher.operand, "heaDING 1"));
+    assert.ok(!matcher.operator(matcher.operand, "heaDING 2"));
+});
+
+test("startsWith matches strings with prefix", function() {
+    var matcher = documentMatchers.startsWith("Heading");
+    assert.ok(matcher.operator(matcher.operand, "Heading 1"));
+    assert.ok(!matcher.operator(matcher.operand, "Custom Heading"));
+    assert.ok(!matcher.operator(matcher.operand, "Head"));
+    assert.ok(!matcher.operator(matcher.operand, "Header 2"));
+});
+
+test("startsWith matcher is case insensitive", function() {
+    var matcher = documentMatchers.startsWith("Heading");
+    assert.ok(matcher.operator(matcher.operand, "heaDING"));
+});
