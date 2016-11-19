@@ -40,7 +40,7 @@ test("arrows are tokenised", function() {
 });
 
 test("classes are tokenised", function() {
-    assertTokens(".overture", [isToken("cssClassName", ".overture")]);
+    assertTokens(".overture", [isToken("dot"), isToken("identifier", "overture")]);
 });
 
 test("colons are tokenised", function() {
