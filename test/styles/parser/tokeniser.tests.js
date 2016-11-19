@@ -55,6 +55,10 @@ test("equals are tokenised", function() {
     assertTokens("==", [isToken("equals"), isToken("equals")]);
 });
 
+test("startsWith symbols are tokenised", function() {
+    assertTokens("^=^=", [isToken("startsWith"), isToken("startsWith")]);
+});
+
 test("open parens are tokenised", function() {
     assertTokens("((", [isToken("open-paren"), isToken("open-paren")]);
 });
