@@ -58,6 +58,7 @@ test("equalTo matcher is case insensitive", function() {
 
 test("startsWith matches strings with prefix", function() {
     var matcher = documentMatchers.startsWith("Heading");
+    assert.ok(matcher.operator(matcher.operand, "Heading"));
     assert.ok(matcher.operator(matcher.operand, "Heading 1"));
     assert.ok(!matcher.operator(matcher.operand, "Custom Heading"));
     assert.ok(!matcher.operator(matcher.operand, "Head"));
