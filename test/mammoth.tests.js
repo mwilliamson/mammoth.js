@@ -100,6 +100,17 @@ test('explicit style map takes precedence over embedded style map', function() {
     });
 });
 
+test('explicit style map is combined with embedded style map', function() {
+    var docxPath = path.join(__dirname, "test-data/embedded-style-map.docx");
+    var options = {
+        styleMap: ["r => strong"]
+    };
+    return mammoth.convertToHtml({path: docxPath}, options).then(function(result) {
+        assert.equal(result.value, "<h1><strong>Walking on imported air</strong></h1>");
+        assert.deepEqual(result.messages, []);
+    });
+});
+
 test('embedded style maps can be disabled', function() {
     var docxPath = path.join(__dirname, "test-data/embedded-style-map.docx");
     var options = {
