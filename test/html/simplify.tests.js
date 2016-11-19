@@ -4,7 +4,7 @@ var _ = require("underscore");
 
 var test = require("../test")(module);
 var html = require("../../lib/html");
-var htmlPaths = require("../../lib/html-paths");
+var htmlPaths = require("../../lib/styles/html-paths");
 
 var nonFreshElement = html.nonFreshElement;
 var text = html.text;

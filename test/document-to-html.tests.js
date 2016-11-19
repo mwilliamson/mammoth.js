@@ -6,10 +6,10 @@ var documentToHtml = require("../lib/document-to-html");
 var DocumentConverter = documentToHtml.DocumentConverter;
 var commentAuthorLabel = documentToHtml.commentAuthorLabel;
 var test = require("./test")(module);
-var htmlPaths = require("../lib/html-paths");
+var htmlPaths = require("../lib/styles/html-paths");
 var xml = require("../lib/xml");
 var results = require("../lib/results");
-var documentMatchers = require("../lib/document-matchers");
+var documentMatchers = require("../lib/styles/document-matchers");
 var Html = require("../lib/html");
 
 

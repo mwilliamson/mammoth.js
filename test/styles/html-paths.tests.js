@@ -1,7 +1,7 @@
 var assert = require("assert");
 
-var test = require("./test")(module);
-var htmlPaths = require("../lib/html-paths");
+var test = require("../test")(module);
+var htmlPaths = require("../../lib/styles/html-paths");
 
 
 test("element can match multiple tag names", function() {
