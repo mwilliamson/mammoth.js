@@ -96,13 +96,20 @@ test("styleReader.readDocumentMatcher", {
         );
     },
     
-    "reads paragraph with style name": function() {
+    "reads paragraph with exact style name": function() {
         assertDocumentMatcher(
             "p[style-name='Heading 1']",
             documentMatchers.paragraph({styleName: documentMatchers.equalTo("Heading 1")})
         );
     },
     
+    "reads paragraph with style name prefix": function() {
+        assertDocumentMatcher(
+            "p[style-name^='Heading']",
+            documentMatchers.paragraph({styleName: documentMatchers.startsWith("Heading")})
+        );
+    },
+
     "reads p:ordered-list(1) as ordered list with index of 0": function() {
         assertDocumentMatcher(
             "p:ordered-list(1)",
