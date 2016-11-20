@@ -544,6 +544,19 @@ Returns a function that can be used as the `transformDocument` option.
 This will apply the function `transformParagraph` to each paragraph element.
 `transformParagraph` should return the new paragraph.
 
+#### `mammoth.transforms.getDescendants(element)`
+
+Gets all descendants of an element.
+
+#### `mammoth.transforms.getDescendantsOfType(element, type)`
+
+Gets all descendants of a particular type of an element.
+For instance, to get all runs within an element `paragraph`:
+
+```javascript
+var runs = mammoth.transforms.getDescendantsOfType(paragraph, "run");
+```
+
 ## Writing style maps
 
 A style map is made up of a number of style mappings separated by new lines.
