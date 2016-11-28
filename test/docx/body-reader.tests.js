@@ -694,18 +694,17 @@ test("w:hyperlink is ignored if it does not have a relationship ID nor anchor", 
     assert.deepEqual(result.value[0].type, "run");
 });
 
-test("w:br is read as line break", function() {
+test("w:br without explicit type is read as line break", function() {
     var breakXml = new XmlElement("w:br", {}, []);
-    var result = readXmlElement(breakXml);
-    assert.deepEqual(result.value.type, "lineBreak");
-    assert.deepEqual(result.messages, []);
+    var result = readXmlElementValue(breakXml);
+    assert.deepEqual(result, documents.lineBreak);
 });
 
-test("warning on breaks that aren't line breaks", function() {
-    var breakXml = new XmlElement("w:br", {"w:type": "page"}, []);
+test("warning on breaks that aren't recognised", function() {
+    var breakXml = new XmlElement("w:br", {"w:type": "unknownBreakType"}, []);
     var result = readXmlElement(breakXml);
     assert.deepEqual(result.value, []);
-    assert.deepEqual(result.messages, [warning("Unsupported break type: page")]);
+    assert.deepEqual(result.messages, [warning("Unsupported break type: unknownBreakType")]);
 });
 
 test("w:footnoteReference has ID read", function() {

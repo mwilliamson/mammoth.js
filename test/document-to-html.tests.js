@@ -435,10 +435,9 @@ test('table cells are written with rowSpan if not equal to one', function() {
 });
 
 test('line break is converted to <br>', function() {
-    var lineBreak = new documents.LineBreak();
     var converter = new DocumentConverter();
     
-    return converter.convertToHtml(lineBreak).then(function(result) {
+    return converter.convertToHtml(documents.lineBreak).then(function(result) {
         assert.equal(result.value, "<br />");
     });
 });
