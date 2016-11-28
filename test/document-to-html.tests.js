@@ -581,7 +581,7 @@ test('can add custom handler for images', function() {
     var converter = new DocumentConverter({
         convertImage: function(element, messages) {
             return element.read("utf8").then(function(altText) {
-                return [Html.selfClosingElement("img", {alt: altText})];
+                return [Html.freshElement("img", {alt: altText})];
             });
         }
     });
