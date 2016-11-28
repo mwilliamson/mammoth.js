@@ -700,6 +700,24 @@ test("w:br without explicit type is read as line break", function() {
     assert.deepEqual(result, documents.lineBreak);
 });
 
+test("w:br with textWrapping type is read as line break", function() {
+    var breakXml = new XmlElement("w:br", {"w:type": "textWrapping"}, []);
+    var result = readXmlElementValue(breakXml);
+    assert.deepEqual(result, documents.lineBreak);
+});
+
+test("w:br with page type is read as line break", function() {
+    var breakXml = new XmlElement("w:br", {"w:type": "page"}, []);
+    var result = readXmlElementValue(breakXml);
+    assert.deepEqual(result, documents.pageBreak);
+});
+
+test("w:br with column type is read as line break", function() {
+    var breakXml = new XmlElement("w:br", {"w:type": "column"}, []);
+    var result = readXmlElementValue(breakXml);
+    assert.deepEqual(result, documents.columnBreak);
+});
+
 test("warning on breaks that aren't recognised", function() {
     var breakXml = new XmlElement("w:br", {"w:type": "unknownBreakType"}, []);
     var result = readXmlElement(breakXml);
