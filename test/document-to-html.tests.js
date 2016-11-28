@@ -442,6 +442,14 @@ test('line break is converted to <br>', function() {
     });
 });
 
+test('breaks that are not line breaks are ignored', function() {
+    var converter = new DocumentConverter();
+    
+    return converter.convertToHtml(documents.pageBreak).then(function(result) {
+        assert.equal(result.value, "");
+    });
+});
+
 test('footnote reference is converted to superscript intra-page link', function() {
     var footnoteReference = new documents.NoteReference({
         noteType: "footnote",
