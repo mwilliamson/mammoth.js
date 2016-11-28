@@ -164,6 +164,27 @@ test("styleReader.readDocumentMatcher", {
             "comment-reference",
             documentMatchers.commentReference
         );
+    },
+    
+    "reads line breaks": function() {
+        assertDocumentMatcher(
+            "br[type='line']",
+            documentMatchers.lineBreak
+        );
+    },
+    
+    "reads page breaks": function() {
+        assertDocumentMatcher(
+            "br[type='page']",
+            documentMatchers.pageBreak
+        );
+    },
+    
+    "reads column breaks": function() {
+        assertDocumentMatcher(
+            "br[type='column']",
+            documentMatchers.columnBreak
+        );
     }
 });
     
