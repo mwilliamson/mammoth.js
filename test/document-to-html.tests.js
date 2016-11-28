@@ -450,6 +450,21 @@ test('breaks that are not line breaks are ignored', function() {
     });
 });
 
+test('breaks can be mapped using style mappings', function() {
+    var converter = new DocumentConverter({
+        styleMap: [
+            {
+                from: documentMatchers.pageBreak,
+                to: htmlPaths.topLevelElement("hr")
+            }
+        ]
+    });
+    
+    return converter.convertToHtml(documents.pageBreak).then(function(result) {
+        assert.equal(result.value, "<hr />");
+    });
+});
+
 test('footnote reference is converted to superscript intra-page link', function() {
     var footnoteReference = new documents.NoteReference({
         noteType: "footnote",
