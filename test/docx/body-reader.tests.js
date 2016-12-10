@@ -706,13 +706,13 @@ test("w:br with textWrapping type is read as line break", function() {
     assert.deepEqual(result, documents.lineBreak);
 });
 
-test("w:br with page type is read as line break", function() {
+test("w:br with page type is read as page break", function() {
     var breakXml = new XmlElement("w:br", {"w:type": "page"}, []);
     var result = readXmlElementValue(breakXml);
     assert.deepEqual(result, documents.pageBreak);
 });
 
-test("w:br with column type is read as line break", function() {
+test("w:br with column type is read as column break", function() {
     var breakXml = new XmlElement("w:br", {"w:type": "column"}, []);
     var result = readXmlElementValue(breakXml);
     assert.deepEqual(result, documents.columnBreak);
