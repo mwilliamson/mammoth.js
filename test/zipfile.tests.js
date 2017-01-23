@@ -29,5 +29,12 @@ test("joinZipPath", {
             zipfile.joinZipPath("one/two", "three/four"),
             "one/two/three/four"
         )
+    },
+
+    "joining base to absolute path ignores base": function() {
+        assert.equal(
+            zipfile.joinZipPath("one/two", "/three/four"),
+            "/three/four"
+        )
     }
 });
