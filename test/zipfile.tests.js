@@ -17,6 +17,30 @@ test('file in zip can be read after being written', function() {
     });
 });
 
+test('leading slash in path is stripped if set when reading', function() {
+    var zip = emptyZipFile();
+    assert(!zip.exists("/song/title"));
+    
+    zip.write("song/title", "Dark Blue");
+    
+    assert(zip.exists("/song/title"));
+    return zip.read("/song/title", "utf8").then(function(contents) {
+        assert.equal(contents, "Dark Blue");
+    });
+});
+
+test('leading slash in path is stripped if set when writing', function() {
+    var zip = emptyZipFile();
+    assert(!zip.exists("song/title"));
+    
+    zip.write("/song/title", "Dark Blue");
+    
+    assert(zip.exists("song/title"));
+    return zip.read("song/title", "utf8").then(function(contents) {
+        assert.equal(contents, "Dark Blue");
+    });
+});
+
 function emptyZipFile() {
     var zip = new JSZip();
     var buffer = zip.generate({type: "arraybuffer"});
