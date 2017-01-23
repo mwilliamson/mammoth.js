@@ -22,3 +22,12 @@ function emptyZipFile() {
     var buffer = zip.generate({type: "arraybuffer"});
     return zipfile.openArrayBuffer(buffer);
 }
+
+test("joinZipPath", {
+    "joins relative path to base using forward slash": function() {
+        assert.equal(
+            zipfile.joinZipPath("one/two", "three/four"),
+            "one/two/three/four"
+        )
+    }
+});
