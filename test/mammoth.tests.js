@@ -205,8 +205,15 @@ test('mammoth.transforms.paragraph only transforms paragraphs', function() {
     });
 });
 
-test('inline images are included in output', function() {
+test('inline images referenced by path relative to part are included in output', function() {
     var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+        assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
+    });
+});
+
+test('inline images referenced by path relative to base are included in output', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture-target-base-relative.docx");
     return mammoth.convertToHtml({path: docxPath}).then(function(result) {
         assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
     });
