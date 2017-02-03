@@ -141,6 +141,18 @@ test("numbering properties are ignored if w:numId is missing", function() {
     assert.equal(numberingLevel, null);
 });
 
+test("stores instrText returns empty result", function() {
+    var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "http://example.com"')]);
+    var instrText = readXmlElementValue(instrTextXml);
+    assert.deepEqual(instrText, []);
+});
+
+test("run is wrapped in a hyperlink if the runStyle is Hyperlink", function() {
+    var hyperlink = createHyperlink("http://example.com");
+    assert.equal(hyperlink.type, 'hyperlink');
+    assert.equal(hyperlink.href, 'http://example.com');
+});
+
 test("run has no style if it has no properties", function() {
     var runXml = runWithProperties([]);
     var run = readXmlElementValue(runXml);
@@ -859,6 +871,23 @@ function createEmbeddedBlip(relationshipId) {
 
 function createLinkedBlip(relationshipId) {
     return new XmlElement("a:blip", {"r:link": relationshipId});
+}
+
+function createHyperlink(link) {
+    var beginXml = new XmlElement("w:r", {}, [
+        new XmlElement("w:fldChar", {"w:fldCharType": "begin"})
+    ]);
+    var endXml = new XmlElement("w:r", {}, [
+        new XmlElement("w:fldChar", {"w:fldCharType": "end"})
+    ]);
+    var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "' + link + '"')]);
+    var instrRunXml = new XmlElement("w:r", {}, [instrTextXml]);
+    var styleXml = new XmlElement("w:rStyle", {"w:val": "Hyperlink"});
+    var runStyleXml = runWithProperties([styleXml]);
+    var parXml = new XmlElement("w:p", {}, [beginXml, instrRunXml, runStyleXml, endXml]);
+    var styles = new Styles({}, {"Hyperlink": {name: "Hyperlink"}});
+    var par = readXmlElementValue(parXml, {styles: styles});
+    return par.children[2];
 }
 
 function assertImageBuffer(element, expectedImageBuffer) {
