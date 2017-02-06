@@ -148,9 +148,39 @@ test("stores instrText returns empty result", function() {
 });
 
 test("run is wrapped in a hyperlink if the runStyle is Hyperlink", function() {
-    var hyperlink = createHyperlink("http://example.com");
+    var uri = "http://example.com";
+    var beginXml = new XmlElement("w:r", {}, [
+        new XmlElement("w:fldChar", {"w:fldCharType": "begin"})
+    ]);
+    var endXml = new XmlElement("w:r", {}, [
+        new XmlElement("w:fldChar", {"w:fldCharType": "end"})
+    ]);
+    var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "' + uri + '"')]);
+    var hyperlinkRunXml = createHyperlinkRunXml('this is a hyperlink');
+    var afterEndXml = createHyperlinkRunXml('this will not be a hyperlink');
+    var parXml = new XmlElement("w:p", {}, [
+        beginXml,
+        instrTextXml,
+        hyperlinkRunXml,
+        endXml,
+        afterEndXml
+    ]);
+    var styles = new Styles({}, {"Hyperlink": {name: "Hyperlink"}});
+    var paragraph = readXmlElementValue(parXml, {styles: styles});
+
+    var hyperlinkRun = paragraph.children[1];
+    var hyperlink = hyperlinkRun.children[0];
     assert.equal(hyperlink.type, 'hyperlink');
-    assert.equal(hyperlink.href, 'http://example.com');
+    assert.equal(hyperlink.href, uri);
+    var hyperlinkText = hyperlink.children[0];
+    assert.equal(hyperlinkText.type, 'text');
+    assert.equal(hyperlinkText.value, 'this is a hyperlink');
+
+    // runs after fldCharType "end" do not become hyperlinks
+    var run = paragraph.children[3];
+    var text = run.children[0];
+    assert.equal(text.type, 'text');
+    assert.equal(text.value, 'this will not be a hyperlink');
 });
 
 test("run has no style if it has no properties", function() {
@@ -873,21 +903,10 @@ function createLinkedBlip(relationshipId) {
     return new XmlElement("a:blip", {"r:link": relationshipId});
 }
 
-function createHyperlink(link) {
-    var beginXml = new XmlElement("w:r", {}, [
-        new XmlElement("w:fldChar", {"w:fldCharType": "begin"})
-    ]);
-    var endXml = new XmlElement("w:r", {}, [
-        new XmlElement("w:fldChar", {"w:fldCharType": "end"})
-    ]);
-    var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "' + link + '"')]);
-    var instrRunXml = new XmlElement("w:r", {}, [instrTextXml]);
+function createHyperlinkRunXml(text) {
     var styleXml = new XmlElement("w:rStyle", {"w:val": "Hyperlink"});
-    var runStyleXml = runWithProperties([styleXml]);
-    var parXml = new XmlElement("w:p", {}, [beginXml, instrRunXml, runStyleXml, endXml]);
-    var styles = new Styles({}, {"Hyperlink": {name: "Hyperlink"}});
-    var par = readXmlElementValue(parXml, {styles: styles});
-    return par.children[2];
+    var textXml = new XmlElement("w:t", {}, [xml.text(text)]);
+    return new XmlElement("w:r", {}, [createRunPropertiesXml([styleXml]), textXml]);
 }
 
 function assertImageBuffer(element, expectedImageBuffer) {
