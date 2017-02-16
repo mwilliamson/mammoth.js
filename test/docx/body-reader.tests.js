@@ -156,21 +156,22 @@ test("complex fields", (function() {
     var endXml = new XmlElement("w:r", {}, [
         new XmlElement("w:fldChar", {"w:fldCharType": "end"})
     ]);
+    var hyperlinkInstrText = new XmlElement("w:instrText", {}, [
+        xml.text(' HYPERLINK "' + uri + '"')
+    ]);
     
     return {
         "stores instrText returns empty result": function() {
-            var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "http://example.com"')]);
-            var instrText = readXmlElementValue(instrTextXml);
+            var instrText = readXmlElementValue(hyperlinkInstrText);
             assert.deepEqual(instrText, []);
         },
         
         "runs in a complex field for hyperlinks are read as hyperlinks": function() {
-            var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "' + uri + '"')]);
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var afterEndXml = runOfText("this will not be a hyperlink");
             var parXml = new XmlElement("w:p", {}, [
                 beginXml,
-                instrTextXml,
+                hyperlinkInstrText,
                 hyperlinkRunXml,
                 endXml,
                 afterEndXml
