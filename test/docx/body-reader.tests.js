@@ -3,12 +3,19 @@ var path = require("path");
 
 var _ = require("underscore");
 var hamjest = require("hamjest");
+var assertThat = hamjest.assertThat;
 var promiseThat = hamjest.promiseThat;
 var allOf = hamjest.allOf;
 var contains = hamjest.contains;
 var hasProperties = hamjest.hasProperties;
 var willBe = hamjest.willBe;
 var FeatureMatcher = hamjest.FeatureMatcher;
+
+var documentMatchers = require("./document-matchers");
+var isEmptyRun = documentMatchers.isEmptyRun;
+var isHyperlink = documentMatchers.isHyperlink;
+var isRun = documentMatchers.isRun;
+var isText = documentMatchers.isText;
 
 var BodyReader = require("../../lib/docx/body-reader").BodyReader;
 var documents = require("../../lib/documents");
@@ -166,20 +173,27 @@ test("runs in a complex field for hyperlinks are read as hyperlinks", function()
         afterEndXml
     ]);
     var paragraph = readXmlElementValue(parXml);
-
-    var hyperlinkRun = paragraph.children[1];
-    var hyperlink = hyperlinkRun.children[0];
-    assert.equal(hyperlink.type, 'hyperlink');
-    assert.equal(hyperlink.href, uri);
-    var hyperlinkText = hyperlink.children[0];
-    assert.equal(hyperlinkText.type, 'text');
-    assert.equal(hyperlinkText.value, 'this is a hyperlink');
-
-    // runs after fldCharType "end" do not become hyperlinks
-    var run = paragraph.children[3];
-    var text = run.children[0];
-    assert.equal(text.type, 'text');
-    assert.equal(text.value, 'this will not be a hyperlink');
+    
+    assertThat(paragraph.children, contains(
+        isEmptyRun,
+        isRun({
+            children: contains(
+                isHyperlink({
+                    href: uri,
+                    children: contains(
+                        isText("this is a hyperlink")
+                    )
+                })
+            )
+        }),
+        isEmptyRun,
+        isRun({
+            // runs after fldCharType "end" do not become hyperlinks
+            children: contains(
+                isText("this will not be a hyperlink")
+            )
+        })
+    ));
 });
 
 test("run has no style if it has no properties", function() {
