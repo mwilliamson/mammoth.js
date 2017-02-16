@@ -147,7 +147,7 @@ test("stores instrText returns empty result", function() {
     assert.deepEqual(instrText, []);
 });
 
-test("run is wrapped in a hyperlink if the runStyle is Hyperlink", function() {
+test("runs in a complex field for hyperlinks are read as hyperlinks", function() {
     var uri = "http://example.com";
     var beginXml = new XmlElement("w:r", {}, [
         new XmlElement("w:fldChar", {"w:fldCharType": "begin"})
@@ -156,8 +156,8 @@ test("run is wrapped in a hyperlink if the runStyle is Hyperlink", function() {
         new XmlElement("w:fldChar", {"w:fldCharType": "end"})
     ]);
     var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "' + uri + '"')]);
-    var hyperlinkRunXml = createHyperlinkRunXml('this is a hyperlink');
-    var afterEndXml = createHyperlinkRunXml('this will not be a hyperlink');
+    var hyperlinkRunXml = runOfText("this is a hyperlink");
+    var afterEndXml = runOfText("this will not be a hyperlink");
     var parXml = new XmlElement("w:p", {}, [
         beginXml,
         instrTextXml,
@@ -165,8 +165,7 @@ test("run is wrapped in a hyperlink if the runStyle is Hyperlink", function() {
         endXml,
         afterEndXml
     ]);
-    var styles = new Styles({}, {"Hyperlink": {name: "Hyperlink"}});
-    var paragraph = readXmlElementValue(parXml, {styles: styles});
+    var paragraph = readXmlElementValue(parXml);
 
     var hyperlinkRun = paragraph.children[1];
     var hyperlink = hyperlinkRun.children[0];
@@ -903,10 +902,9 @@ function createLinkedBlip(relationshipId) {
     return new XmlElement("a:blip", {"r:link": relationshipId});
 }
 
-function createHyperlinkRunXml(text) {
-    var styleXml = new XmlElement("w:rStyle", {"w:val": "Hyperlink"});
+function runOfText(text) {
     var textXml = new XmlElement("w:t", {}, [xml.text(text)]);
-    return new XmlElement("w:r", {}, [createRunPropertiesXml([styleXml]), textXml]);
+    return new XmlElement("w:r", {}, [textXml]);
 }
 
 function assertImageBuffer(element, expectedImageBuffer) {
