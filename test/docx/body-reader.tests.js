@@ -17,7 +17,8 @@ var isHyperlink = documentMatchers.isHyperlink;
 var isRun = documentMatchers.isRun;
 var isText = documentMatchers.isText;
 
-var BodyReader = require("../../lib/docx/body-reader").BodyReader;
+var createBodyReader = require("../../lib/docx/body-reader").createBodyReader;
+var _readNumberingProperties = require("../../lib/docx/body-reader")._readNumberingProperties;
 var documents = require("../../lib/documents");
 var xml = require("../../lib/xml");
 var XmlElement = xml.Element;
@@ -32,7 +33,7 @@ var createFakeDocxFile = testing.createFakeDocxFile;
 function readXmlElement(element, options) {
     options = Object.create(options || {});
     options.styles = options.styles || new Styles({}, {});
-    return new BodyReader(options).readXmlElement(element);
+    return createBodyReader(options).readXmlElement(element);
 }
 
 function readXmlElementValue(element, options) {
@@ -113,10 +114,7 @@ test("numbering properties are converted to numbering at specified level", funct
     
     var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
     
-    var reader = new BodyReader({
-        numbering: numbering
-    });
-    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
 });
 
@@ -127,10 +125,7 @@ test("numbering properties are ignored if w:ilvl is missing", function() {
     
     var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
     
-    var reader = new BodyReader({
-        numbering: numbering
-    });
-    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
 
@@ -141,10 +136,7 @@ test("numbering properties are ignored if w:numId is missing", function() {
     
     var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
     
-    var reader = new BodyReader({
-        numbering: numbering
-    });
-    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
 
