@@ -169,13 +169,13 @@ test("complex fields", (function() {
         "runs in a complex field for hyperlinks are read as hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var afterEndXml = runOfText("this will not be a hyperlink");
-            var parXml = new XmlElement("w:p", {}, [
+            var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
                 hyperlinkInstrText,
                 hyperlinkRunXml,
                 endXml
             ]);
-            var paragraph = readXmlElementValue(parXml);
+            var paragraph = readXmlElementValue(paragraphXml);
             
             assertThat(paragraph.children, contains(
                 isEmptyRun,
@@ -195,13 +195,13 @@ test("complex fields", (function() {
         
         "runs after a complex field for hyperlinks are not read as hyperlinks": function() {
             var afterEndXml = runOfText("this will not be a hyperlink");
-            var parXml = new XmlElement("w:p", {}, [
+            var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
                 hyperlinkInstrText,
                 endXml,
                 afterEndXml
             ]);
-            var paragraph = readXmlElementValue(parXml);
+            var paragraph = readXmlElementValue(paragraphXml);
             
             assertThat(paragraph.children, contains(
                 isEmptyRun,
