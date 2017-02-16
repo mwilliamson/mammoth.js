@@ -173,8 +173,7 @@ test("complex fields", (function() {
                 beginXml,
                 hyperlinkInstrText,
                 hyperlinkRunXml,
-                endXml,
-                afterEndXml
+                endXml
             ]);
             var paragraph = readXmlElementValue(parXml);
             
@@ -190,9 +189,24 @@ test("complex fields", (function() {
                         })
                     )
                 }),
+                isEmptyRun
+            ));
+        },
+        
+        "runs after a complex field for hyperlinks are not read as hyperlinks": function() {
+            var afterEndXml = runOfText("this will not be a hyperlink");
+            var parXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                endXml,
+                afterEndXml
+            ]);
+            var paragraph = readXmlElementValue(parXml);
+            
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
                 isEmptyRun,
                 isRun({
-                    // runs after fldCharType "end" do not become hyperlinks
                     children: contains(
                         isText("this will not be a hyperlink")
                     )
