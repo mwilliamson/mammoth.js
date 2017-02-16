@@ -148,13 +148,7 @@ test("numbering properties are ignored if w:numId is missing", function() {
     assert.equal(numberingLevel, null);
 });
 
-test("stores instrText returns empty result", function() {
-    var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "http://example.com"')]);
-    var instrText = readXmlElementValue(instrTextXml);
-    assert.deepEqual(instrText, []);
-});
-
-test("runs in a complex field for hyperlinks are read as hyperlinks", function() {
+test("complex fields", (function() {
     var uri = "http://example.com";
     var beginXml = new XmlElement("w:r", {}, [
         new XmlElement("w:fldChar", {"w:fldCharType": "begin"})
@@ -162,39 +156,50 @@ test("runs in a complex field for hyperlinks are read as hyperlinks", function()
     var endXml = new XmlElement("w:r", {}, [
         new XmlElement("w:fldChar", {"w:fldCharType": "end"})
     ]);
-    var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "' + uri + '"')]);
-    var hyperlinkRunXml = runOfText("this is a hyperlink");
-    var afterEndXml = runOfText("this will not be a hyperlink");
-    var parXml = new XmlElement("w:p", {}, [
-        beginXml,
-        instrTextXml,
-        hyperlinkRunXml,
-        endXml,
-        afterEndXml
-    ]);
-    var paragraph = readXmlElementValue(parXml);
     
-    assertThat(paragraph.children, contains(
-        isEmptyRun,
-        isRun({
-            children: contains(
-                isHyperlink({
-                    href: uri,
+    return {
+        "stores instrText returns empty result": function() {
+            var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "http://example.com"')]);
+            var instrText = readXmlElementValue(instrTextXml);
+            assert.deepEqual(instrText, []);
+        },
+        
+        "runs in a complex field for hyperlinks are read as hyperlinks": function() {
+            var instrTextXml = new XmlElement("w:instrText", {}, [xml.text(' HYPERLINK "' + uri + '"')]);
+            var hyperlinkRunXml = runOfText("this is a hyperlink");
+            var afterEndXml = runOfText("this will not be a hyperlink");
+            var parXml = new XmlElement("w:p", {}, [
+                beginXml,
+                instrTextXml,
+                hyperlinkRunXml,
+                endXml,
+                afterEndXml
+            ]);
+            var paragraph = readXmlElementValue(parXml);
+            
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isRun({
                     children: contains(
-                        isText("this is a hyperlink")
+                        isHyperlink({
+                            href: uri,
+                            children: contains(
+                                isText("this is a hyperlink")
+                            )
+                        })
+                    )
+                }),
+                isEmptyRun,
+                isRun({
+                    // runs after fldCharType "end" do not become hyperlinks
+                    children: contains(
+                        isText("this will not be a hyperlink")
                     )
                 })
-            )
-        }),
-        isEmptyRun,
-        isRun({
-            // runs after fldCharType "end" do not become hyperlinks
-            children: contains(
-                isText("this will not be a hyperlink")
-            )
-        })
-    ));
-});
+            ));
+        }
+    };
+})());
 
 test("run has no style if it has no properties", function() {
     var runXml = runWithProperties([]);
