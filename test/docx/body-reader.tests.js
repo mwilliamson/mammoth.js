@@ -148,6 +148,9 @@ test("complex fields", (function() {
     var endXml = new XmlElement("w:r", {}, [
         new XmlElement("w:fldChar", {"w:fldCharType": "end"})
     ]);
+    var separateXml = new XmlElement("w:r", {}, [
+        new XmlElement("w:fldChar", {"w:fldCharType": "separate"})
+    ]);
     var hyperlinkInstrText = new XmlElement("w:instrText", {}, [
         xml.text(' HYPERLINK "' + uri + '"')
     ]);
@@ -160,10 +163,10 @@ test("complex fields", (function() {
         
         "runs in a complex field for hyperlinks are read as hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
-            var afterEndXml = runOfText("this will not be a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
                 hyperlinkInstrText,
+                separateXml,
                 hyperlinkRunXml,
                 endXml
             ]);
@@ -171,6 +174,14 @@ test("complex fields", (function() {
             
             assertThat(paragraph.children, contains(
                 isEmptyRun,
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: []
+                        })
+                    )
+                }),
                 isRun({
                     children: contains(
                         isHyperlink({
@@ -190,6 +201,7 @@ test("complex fields", (function() {
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
                 hyperlinkInstrText,
+                separateXml,
                 endXml,
                 afterEndXml
             ]);
@@ -197,12 +209,62 @@ test("complex fields", (function() {
             
             assertThat(paragraph.children, contains(
                 isEmptyRun,
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: []
+                        })
+                    )
+                }),
                 isEmptyRun,
                 isRun({
                     children: contains(
                         isText("this will not be a hyperlink")
                     )
                 })
+            ));
+        },
+
+        "can handle split instrText elements": function() {
+            var hyperlinkRunXml = runOfText("this is a hyperlink");
+            var hyperlinkInstrTextPart1 = new XmlElement("w:instrText", {}, [
+                xml.text(" HYPE")
+            ]);
+            var hyperlinkInstrTextPart2 = new XmlElement("w:instrText", {}, [
+                xml.text('RLINK "' + uri + '"')
+            ]);
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrTextPart1,
+                hyperlinkInstrTextPart2,
+                separateXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: []
+                        })
+                    )
+                }),
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: contains(
+                                isText("this is a hyperlink")
+                            )
+                        })
+                    )
+                }),
+                isEmptyRun
             ));
         }
     };
