@@ -154,6 +154,7 @@ test("complex fields", (function() {
     var hyperlinkInstrText = new XmlElement("w:instrText", {}, [
         xml.text(' HYPERLINK "' + uri + '"')
     ]);
+    var hyperlinkRunXml = runOfText("this is a hyperlink");
     
     return {
         "stores instrText returns empty result": function() {
@@ -227,7 +228,6 @@ test("complex fields", (function() {
         },
 
         "can handle split instrText elements": function() {
-            var hyperlinkRunXml = runOfText("this is a hyperlink");
             var hyperlinkInstrTextPart1 = new XmlElement("w:instrText", {}, [
                 xml.text(" HYPE")
             ]);
@@ -266,6 +266,48 @@ test("complex fields", (function() {
                 }),
                 isEmptyRun
             ));
+        },
+
+        "hyperlink with a nested complex field uses the outer hyperlink": function() {
+            var authorInstrText = new XmlElement("w:instrText", {}, [
+                xml.text(' AUTHOR "John Doe"')
+            ]);
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                beginXml,
+                authorInstrText,
+                endXml,
+                hyperlinkInstrText,
+                separateXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyRun,
+                isEmptyRun,
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: []
+                        })
+                    )
+                }),
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: contains(
+                                isText("this is a hyperlink")
+                            )
+                        })
+                    )
+                }),
+                isEmptyRun
+          ));
         }
     };
 })());
