@@ -308,6 +308,55 @@ test("complex fields", (function() {
                 }),
                 isEmptyRun
           ));
+        },
+
+        "complex field nested within a hyperlink complex field is wrapped with the hyperlink": function() {
+            var authorInstrText = new XmlElement("w:instrText", {}, [
+                xml.text(' AUTHOR "John Doe"')
+            ]);
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                separateXml,
+                hyperlinkRunXml,
+                beginXml,
+                authorInstrText,
+                endXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: []
+                        })
+                    )
+                }),
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: contains(
+                                isText("this is a hyperlink")
+                            )
+                        })
+                    )
+                }),
+                isRun({
+                    children: contains(
+                        isHyperlink({
+                            href: uri,
+                            children: []
+                        })
+                    )
+                }),
+                isEmptyRun,
+                isEmptyRun
+          ));
         }
     };
 })());
