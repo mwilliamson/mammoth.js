@@ -287,9 +287,10 @@ test("complex fields", (function() {
                 beginXml,
                 hyperlinkInstrText,
                 separateXml,
-                hyperlinkRunXml,
                 beginXml,
                 authorInstrText,
+                separateXml,
+                runOfText("John Doe"),
                 endXml,
                 endXml
             ]);
@@ -298,13 +299,14 @@ test("complex fields", (function() {
             assertThat(paragraph.children, contains(
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
                     children: contains(
-                        isText("this is a hyperlink")
+                        isText("John Doe")
                     )
                 }),
                 isEmptyHyperlinkedRun,
-                isEmptyRun,
                 isEmptyRun
           ));
         }
