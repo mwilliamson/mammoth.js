@@ -274,28 +274,32 @@ test("complex fields", (function() {
             ]);
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
-                beginXml,
-                authorInstrText,
-                endXml,
                 hyperlinkInstrText,
                 separateXml,
+                beginXml,
+                authorInstrText,
+                separateXml,
+                endXml,
                 hyperlinkRunXml,
                 endXml
             ]);
             var paragraph = readXmlElementValue(paragraphXml);
 
+            var isEmptyHyperlinkedRun = isRun({
+                children: contains(
+                    isHyperlink({
+                        href: uri,
+                        children: []
+                    })
+                )
+            });
+
             assertThat(paragraph.children, contains(
                 isEmptyRun,
-                isEmptyRun,
-                isEmptyRun,
-                isRun({
-                    children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: []
-                        })
-                    )
-                }),
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
                 isRun({
                     children: contains(
                         isHyperlink({
