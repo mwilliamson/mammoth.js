@@ -297,32 +297,13 @@ test("complex fields", (function() {
 
             assertThat(paragraph.children, contains(
                 isEmptyRun,
-                isRun({
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
                     children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: []
-                        })
+                        isText("this is a hyperlink")
                     )
                 }),
-                isRun({
-                    children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: contains(
-                                isText("this is a hyperlink")
-                            )
-                        })
-                    )
-                }),
-                isRun({
-                    children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: []
-                        })
-                    )
-                }),
+                isEmptyHyperlinkedRun,
                 isEmptyRun,
                 isEmptyRun
           ));
