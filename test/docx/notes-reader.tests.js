@@ -1,14 +1,14 @@
 var assert = require("assert");
 
 var createFootnotesReader = require("../../lib/docx/notes-reader").createFootnotesReader;
-var BodyReader = require("../../lib/docx/body-reader").BodyReader;
+var createBodyReader = require("../../lib/docx/body-reader").createBodyReader;
 var documents = require("../../lib/documents");
 var XmlElement = require("../../lib/xml").Element;
 var test = require("../test")(module);
 
 
 test('ID and body of footnote are read', function() {
-    var bodyReader = new BodyReader({});
+    var bodyReader = new createBodyReader({});
     var footnoteBody = [new XmlElement("w:p", {}, [])];
     var footnotes = createFootnotesReader(bodyReader)(
         new XmlElement("w:footnotes", {}, [
