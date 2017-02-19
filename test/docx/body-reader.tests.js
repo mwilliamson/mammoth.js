@@ -155,6 +155,16 @@ test("complex fields", (function() {
         xml.text(' HYPERLINK "' + uri + '"')
     ]);
     var hyperlinkRunXml = runOfText("this is a hyperlink");
+
+    var isEmptyHyperlinkedRun = isHyperlinkedRun({children: []});
+    
+    function isHyperlinkedRun(hyperlinkProperties) {
+        return isRun({
+            children: contains(
+                isHyperlink(_.extend({href: uri}, hyperlinkProperties))
+            )
+        });
+    }
     
     return {
         "stores instrText returns empty result": function() {
@@ -175,22 +185,10 @@ test("complex fields", (function() {
             
             assertThat(paragraph.children, contains(
                 isEmptyRun,
-                isRun({
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
                     children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: []
-                        })
-                    )
-                }),
-                isRun({
-                    children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: contains(
-                                isText("this is a hyperlink")
-                            )
-                        })
+                        isText("this is a hyperlink")
                     )
                 }),
                 isEmptyRun
@@ -210,14 +208,7 @@ test("complex fields", (function() {
             
             assertThat(paragraph.children, contains(
                 isEmptyRun,
-                isRun({
-                    children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: []
-                        })
-                    )
-                }),
+                isEmptyHyperlinkedRun,
                 isEmptyRun,
                 isRun({
                     children: contains(
@@ -246,22 +237,10 @@ test("complex fields", (function() {
 
             assertThat(paragraph.children, contains(
                 isEmptyRun,
-                isRun({
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
                     children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: []
-                        })
-                    )
-                }),
-                isRun({
-                    children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: contains(
-                                isText("this is a hyperlink")
-                            )
-                        })
+                        isText("this is a hyperlink")
                     )
                 }),
                 isEmptyRun
@@ -285,29 +264,15 @@ test("complex fields", (function() {
             ]);
             var paragraph = readXmlElementValue(paragraphXml);
 
-            var isEmptyHyperlinkedRun = isRun({
-                children: contains(
-                    isHyperlink({
-                        href: uri,
-                        children: []
-                    })
-                )
-            });
-
             assertThat(paragraph.children, contains(
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
-                isRun({
+                isHyperlinkedRun({
                     children: contains(
-                        isHyperlink({
-                            href: uri,
-                            children: contains(
-                                isText("this is a hyperlink")
-                            )
-                        })
+                        isText("this is a hyperlink")
                     )
                 }),
                 isEmptyRun
