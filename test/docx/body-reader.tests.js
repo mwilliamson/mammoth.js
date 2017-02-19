@@ -268,7 +268,7 @@ test("complex fields", (function() {
             ));
         },
 
-        "hyperlink with a nested complex field uses the outer hyperlink": function() {
+        "hyperlink is not ended by end of nested complex field": function() {
             var authorInstrText = new XmlElement("w:instrText", {}, [
                 xml.text(' AUTHOR "John Doe"')
             ]);
