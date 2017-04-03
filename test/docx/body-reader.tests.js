@@ -453,6 +453,13 @@ test("run has vertical alignment read from properties", function() {
     assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.superscript);
 });
 
+test("run has null font by default", function() {
+    var runXml = runWithProperties([]);
+
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.font, null);
+});
+
 test("run has font read from properties", function() {
     var fontXml = new XmlElement("w:rFonts", {"w:ascii": "Arial"});
     var runXml = runWithProperties([fontXml]);
