@@ -834,18 +834,22 @@ test("no elements created if image cannot be found in wp:inline", function() {
 });
 
 test("children of w:ins are converted normally", function() {
-    var runXml = new XmlElement("w:r", {}, []);
-    var insXml = new XmlElement("w:ins", {}, [runXml]);
-    var result = readXmlElement(insXml);
-    assert.deepEqual(result.value[0].type, "run");
+    assertChildrenAreConvertedNormally("w:ins");
+});
+
+test("children of w:object are converted normally", function() {
+    assertChildrenAreConvertedNormally("w:object");
 });
 
 test("children of w:smartTag are converted normally", function() {
-    var runXml = new XmlElement("w:r", {}, []);
-    var smartTagXml = new XmlElement("w:smartTag", {}, [runXml]);
-    var result = readXmlElement(smartTagXml);
-    assert.deepEqual(result.value[0].type, "run");
+    assertChildrenAreConvertedNormally("w:smartTag");
 });
+
+function assertChildrenAreConvertedNormally(tagName) {
+    var runXml = new XmlElement("w:r", {}, []);
+    var result = readXmlElement(new XmlElement(tagName, {}, [runXml]));
+    assert.deepEqual(result.value[0].type, "run");
+}
 
 test("w:hyperlink is read as document hyperlink if it has a relationship ID", function() {
     var runXml = new XmlElement("w:r", {}, []);
