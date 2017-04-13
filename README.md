@@ -571,6 +571,12 @@ Returns a function that can be used as the `transformDocument` option.
 This will apply the function `transformParagraph` to each paragraph element.
 `transformParagraph` should return the new paragraph.
 
+#### `mammoth.transforms.run(transformRun)`
+
+Returns a function that can be used as the `transformDocument` option.
+This will apply the function `transformRun` to each run element.
+`transformRun` should return the new run.
+
 #### `mammoth.transforms.getDescendants(element)`
 
 Gets all descendants of an element.
