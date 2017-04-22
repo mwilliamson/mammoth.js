@@ -311,7 +311,7 @@ test("complex fields", (function() {
           ));
         },
         
-        "field without separate element is ignored": function() {
+        "field without separate w:fldChar is ignored": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
