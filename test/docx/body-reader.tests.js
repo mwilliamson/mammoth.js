@@ -309,6 +309,33 @@ test("complex fields", (function() {
                 isEmptyHyperlinkedRun,
                 isEmptyRun
           ));
+        },
+        
+        "field without separate element is ignored": function() {
+            var hyperlinkRunXml = runOfText("this is a hyperlink");
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                separateXml,
+                beginXml,
+                endXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+            
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
+                    children: contains(
+                        isText("this is a hyperlink")
+                    )
+                }),
+                isEmptyRun
+            ));
         }
     };
 })());
