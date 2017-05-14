@@ -479,6 +479,8 @@ mammoth.images.imgElement(function(image) {
 })
 ```
 
+`mammoth.images.dataUri` is the default image converter.
+
 ### Document transforms
 
 **The API for document transforms should be considered unstable,
