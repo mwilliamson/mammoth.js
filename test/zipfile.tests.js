@@ -2,8 +2,8 @@ var assert = require("assert");
 
 var JSZip = require("jszip");
 
-var test = require("./test")(module);
 var zipfile = require("../lib/zipfile");
+var test = require("./test")(module);
 
 test('file in zip can be read after being written', function() {
     var zip = emptyZipFile();

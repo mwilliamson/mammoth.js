@@ -538,11 +538,44 @@ var options = {
 };
 ```
 
+Or if you want paragraphs that have been explicitly set to use monospace fonts to represent code:
+
+```javascript
+function transformParagraph(paragraph) {
+    var runs = mammoth.transforms.getDescendantsOfType(paragraph, "run");
+    var isMatch = runs.length > 0 && runs.every(function(run) {
+        return run.font && fonts.indexOf(run.font.toLowerCase()) !== -1;
+    });
+    if (isMatch) {
+        return {
+            ...paragraph,
+            styleId: "code",
+            styleName: "Code"
+        };
+    } else {
+        return paragraph;
+    }
+}
+
+var options = {
+    transformDocument: mammoth.transforms.paragraph(transformParagraph),
+    styleMap: [
+        "p[style-name='Code'] => pre:separator('\n')"
+    ]
+};
+```
+
 #### `mammoth.transforms.paragraph(transformParagraph)`
 
 Returns a function that can be used as the `transformDocument` option.
 This will apply the function `transformParagraph` to each paragraph element.
 `transformParagraph` should return the new paragraph.
+
+#### `mammoth.transforms.run(transformRun)`
+
+Returns a function that can be used as the `transformDocument` option.
+This will apply the function `transformRun` to each run element.
+`transformRun` should return the new run.
 
 #### `mammoth.transforms.getDescendants(element)`
 

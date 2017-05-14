@@ -3,6 +3,7 @@ var path = require("path");
 
 var _ = require("underscore");
 var hamjest = require("hamjest");
+var assertThat = hamjest.assertThat;
 var promiseThat = hamjest.promiseThat;
 var allOf = hamjest.allOf;
 var contains = hamjest.contains;
@@ -10,7 +11,14 @@ var hasProperties = hamjest.hasProperties;
 var willBe = hamjest.willBe;
 var FeatureMatcher = hamjest.FeatureMatcher;
 
-var BodyReader = require("../../lib/docx/body-reader").BodyReader;
+var documentMatchers = require("./document-matchers");
+var isEmptyRun = documentMatchers.isEmptyRun;
+var isHyperlink = documentMatchers.isHyperlink;
+var isRun = documentMatchers.isRun;
+var isText = documentMatchers.isText;
+
+var createBodyReader = require("../../lib/docx/body-reader").createBodyReader;
+var _readNumberingProperties = require("../../lib/docx/body-reader")._readNumberingProperties;
 var documents = require("../../lib/documents");
 var xml = require("../../lib/xml");
 var XmlElement = xml.Element;
@@ -25,7 +33,7 @@ var createFakeDocxFile = testing.createFakeDocxFile;
 function readXmlElement(element, options) {
     options = Object.create(options || {});
     options.styles = options.styles || new Styles({}, {});
-    return new BodyReader(options).readXmlElement(element);
+    return createBodyReader(options).readXmlElement(element);
 }
 
 function readXmlElementValue(element, options) {
@@ -106,10 +114,7 @@ test("numbering properties are converted to numbering at specified level", funct
     
     var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
     
-    var reader = new BodyReader({
-        numbering: numbering
-    });
-    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
 });
 
@@ -120,10 +125,7 @@ test("numbering properties are ignored if w:ilvl is missing", function() {
     
     var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
     
-    var reader = new BodyReader({
-        numbering: numbering
-    });
-    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
 
@@ -134,12 +136,209 @@ test("numbering properties are ignored if w:numId is missing", function() {
     
     var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
     
-    var reader = new BodyReader({
-        numbering: numbering
-    });
-    var numberingLevel = reader._readNumberingProperties(numberingPropertiesXml);
+    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
+
+test("complex fields", (function() {
+    var uri = "http://example.com";
+    var beginXml = new XmlElement("w:r", {}, [
+        new XmlElement("w:fldChar", {"w:fldCharType": "begin"})
+    ]);
+    var endXml = new XmlElement("w:r", {}, [
+        new XmlElement("w:fldChar", {"w:fldCharType": "end"})
+    ]);
+    var separateXml = new XmlElement("w:r", {}, [
+        new XmlElement("w:fldChar", {"w:fldCharType": "separate"})
+    ]);
+    var hyperlinkInstrText = new XmlElement("w:instrText", {}, [
+        xml.text(' HYPERLINK "' + uri + '"')
+    ]);
+    var hyperlinkRunXml = runOfText("this is a hyperlink");
+
+    var isEmptyHyperlinkedRun = isHyperlinkedRun({children: []});
+    
+    function isHyperlinkedRun(hyperlinkProperties) {
+        return isRun({
+            children: contains(
+                isHyperlink(_.extend({href: uri}, hyperlinkProperties))
+            )
+        });
+    }
+    
+    return {
+        "stores instrText returns empty result": function() {
+            var instrText = readXmlElementValue(hyperlinkInstrText);
+            assert.deepEqual(instrText, []);
+        },
+        
+        "runs in a complex field for hyperlinks are read as hyperlinks": function() {
+            var hyperlinkRunXml = runOfText("this is a hyperlink");
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                separateXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+            
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
+                    children: contains(
+                        isText("this is a hyperlink")
+                    )
+                }),
+                isEmptyRun
+            ));
+        },
+        
+        "runs after a complex field for hyperlinks are not read as hyperlinks": function() {
+            var afterEndXml = runOfText("this will not be a hyperlink");
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                separateXml,
+                endXml,
+                afterEndXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+            
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isEmptyRun,
+                isRun({
+                    children: contains(
+                        isText("this will not be a hyperlink")
+                    )
+                })
+            ));
+        },
+
+        "can handle split instrText elements": function() {
+            var hyperlinkInstrTextPart1 = new XmlElement("w:instrText", {}, [
+                xml.text(" HYPE")
+            ]);
+            var hyperlinkInstrTextPart2 = new XmlElement("w:instrText", {}, [
+                xml.text('RLINK "' + uri + '"')
+            ]);
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrTextPart1,
+                hyperlinkInstrTextPart2,
+                separateXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
+                    children: contains(
+                        isText("this is a hyperlink")
+                    )
+                }),
+                isEmptyRun
+            ));
+        },
+
+        "hyperlink is not ended by end of nested complex field": function() {
+            var authorInstrText = new XmlElement("w:instrText", {}, [
+                xml.text(' AUTHOR "John Doe"')
+            ]);
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                separateXml,
+                beginXml,
+                authorInstrText,
+                separateXml,
+                endXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
+                    children: contains(
+                        isText("this is a hyperlink")
+                    )
+                }),
+                isEmptyRun
+          ));
+        },
+
+        "complex field nested within a hyperlink complex field is wrapped with the hyperlink": function() {
+            var authorInstrText = new XmlElement("w:instrText", {}, [
+                xml.text(' AUTHOR "John Doe"')
+            ]);
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                separateXml,
+                beginXml,
+                authorInstrText,
+                separateXml,
+                runOfText("John Doe"),
+                endXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
+                    children: contains(
+                        isText("John Doe")
+                    )
+                }),
+                isEmptyHyperlinkedRun,
+                isEmptyRun
+          ));
+        },
+        
+        "field without separate w:fldChar is ignored": function() {
+            var hyperlinkRunXml = runOfText("this is a hyperlink");
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                separateXml,
+                beginXml,
+                endXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+            
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
+                    children: contains(
+                        isText("this is a hyperlink")
+                    )
+                }),
+                isEmptyRun
+            ));
+        }
+    };
+})());
 
 test("run has no style if it has no properties", function() {
     var runXml = runWithProperties([]);
@@ -279,6 +478,13 @@ test("run has vertical alignment read from properties", function() {
     
     var run = readXmlElementValue(runXml);
     assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.superscript);
+});
+
+test("run has null font by default", function() {
+    var runXml = runWithProperties([]);
+
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.font, null);
 });
 
 test("run has font read from properties", function() {
@@ -655,18 +861,22 @@ test("no elements created if image cannot be found in wp:inline", function() {
 });
 
 test("children of w:ins are converted normally", function() {
-    var runXml = new XmlElement("w:r", {}, []);
-    var insXml = new XmlElement("w:ins", {}, [runXml]);
-    var result = readXmlElement(insXml);
-    assert.deepEqual(result.value[0].type, "run");
+    assertChildrenAreConvertedNormally("w:ins");
+});
+
+test("children of w:object are converted normally", function() {
+    assertChildrenAreConvertedNormally("w:object");
 });
 
 test("children of w:smartTag are converted normally", function() {
-    var runXml = new XmlElement("w:r", {}, []);
-    var smartTagXml = new XmlElement("w:smartTag", {}, [runXml]);
-    var result = readXmlElement(smartTagXml);
-    assert.deepEqual(result.value[0].type, "run");
+    assertChildrenAreConvertedNormally("w:smartTag");
 });
+
+function assertChildrenAreConvertedNormally(tagName) {
+    var runXml = new XmlElement("w:r", {}, []);
+    var result = readXmlElement(new XmlElement(tagName, {}, [runXml]));
+    assert.deepEqual(result.value[0].type, "run");
+}
 
 test("w:hyperlink is read as document hyperlink if it has a relationship ID", function() {
     var runXml = new XmlElement("w:r", {}, []);
@@ -859,6 +1069,11 @@ function createEmbeddedBlip(relationshipId) {
 
 function createLinkedBlip(relationshipId) {
     return new XmlElement("a:blip", {"r:link": relationshipId});
+}
+
+function runOfText(text) {
+    var textXml = new XmlElement("w:t", {}, [xml.text(text)]);
+    return new XmlElement("w:r", {}, [textXml]);
 }
 
 function assertImageBuffer(element, expectedImageBuffer) {

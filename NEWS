@@ -1,3 +1,24 @@
+# 1.3.6
+
+* Handle complex fields that do not have a "separate" fldChar.
+
+# 1.3.5
+
+* Add transforms.run.
+
+# 1.3.4
+
+* Read children of w:object elements.
+
+# 1.3.3
+
+* Handle hyperlinks created with complex fields.
+
+# 1.3.2
+
+* Handle absolute paths within zip files. This should fix an issue where some
+  images within a document couldn't be found.
+
 # 1.3.1
 
 * Add getDescendants() and getDescendantsOfType() to transforms module.
