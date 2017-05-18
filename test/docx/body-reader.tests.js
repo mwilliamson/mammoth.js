@@ -901,6 +901,17 @@ test("w:hyperlink", {
         assert.deepEqual(result.value.children[0].type, "run");
     },
 
+    "existing fragment is replaced when anchor is set on external link": function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42", "w:anchor": "fragment"}, [runXml]);
+        var relationships = {
+            "r42": {target: "http://example.com/#previous"}
+        };
+        var result = readXmlElement(hyperlinkXml, {relationships: relationships});
+        assert.deepEqual(result.value.href, "http://example.com/#fragment");
+        assert.deepEqual(result.value.children[0].type, "run");
+    },
+
     "is read as internal hyperlink if it has an anchor": function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"w:anchor": "_Peter"}, [runXml]);
