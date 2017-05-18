@@ -878,41 +878,43 @@ function assertChildrenAreConvertedNormally(tagName) {
     assert.deepEqual(result.value[0].type, "run");
 }
 
-test("w:hyperlink is read as external hyperlink if it has a relationship ID", function() {
-    var runXml = new XmlElement("w:r", {}, []);
-    var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
-    var relationships = {
-        "r42": {target: "http://example.com"}
-    };
-    var result = readXmlElement(hyperlinkXml, {relationships: relationships});
-    assert.deepEqual(result.value.href, "http://example.com");
-    assert.deepEqual(result.value.children[0].type, "run");
-});
+test("w:hyperlink", {
+    "is read as external hyperlink if it has a relationship ID": function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
+        var relationships = {
+            "r42": {target: "http://example.com"}
+        };
+        var result = readXmlElement(hyperlinkXml, {relationships: relationships});
+        assert.deepEqual(result.value.href, "http://example.com");
+        assert.deepEqual(result.value.children[0].type, "run");
+    },
 
-test("w:hyperlink is read as external hyperlink if it has a relationship ID and an anchor", function() {
-    var runXml = new XmlElement("w:r", {}, []);
-    var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42", "w:anchor": "fragment"}, [runXml]);
-    var relationships = {
-        "r42": {target: "http://example.com/"}
-    };
-    var result = readXmlElement(hyperlinkXml, {relationships: relationships});
-    assert.deepEqual(result.value.href, "http://example.com/#fragment");
-    assert.deepEqual(result.value.children[0].type, "run");
-});
+    "is read as external hyperlink if it has a relationship ID and an anchor": function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42", "w:anchor": "fragment"}, [runXml]);
+        var relationships = {
+            "r42": {target: "http://example.com/"}
+        };
+        var result = readXmlElement(hyperlinkXml, {relationships: relationships});
+        assert.deepEqual(result.value.href, "http://example.com/#fragment");
+        assert.deepEqual(result.value.children[0].type, "run");
+    },
 
-test("w:hyperlink is read as internal hyperlink if it has an anchor", function() {
-    var runXml = new XmlElement("w:r", {}, []);
-    var hyperlinkXml = new XmlElement("w:hyperlink", {"w:anchor": "_Peter"}, [runXml]);
-    var result = readXmlElement(hyperlinkXml);
-    assert.deepEqual(result.value.anchor, "_Peter");
-    assert.deepEqual(result.value.children[0].type, "run");
-});
+    "is read as internal hyperlink if it has an anchor": function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var hyperlinkXml = new XmlElement("w:hyperlink", {"w:anchor": "_Peter"}, [runXml]);
+        var result = readXmlElement(hyperlinkXml);
+        assert.deepEqual(result.value.anchor, "_Peter");
+        assert.deepEqual(result.value.children[0].type, "run");
+    },
 
-test("w:hyperlink is ignored if it does not have a relationship ID nor anchor", function() {
-    var runXml = new XmlElement("w:r", {}, []);
-    var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
-    var result = readXmlElement(hyperlinkXml);
-    assert.deepEqual(result.value[0].type, "run");
+    "is ignored if it does not have a relationship ID nor anchor": function() {
+        var runXml = new XmlElement("w:r", {}, []);
+        var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
+        var result = readXmlElement(hyperlinkXml);
+        assert.deepEqual(result.value[0].type, "run");
+    }
 });
 
 test("w:br without explicit type is read as line break", function() {
