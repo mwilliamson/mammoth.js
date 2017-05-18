@@ -2,6 +2,8 @@
 
 * Extract the default data URI image converter to the images module.
 
+* Add anchor on hyperlinks as fragment if present.
+
 # 1.3.6
 
 * Handle complex fields that do not have a "separate" fldChar.

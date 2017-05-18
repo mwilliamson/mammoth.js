@@ -878,7 +878,7 @@ function assertChildrenAreConvertedNormally(tagName) {
     assert.deepEqual(result.value[0].type, "run");
 }
 
-test("w:hyperlink is read as document hyperlink if it has a relationship ID", function() {
+test("w:hyperlink is read as external hyperlink if it has a relationship ID", function() {
     var runXml = new XmlElement("w:r", {}, []);
     var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
     var relationships = {
@@ -889,7 +889,18 @@ test("w:hyperlink is read as document hyperlink if it has a relationship ID", fu
     assert.deepEqual(result.value.children[0].type, "run");
 });
 
-test("w:hyperlink is read as document hyperlink if it has an anchor", function() {
+test("w:hyperlink is read as external hyperlink if it has a relationship ID and an anchor", function() {
+    var runXml = new XmlElement("w:r", {}, []);
+    var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42", "w:anchor": "fragment"}, [runXml]);
+    var relationships = {
+        "r42": {target: "http://example.com/"}
+    };
+    var result = readXmlElement(hyperlinkXml, {relationships: relationships});
+    assert.deepEqual(result.value.href, "http://example.com/#fragment");
+    assert.deepEqual(result.value.children[0].type, "run");
+});
+
+test("w:hyperlink is read as internal hyperlink if it has an anchor", function() {
     var runXml = new XmlElement("w:r", {}, []);
     var hyperlinkXml = new XmlElement("w:hyperlink", {"w:anchor": "_Peter"}, [runXml]);
     var result = readXmlElement(hyperlinkXml);
