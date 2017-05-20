@@ -527,6 +527,24 @@ test("w:tbl is read as document table element", function() {
     ]));
 });
 
+test("w:tblHeader marks table row as header", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        new XmlElement("w:tr", {}, [
+            new XmlElement("w:trPr", {}, [
+                new XmlElement("w:tblHeader")
+            ])
+        ]),
+        new XmlElement("w:tr")
+    ]);
+    var result = readXmlElementValue(tableXml);
+    assertThat(result, isTable({
+        children: contains(
+            isRow({isHeader: true}),
+            isRow({isHeader: false})
+        )
+    }));
+});
+
 test("w:gridSpan is read as colSpan for table cell", function() {
     var tableXml = new XmlElement("w:tbl", {}, [
         new XmlElement("w:tr", {}, [
@@ -646,6 +664,14 @@ function docRow(children) {
 
 function docEmptyCell(properties) {
     return new documents.TableCell([], properties);
+}
+
+function isTable(options) {
+    return hasProperties(_.extend({type: documents.types.table}, options));
+}
+
+function isRow(options) {
+    return hasProperties(_.extend({type: documents.types.tableRow}, options));
 }
 
 test("w:bookmarkStart is read as a bookmarkStart", function() {
