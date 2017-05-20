@@ -384,6 +384,37 @@ test('docx table is converted to table in HTML', function() {
     });
 });
 
+test('header rows are wrapped in thead', function() {
+    var table = new documents.Table([
+        new documents.TableRow([new documents.TableCell([])], {isHeader: true}),
+        new documents.TableRow([new documents.TableCell([])], {isHeader: true}),
+        new documents.TableRow([new documents.TableCell([])], {isHeader: false})
+    ]);
+    var converter = new DocumentConverter();
+    
+    return converter.convertToHtml(table).then(function(result) {
+        var expectedHtml = "<table>" +
+            "<thead><tr><th></th></tr><tr><th></th></tr></thead>" +
+            "<tbody><tr><td></td></tr></tbody>" +
+            "</table>";
+        assert.equal(result.value, expectedHtml);
+    });
+});
+
+test('tbody is omitted if all rows are headers', function() {
+    var table = new documents.Table([
+        new documents.TableRow([new documents.TableCell([])], {isHeader: true})
+    ]);
+    var converter = new DocumentConverter();
+    
+    return converter.convertToHtml(table).then(function(result) {
+        var expectedHtml = "<table>" +
+            "<thead><tr><th></th></tr></thead>" +
+            "</table>";
+        assert.equal(result.value, expectedHtml);
+    });
+});
+
 test('empty cells are preserved in table', function() {
     var table = new documents.Table([
         new documents.TableRow([

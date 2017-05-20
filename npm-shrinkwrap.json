@@ -1720,9 +1720,9 @@
       "dev": true
     },
     "underscore": {
-      "version": "1.6.0",
-      "from": "underscore@>=1.6.0 <1.7.0",
-      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.6.0.tgz"
+      "version": "1.8.3",
+      "from": "underscore@>=1.8.3 <1.9.0",
+      "resolved": "https://registry.npmjs.org/underscore/-/underscore-1.8.3.tgz"
     },
     "url": {
       "version": "0.11.0",
