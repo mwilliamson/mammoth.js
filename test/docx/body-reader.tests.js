@@ -16,6 +16,8 @@ var isEmptyRun = documentMatchers.isEmptyRun;
 var isHyperlink = documentMatchers.isHyperlink;
 var isRun = documentMatchers.isRun;
 var isText = documentMatchers.isText;
+var isTable = documentMatchers.isTable;
+var isRow = documentMatchers.isRow;
 
 var createBodyReader = require("../../lib/docx/body-reader").createBodyReader;
 var _readNumberingProperties = require("../../lib/docx/body-reader")._readNumberingProperties;
@@ -664,14 +666,6 @@ function docRow(children) {
 
 function docEmptyCell(properties) {
     return new documents.TableCell([], properties);
-}
-
-function isTable(options) {
-    return hasProperties(_.extend({type: documents.types.table}, options));
-}
-
-function isRow(options) {
-    return hasProperties(_.extend({type: documents.types.tableRow}, options));
 }
 
 test("w:bookmarkStart is read as a bookmarkStart", function() {

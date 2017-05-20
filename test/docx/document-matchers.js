@@ -8,6 +8,8 @@ exports.isEmptyRun = isRun({children: []});
 exports.isRun = isRun;
 exports.isText = isText;
 exports.isHyperlink = isHyperlink;
+exports.isTable = isTable;
+exports.isRow = isRow;
 
 
 function isRun(properties) {
@@ -20,6 +22,14 @@ function isText(text) {
 
 function isHyperlink(properties) {
     return isDocumentElement(documents.types.hyperlink, properties);
+}
+
+function isTable(options) {
+    return isDocumentElement(documents.types.table, options);
+}
+
+function isRow(options) {
+    return isDocumentElement(documents.types.tableRow, options);
 }
 
 function isDocumentElement(type, properties) {
