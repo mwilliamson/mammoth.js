@@ -4,6 +4,8 @@
 
 * Add anchor on hyperlinks as fragment if present.
 
+* Detect header rows in tables and convert to thead > tr > th.
+
 # 1.3.6
 
 * Handle complex fields that do not have a "separate" fldChar.
