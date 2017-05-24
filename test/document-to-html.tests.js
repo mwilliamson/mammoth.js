@@ -415,6 +415,18 @@ test('tbody is omitted if all rows are headers', function() {
     });
 });
 
+test('unexpected table children do not cause error', function() {
+    var table = new documents.Table([
+        new documents.tab()
+    ]);
+    var converter = new DocumentConverter();
+    
+    return converter.convertToHtml(table).then(function(result) {
+        var expectedHtml = "<table>\t</table>";
+        assert.equal(result.value, expectedHtml);
+    });
+});
+
 test('empty cells are preserved in table', function() {
     var table = new documents.Table([
         new documents.TableRow([
