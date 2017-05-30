@@ -945,7 +945,16 @@ test("w:hyperlink", {
         var hyperlinkXml = new XmlElement("w:hyperlink", {}, [runXml]);
         var result = readXmlElement(hyperlinkXml);
         assert.deepEqual(result.value[0].type, "run");
-    }
+    },
+    
+    "target frame is read": function() {
+        var hyperlinkXml = new XmlElement("w:hyperlink", {
+            "w:anchor": "Introduction",
+            "w:tgtFrame": "_blank"
+        });
+        var result = readXmlElementValue(hyperlinkXml);
+        assertThat(result, hasProperties({targetFrame: "_blank"}));
+    },
 });
 
 test("w:br without explicit type is read as line break", function() {
