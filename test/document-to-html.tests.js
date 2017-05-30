@@ -343,6 +343,17 @@ test('docx hyperlink with anchor is converted to <a>', function() {
     });
 });
 
+test('hyperlink target frame is used as anchor target', function() {
+    var hyperlink = new documents.Hyperlink(
+        [runOfText("Hello.")],
+        {anchor: "start", targetFrame: "_blank"}
+    );
+    var converter = new DocumentConverter();
+    return converter.convertToHtml(hyperlink).then(function(result) {
+        assert.equal(result.value, '<a href="#start" target="_blank">Hello.</a>');
+    });
+});
+
 test('bookmarks are converted to anchors', function() {
     var bookmarkStart = new documents.BookmarkStart({name: "_Peter"});
     var converter = new DocumentConverter({
