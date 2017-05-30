@@ -1,8 +1,10 @@
-# 1.3.7
+# 1.4.0
 
 * Extract the default data URI image converter to the images module.
 
 * Add anchor on hyperlinks as fragment if present.
+
+* Convert target frames on hyperlinks to targets on anchors.
 
 * Detect header rows in tables and convert to thead > tr > th.
 
