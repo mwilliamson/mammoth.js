@@ -955,6 +955,15 @@ test("w:hyperlink", {
         var result = readXmlElementValue(hyperlinkXml);
         assertThat(result, hasProperties({targetFrame: "_blank"}));
     },
+    
+    "empty target frame is ignored": function() {
+        var hyperlinkXml = new XmlElement("w:hyperlink", {
+            "w:anchor": "Introduction",
+            "w:tgtFrame": ""
+        });
+        var result = readXmlElementValue(hyperlinkXml);
+        assertThat(result, hasProperties({targetFrame: null}));
+    }
 });
 
 test("w:br without explicit type is read as line break", function() {
