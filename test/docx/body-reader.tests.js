@@ -511,6 +511,12 @@ test("w:tab is read as document tab element", function() {
     assert.deepEqual(result.value, new documents.Tab());
 });
 
+test("w:noBreakHyphen is read as non-breaking hyphen character", function() {
+    var noBreakHyphenXml = new XmlElement("w:noBreakHyphen");
+    var result = readXmlElement(noBreakHyphenXml);
+    assert.deepEqual(result.value, new documents.Text("\u2011"));
+});
+
 test("w:tbl is read as document table element", function() {
     var tableXml = new XmlElement("w:tbl", {}, [
         new XmlElement("w:tr", {}, [
