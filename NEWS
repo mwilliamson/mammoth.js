@@ -1,6 +1,6 @@
 # 1.4.1
 
-* Read w:nonBreakingHyphen elements as non-breaking hyphen characters.
+* Read w:noBreakHyphen elements as non-breaking hyphen characters.
 
 # 1.4.0
 
