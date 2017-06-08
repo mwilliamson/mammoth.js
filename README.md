@@ -1,5 +1,7 @@
 # Mammoth .docx to HTML converter
 
+[![CDNJS](https://img.shields.io/cdnjs/v/mammoth.svg)](https://cdnjs.com/libraries/mammoth)
+
 Mammoth is designed to convert .docx documents,
 such as those created by Microsoft Word,
 and convert them to HTML.
