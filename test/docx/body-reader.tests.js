@@ -898,6 +898,10 @@ test("children of w:smartTag are converted normally", function() {
     assertChildrenAreConvertedNormally("w:smartTag");
 });
 
+test("children of v:group are converted normally", function() {
+    assertChildrenAreConvertedNormally("v:group");
+});
+
 function assertChildrenAreConvertedNormally(tagName) {
     var runXml = new XmlElement("w:r", {}, []);
     var result = readXmlElement(new XmlElement(tagName, {}, [runXml]));

@@ -1,3 +1,7 @@
+# 1.4.2
+
+* Read children of v:group elements.
+
 # 1.4.1
 
 * Read w:noBreakHyphen elements as non-breaking hyphen characters.
