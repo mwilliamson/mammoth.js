@@ -185,7 +185,15 @@ test("styleReader.readDocumentMatcher", {
             "br[type='column']",
             documentMatchers.columnBreak
         );
+    },
+
+    "reads smallcaps": function() {
+        assertDocumentMatcher(
+            "smallCaps",
+            documentMatchers.smallCaps
+        );
     }
+    
 });
     
 function assertDocumentMatcher(input, expected) {

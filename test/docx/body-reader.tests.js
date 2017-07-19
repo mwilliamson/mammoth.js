@@ -431,11 +431,25 @@ test("isItalic is true if bold element is present", function() {
     assert.equal(run.isItalic, true);
 });
 
+test("isSmallCaps is false if smallcaps element is not present", function() {
+    var runXml = runWithProperties([]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.isSmallCaps, false);
+});
+
+test("isSmallCaps is true if smallcaps element is present", function() {
+    var smallCapsXml = new XmlElement("w:smallCaps");
+    var runXml = runWithProperties([smallCapsXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isSmallCaps, true);
+});
+
 var booleanRunProperties = [
     {name: "isBold", tagName: "w:b"},
     {name: "isUnderline", tagName: "w:u"},
     {name: "isItalic", tagName: "w:i"},
     {name: "isStrikethrough", tagName: "w:strike"},
+    {name: "isSmallCaps", tagName: "w:smallCaps"},
 ];
 
 booleanRunProperties.forEach(function(runProperty) {
