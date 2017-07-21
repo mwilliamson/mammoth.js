@@ -159,6 +159,13 @@ test("styleReader.readDocumentMatcher", {
         );
     },
     
+    "reads smallcaps": function() {
+        assertDocumentMatcher(
+            "small-caps",
+            documentMatchers.smallCaps
+        );
+    },
+    
     "reads comment-reference": function() {
         assertDocumentMatcher(
             "comment-reference",
@@ -186,6 +193,7 @@ test("styleReader.readDocumentMatcher", {
             documentMatchers.columnBreak
         );
     }
+
 });
     
 function assertDocumentMatcher(input, expected) {
