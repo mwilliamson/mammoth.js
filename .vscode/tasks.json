@@ -1,0 +1,22 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "taskName": "browserify:buid",
+      "command": "browserify",
+      "args": [
+         "lib/index.js",
+         "--standalone", "mammoth",
+         "-p", "browserify-prepend-licenses",
+         "-o", "mammoth.browser.js"
+      ],
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
