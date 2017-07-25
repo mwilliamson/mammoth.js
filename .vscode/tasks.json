@@ -17,6 +17,13 @@
         "kind": "build",
         "isDefault": true
       }
+    },
+    {
+      "taskName": "npm:install",
+      "command": "npm",
+      "args": [ "install" ],
+      "type": "shell",
+      "group": "build"
     }
   ]
 }
