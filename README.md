@@ -318,6 +318,18 @@ mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 Comments will be appended to the end of the document,
 with links to the comments wrapped using the specified style mapping.
 
+#### Paragraph Ids
+
+By default, paragraphs does not contain ids from XML document.
+To include `data-para-id` (`paraId` from XML; if present) attribute to every paragraph in HTML document (which can be used later to find this exact paragraph in the original XML document), add option `paragraphId`.
+For instance:
+
+```javascript
+var options = {
+    paragraphId: true
+};
+```
+
 ### API
 
 #### `mammoth.convertToHtml(input, options)`
@@ -370,6 +382,9 @@ Converts the source document to HTML.
     this function is applied to the document read from the docx file before the conversion to HTML.
     The API for document transforms should be considered unstable.
     See [document transforms](#document-transforms).
+
+  * `paragraphId`: if set to true, every paragraph in HTML document will contain `data-para-id` attribute which matches `paraId` attribute in XML document.
+  By default it's false.
 
 * Returns a promise containing a result.
   This result has the following properties:
