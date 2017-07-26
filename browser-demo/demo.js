@@ -4,7 +4,12 @@
         
     function handleFileSelect(event) {
         readFileInputEventAsArrayBuffer(event, function(arrayBuffer) {
-            mammoth.convertToHtml({arrayBuffer: arrayBuffer})
+            mammoth.convertToHtml({ arrayBuffer: arrayBuffer }, {
+                styleMap: [
+                    "comment-reference => sup",
+                    "comment-range => span"
+                ]
+            })
                 .then(displayResult)
                 .done();
         });
