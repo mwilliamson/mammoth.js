@@ -24,6 +24,21 @@
       "args": [ "install" ],
       "type": "shell",
       "group": "build"
+    },
+    {
+      "taskName": "npm:test",
+      "command": "npm",
+      "args": [
+        "test"
+      ],
+      "type": "shell",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [
+        "$eslint-compact"
+      ]
     }
   ]
 }
