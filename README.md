@@ -318,6 +318,31 @@ mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 Comments will be appended to the end of the document,
 with links to the comments wrapped using the specified style mapping.
 
+You can also add comment range marks as tags placed at the beggining and ending of the comment.
+For instance:
+
+```javascript
+var mammoth = require("mammoth");
+
+var options = {
+    styleMap: [
+        "comment-range => span"
+    ]
+};
+mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+```
+
+The result will be as follows:
+```html
+<p>
+    This is a sample paragraph with 
+    <span data-comment-id="3" data-comment-edge="start"></span>
+        a comment
+    <span data-comment-id="3" data-comment-edge="end"></span>
+    inserted into it.
+</p>
+```
+
 ### API
 
 #### `mammoth.convertToHtml(input, options)`
