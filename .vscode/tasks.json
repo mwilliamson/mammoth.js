@@ -19,7 +19,8 @@
       "group": {
         "kind": "build",
         "isDefault": true
-      }
+      },
+      "problemMatcher": []
     },
     {
       "taskName": "npm:install",
