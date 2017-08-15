@@ -567,6 +567,42 @@ test("w:tblHeader marks table row as header", function() {
     }));
 });
 
+test("w:firstRow marks table row as header", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        new XmlElement("w:tr", {}, [
+            new XmlElement("w:trPr", {}, [
+                new XmlElement("w:firstRow")
+            ])
+        ]),
+        new XmlElement("w:tr")
+    ]);
+    var result = readXmlElementValue(tableXml);
+    assertThat(result, isTable({
+        children: contains(
+            isRow({isHeader: true}),
+            isRow({isHeader: false})
+        )
+    }));
+});
+
+test("w:firstColumn marks table column as header", function() {
+    var tableXml = new XmlElement("w:tbl", {}, [
+        new XmlElement("w:tr", {}, [
+            new XmlElement("w:trPr", {}, [
+                new XmlElement("w:firstColumn")
+            ])
+        ])
+    ]);
+    var result = readXmlElementValue(tableXml);
+    assert.deepEqual(result.value, new documents.Table([
+        new documents.TableRow([
+            new documents.TableCell([
+                new documents.Paragraph([])
+            ], {isTableHeader: true})
+        ])
+    ]));
+});
+
 test("w:gridSpan is read as colSpan for table cell", function() {
     var tableXml = new XmlElement("w:tbl", {}, [
         new XmlElement("w:tr", {}, [
