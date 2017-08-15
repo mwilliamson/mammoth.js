@@ -436,6 +436,28 @@ test('header rows are wrapped in thead', function() {
     });
 });
 
+test('First column cells are <th> tags', function() {
+    var table = new documents.Table([
+        new documents.TableRow([
+            new documents.TableCell([])
+            new documents.TableCell([])
+        ], {isHeader: true}),
+        new documents.TableRow([
+            new documents.TableCell([], {isTableHeader: true})
+            new documents.TableCell([], {isTableHeader: false})
+        ], {isHeader: false})
+    ]);
+    var converter = new DocumentConverter();
+    
+    return converter.convertToHtml(table).then(function(result) {
+        var expectedHtml = "<table>" +
+            "<thead><tr><th></th><th></th></tr></thead>" +
+            "<tbody><tr><th></th></tr></tbody>" +
+            "</table>";
+        assert.equal(result.value, expectedHtml);
+    });
+});
+
 test('tbody is omitted if all rows are headers', function() {
     var table = new documents.Table([
         new documents.TableRow([new documents.TableCell([])], {isHeader: true})
