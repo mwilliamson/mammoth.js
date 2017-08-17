@@ -94,6 +94,17 @@ test("paragraph has justification read from paragraph properties if present", fu
     assert.deepEqual(paragraph.alignment, "center");
 });
 
+test("paragraph has indent read from paragraph properties if present (Left, Right, First Line & Hanging)", function() {
+    var indentXml = new XmlElement("w:ind", {"w:left": "720", "w:right": "720", "w:firstLine": "720", "w:hanging": "720"}, []);
+    var propertiesXml = new XmlElement("w:pPr", {}, [indentXml]);
+    var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+    var paragraph = readXmlElementValue(paragraphXml);
+    assert.deepEqual(paragraph.indentLeft, "720");
+    assert.deepEqual(paragraph.indentRight, "720");
+    assert.deepEqual(paragraph.indentFirstLine, "720");
+    assert.deepEqual(paragraph.indentHanging, "720");
+});
+
 test("paragraph has numbering properties from paragraph properties if present", function() {
     var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
         new XmlElement("w:ilvl", {"w:val": "1"}),
