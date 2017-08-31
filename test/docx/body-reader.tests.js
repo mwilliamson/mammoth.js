@@ -107,7 +107,7 @@ indentProperties.forEach(function(property) {
         var propertiesXml = new XmlElement("w:pPr", {}, [indentXml]);
         var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
         var paragraph = readXmlElementValue(paragraphXml);
-        assert.deepEqual(paragraph.indent[name], property.value[Object.keys(property.value)[0]]);
+        assert.deepEqual(paragraph.indent[property.name], property.value[Object.keys(property.value)[0]]);
     });
 });
 
