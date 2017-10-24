@@ -94,22 +94,35 @@ test("paragraph has justification read from paragraph properties if present", fu
     assert.deepEqual(paragraph.alignment, "center");
 });
 
-var indentProperties = [
-    {name: "left", value: {"w:left": "720"}},
-    {name: "right", value: {"w:right": "180"}},
-    {name: "firstLine", value: {"w:firstLine": "320"}},
-    {name: "hanging", value: {"w:hanging": "500"}}
-];
-
-indentProperties.forEach(function(property) {
-    test("paragraph has indent " + property.name + " read from paragraph properties if present", function() {
-        var indentXml = new XmlElement("w:ind", property.value, []);
-        var propertiesXml = new XmlElement("w:pPr", {}, [indentXml]);
-        var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-        var paragraph = readXmlElementValue(paragraphXml);
-        assert.deepEqual(paragraph.indent[property.name], property.value[Object.keys(property.value)[0]]);
-    });
+test("paragraph has indent left read from paragraph properties if present", function() {
+    var paragraphXml = paragraphWithIndent({"w:left": "720"});
+    var paragraph = readXmlElementValue(paragraphXml);
+    assert.equal(paragraph.indent.left, "720");
 });
+
+test("paragraph has indent right read from paragraph properties if present", function() {
+    var paragraphXml = paragraphWithIndent({"w:right": "720"});
+    var paragraph = readXmlElementValue(paragraphXml);
+    assert.equal(paragraph.indent.right, "720");
+});
+
+test("paragraph has indent firstLine read from paragraph properties if present", function() {
+    var paragraphXml = paragraphWithIndent({"w:fistLine": "720"});
+    var paragraph = readXmlElementValue(paragraphXml);
+    assert.equal(paragraph.indent.firstLine, "720");
+});
+
+test("paragraph has indent hanging read from paragraph properties if present", function() {
+    var paragraphXml = paragraphWithIndent({"w:hanging": "720"});
+    var paragraph = readXmlElementValue(paragraphXml);
+    assert.equal(paragraph.indent.hanging, "720");
+});
+
+function paragraphWithIndent(indentAttributes) {
+    var indentXml = new XmlElement("w:ind", indentAttributes, []);
+    var propertiesXml = new XmlElement("w:pPr", {}, [indentXml]);
+    return new XmlElement("w:p", {}, [propertiesXml]);
+}
 
 test("paragraph has numbering properties from paragraph properties if present", function() {
     var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
