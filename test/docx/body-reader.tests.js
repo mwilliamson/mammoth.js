@@ -97,25 +97,25 @@ test("paragraph has justification read from paragraph properties if present", fu
 test("paragraph has indent left read from paragraph properties if present", function() {
     var paragraphXml = paragraphWithIndent({"w:left": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.equal(paragraph.indent.left, "720");
+    assert.deepEqual(paragraph.indent.left, "720");
 });
 
 test("paragraph has indent right read from paragraph properties if present", function() {
     var paragraphXml = paragraphWithIndent({"w:right": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.equal(paragraph.indent.right, "720");
+    assert.deepEqual(paragraph.indent.right, "720");
 });
 
 test("paragraph has indent firstLine read from paragraph properties if present", function() {
     var paragraphXml = paragraphWithIndent({"w:fistLine": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.equal(paragraph.indent.firstLine, "720");
+    assert.deepEqual(paragraph.indent.firstLine, "720");
 });
 
 test("paragraph has indent hanging read from paragraph properties if present", function() {
     var paragraphXml = paragraphWithIndent({"w:hanging": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.equal(paragraph.indent.hanging, "720");
+    assert.deepEqual(paragraph.indent.hanging, "720");
 });
 
 function paragraphWithIndent(indentAttributes) {
