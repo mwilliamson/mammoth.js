@@ -107,7 +107,7 @@ test("paragraph has indent right read from paragraph properties if present", fun
 });
 
 test("paragraph has indent firstLine read from paragraph properties if present", function() {
-    var paragraphXml = paragraphWithIndent({"w:fistLine": "720"});
+    var paragraphXml = paragraphWithIndent({"w:firstLine": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
     assert.deepEqual(paragraph.indent.firstLine, "720");
 });
@@ -116,6 +116,12 @@ test("paragraph has indent hanging read from paragraph properties if present", f
     var paragraphXml = paragraphWithIndent({"w:hanging": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
     assert.deepEqual(paragraph.indent.hanging, "720");
+});
+
+test("paragraph has no indent read from paragraph properties", function() {
+    var paragraphXml = paragraphWithIndent({});
+    var paragraph = readXmlElementValue(paragraphXml);
+    assert.deepEqual(paragraph.indent, null);
 });
 
 function paragraphWithIndent(indentAttributes) {
