@@ -121,7 +121,7 @@ test("paragraph has indent hanging read from paragraph properties if present", f
 test("paragraph has no indent read from paragraph properties", function() {
     var paragraphXml = paragraphWithIndent({});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.deepEqual(paragraph.indent, null);
+    assert.deepEqual(paragraph.indent, undefined);
 });
 
 function paragraphWithIndent(indentAttributes) {
