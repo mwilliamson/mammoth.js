@@ -567,6 +567,18 @@ test("table has style ID and name read from table properties if present", functi
     assert.deepEqual(table.styleName, "Normal Table");
 });
 
+test("warning is emitted when table style cannot be found", function() {
+    var styleXml = new XmlElement("w:tblStyle", {"w:val": "TableNormal"}, []);
+    var propertiesXml = new XmlElement("w:tblPr", {}, [styleXml]);
+    var tableXml = new XmlElement("w:tbl", {}, [propertiesXml]);
+    
+    var result = readXmlElement(tableXml, {styles: Styles.EMPTY});
+    var table = result.value;
+    assert.deepEqual(table.styleId, "TableNormal");
+    assert.deepEqual(table.styleName, null);
+    assert.deepEqual(result.messages, [warning("Table style with ID TableNormal was referenced but not defined in the document")]);
+});
+
 test("w:tblHeader marks table row as header", function() {
     var tableXml = new XmlElement("w:tbl", {}, [
         new XmlElement("w:tr", {}, [
