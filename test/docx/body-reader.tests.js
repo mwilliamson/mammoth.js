@@ -555,7 +555,7 @@ test("table has no style if it has no properties", function() {
     assert.deepEqual(table.styleId, null);
 });
 
-test("table has style ID and name read from paragraph properties if present", function() {
+test("table has style ID and name read from table properties if present", function() {
     var styleXml = new XmlElement("w:tblStyle", {"w:val": "TableNormal"}, []);
     var propertiesXml = new XmlElement("w:tblPr", {}, [styleXml]);
     var tableXml = new XmlElement("w:tbl", {}, [propertiesXml]);
