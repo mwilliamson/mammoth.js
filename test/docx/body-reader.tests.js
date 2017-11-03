@@ -549,6 +549,24 @@ test("w:tbl is read as document table element", function() {
     ]));
 });
 
+test("table has no style if it has no properties", function() {
+    var tableXml = new XmlElement("w:tbl", {}, []);
+    var table = readXmlElementValue(tableXml);
+    assert.deepEqual(table.styleId, null);
+});
+
+test("table has style ID and name read from paragraph properties if present", function() {
+    var styleXml = new XmlElement("w:tblStyle", {"w:val": "TableNormal"}, []);
+    var propertiesXml = new XmlElement("w:tblPr", {}, [styleXml]);
+    var tableXml = new XmlElement("w:tbl", {}, [propertiesXml]);
+    
+    var styles = new Styles({}, {}, {"TableNormal": {name: "Normal Table"}});
+    
+    var table = readXmlElementValue(tableXml, {styles: styles});
+    assert.deepEqual(table.styleId, "TableNormal");
+    assert.deepEqual(table.styleName, "Normal Table");
+});
+
 test("w:tblHeader marks table row as header", function() {
     var tableXml = new XmlElement("w:tbl", {}, [
         new XmlElement("w:tr", {}, [
