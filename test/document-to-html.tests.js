@@ -419,6 +419,23 @@ test('docx table is converted to table in HTML', function() {
     });
 });
 
+test('table style mappings can be used to map tables', function() {
+    var table = new documents.Table([], {styleName: "Normal Table"});
+    var converter = new DocumentConverter({
+        styleMap: [
+            {
+                from: documentMatchers.table({styleName: documentMatchers.equalTo("Normal Table")}),
+                to: htmlPaths.topLevelElement("table", {"class": "normal-table"})
+            }
+        ]
+    });
+
+    return converter.convertToHtml(table).then(function(result) {
+        var expectedHtml = '<table class="normal-table"></table>';
+        assert.equal(result.value, expectedHtml);
+    });
+});
+
 test('header rows are wrapped in thead', function() {
     var table = new documents.Table([
         new documents.TableRow([new documents.TableCell([])], {isHeader: true}),
