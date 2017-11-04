@@ -165,7 +165,29 @@ test("styleReader.readDocumentMatcher", {
             documentMatchers.smallCaps
         );
     },
-    
+
+    "reads plain table": function() {
+        assertDocumentMatcher("table", documentMatchers.table());
+    },
+
+    "reads table with style ID": function() {
+        assertDocumentMatcher(
+            "table.TableNormal",
+            documentMatchers.table({
+                styleId: "TableNormal"
+            })
+        );
+    },
+
+    "reads table with style name": function() {
+        assertDocumentMatcher(
+            "table[style-name='Normal Table']",
+            documentMatchers.table({
+                styleName: documentMatchers.equalTo("Normal Table")
+            })
+        );
+    },
+
     "reads comment-reference": function() {
         assertDocumentMatcher(
             "comment-reference",
