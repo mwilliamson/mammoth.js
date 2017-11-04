@@ -635,7 +635,7 @@ In this case, style mappings similar to `p[style-name='Aside Heading'] => div.as
 
 ### Document element matchers
 
-#### Paragraphs and runs
+#### Paragraphs, runs and tables
 
 Match any paragraph:
 
@@ -649,7 +649,13 @@ Match any run:
 r
 ```
 
-To match a paragraph or run with a specific style,
+Match any table:
+
+```
+table
+```
+
+To match a paragraph, run or table with a specific style,
 you can reference the style by name.
 This is the style name that is displayed in Microsoft Word or LibreOffice.
 For instance, to match a paragraph with the style name `Heading 1`:
