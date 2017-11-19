@@ -89,8 +89,12 @@ gulp.task('minify', ['build-dist'], () => {
     .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(minify({
       compress: {
-        passes: 3
-      }
+        passes: 2,
+        toplevel: true,
+        typeofs: false
+      },
+      ie8: true,
+      toplevel: true
     }))
     .pipe(sourcemaps.write('.'))
     .pipe(gulp.dest(distDir.path()))
