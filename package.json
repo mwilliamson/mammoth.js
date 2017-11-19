@@ -11,43 +11,64 @@
     "markdown",
     "md"
   ],
-  "main": "./lib/index.js",
+  "main": "./src/lib/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/mwilliamson/mammoth.js.git"
   },
   "dependencies": {
-    "bluebird": "~3.4.0",
-    "sax": "~1.1.1",
-    "underscore": "~1.8.3",
-    "lop": "~0.4.0",
-    "argparse": "~1.0.3",
-    "jszip": "~2.5.0",
-    "xmlbuilder": "~2.6.4",
-    "path-is-absolute": "^1.0.0"
+    "argparse": "^1.0.9",
+    "jszip": "^2.5.0",
+    "lop": "^0.4.0",
+    "path-is-absolute": "^1.0.0",
+    "sax": "1.2.4",
+    "xmlbuilder": "^9.0.4"
   },
   "devDependencies": {
-    "mocha": "~2.2.5",
-    "browserify": "~13.0.1",
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
+    "browserify": "^14.5.0",
     "browserify-prepend-licenses": "~1.0.0",
-    "duck": "~0.1.11",
-    "uglify-js": "~2.4.8",
-    "temp": "~0.7.0",
-    "eslint": "2.13.1",
-    "hamjest": "2.13.0",
-    "flow-bin": "^0.32.0"
+    "duck": "0.1.11",
+    "flow-bin": "^0.59.0",
+    "fs-jetpack": "^1.2.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-clone": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sourcemaps": "^2.6.1",
+    "gulp-uglify": "^3.0.0",
+    "hamjest": "^3.1.0",
+    "mocha": "^4.0.1",
+    "rollup-plugin-node-resolve": "^3.0.0",
+    "rollupify": "^0.4.0",
+    "source-map-support": "^0.5.0",
+    "standard": "^10.0.3",
+    "temp": "^0.8.3",
+    "uglify-es": "^3.1.9",
+    "vinyl-buffer": "^1.0.0",
+    "vinyl-source-stream": "^1.1.0"
   },
   "browser": {
-    "./lib/unzip.js": "./browser/unzip.js",
-    "./lib/docx/files.js": "./browser/docx/files.js"
+    "./src/lib/unzip.js": "./src/browser/unzip.js",
+    "./src/lib/docx/files.js": "./src/browser/docx/files.js"
   },
   "bin": {
-    "mammoth": "bin/mammoth"
+    "mammoth": "src/bin/mammoth"
   },
   "scripts": {
-    "pretest": "eslint lib tests",
-    "test": "mocha 'test/**/*.tests.js'",
-    "prepublish": "make mammoth.browser.min.js"
+    "pretest": "gulp pretest",
+    "test": "mocha --ui exports --require source-map-support/register 'build/test/**/*.tests.js'",
+    "posttest": "standard",
+    "build": "gulp build-dist",
+    "prepare": "gulp minify"
   },
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "standard": {
+    "ignore": [
+      "build",
+      "dist"
+    ]
+  }
 }
