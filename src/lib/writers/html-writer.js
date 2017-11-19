@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import * as util from 'util'
 
 export const writer = (options = {}) =>
@@ -98,7 +97,10 @@ const simpleWriter = () => {
     fragments.push(util.format('<%s%s />', tagName, attributeString))
   }
 
-  const generateAttributeString = attributes => _.map(attributes, (value, key) => util.format(' %s="%s"', key, escapeHtmlAttribute(value))).join('')
+  const generateAttributeString = (attributes = {}) => Object.keys(attributes).map(key => {
+    const value = attributes[key]
+    return util.format(' %s="%s"', key, escapeHtmlAttribute(value))
+  }).join('')
 
   const text = value => {
     fragments.push(escapeHtmlText(value))

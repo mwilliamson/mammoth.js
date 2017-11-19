@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import { flatten } from './utils'
 
 export class Result {
   constructor (value, messages) {
@@ -21,7 +21,7 @@ export class Result {
   }
 
   static combine (results) {
-    const values = _.flatten(_.pluck(results, 'value'))
+    const values = flatten(results.map(x => x.value))
     const messages = combineMessages(results)
     return new Result(values, messages)
   }
@@ -42,12 +42,12 @@ export const error = exception => ({
 
 const combineMessages = results => {
   const messages = []
-  _.flatten(_.pluck(results, 'messages'), true).forEach(message => {
+  flatten(results.map(x => x.messages), true).forEach(message => {
     if (!containsMessage(messages, message)) messages.push(message)
   })
   return messages
 }
 
-const containsMessage = (messages, message) => _.find(messages, isSameMessage.bind(null, message)) !== undefined
+const containsMessage = (messages, message) => messages.find(isSameMessage.bind(null, message)) !== undefined
 
 const isSameMessage = (first, second) => first.type === second.type && first.message === second.message

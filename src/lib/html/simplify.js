@@ -1,6 +1,5 @@
-import _ from 'underscore'
-
 import * as ast from './ast'
+import { flatMap } from '../utils'
 
 export default nodes => collapse(removeEmpty(nodes))
 
@@ -17,12 +16,10 @@ const collapseNode = node => collapsers[node.type](node)
 
 const collapseElement = node => ast.elementWithTag(node.tag, collapse(node.children))
 
-const identity = value => value
-
 const collapsers = {
   element: collapseElement,
-  text: identity,
-  forceWrite: identity
+  text: x => x,
+  forceWrite: x => x
 }
 
 const appendChild = (children, child) => {
@@ -37,8 +34,6 @@ const appendChild = (children, child) => {
 }
 
 const removeEmpty = nodes => flatMap(nodes, node => emptiers[node.type](node))
-
-const flatMap = (values, func) => _.flatten(_.map(values, func), true)
 
 const neverEmpty = node => [node]
 

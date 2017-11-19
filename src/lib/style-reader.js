@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import lop from 'lop'
 
 import * as results from './results'
@@ -100,7 +99,7 @@ const documentMatcherRule = () => {
     return lop.rules.then(matcherSuffixes, suffixes => {
       const matcherOptions = {}
       suffixes.forEach(suffix => {
-        _.extend(matcherOptions, suffix)
+        Object.assign(matcherOptions, suffix)
       })
       return matcherOptions
     })

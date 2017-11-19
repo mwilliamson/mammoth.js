@@ -1,12 +1,20 @@
-import _ from 'underscore'
-
 import * as html from '../html/index'
+import { deepEqual as _deepEqual } from 'assert'
+
+const deepEqual = (obj1, obj2) => {
+  try {
+    _deepEqual(obj1, obj2)
+    return true
+  } catch (error) {
+    return false
+  }
+}
 
 export const topLevelElement = (tagName, attributes) => elements([element(tagName, attributes, {fresh: true})])
 
 export const elements = elementStyles =>
   new HtmlPath(elementStyles
-    .map(elementStyle => _.isString(elementStyle) ? element(elementStyle) : elementStyle))
+    .map(elementStyle => typeof elementStyle === 'string' ? element(elementStyle) : elementStyle))
 
 class HtmlPath {
   constructor (elements) {
@@ -30,7 +38,7 @@ export const element = (tagName, attributes, options) => {
 class Element {
   constructor (tagName, attributes, options) {
     const tagNames = {}
-    if (_.isArray(tagName)) {
+    if (tagName instanceof Array) {
       tagName.forEach(tagName => {
         tagNames[tagName] = true
       })
@@ -45,7 +53,7 @@ class Element {
   }
 
   matchesElement (element) {
-    return this.tagNames[element.tagName] && _.isEqual(this.attributes || {}, element.attributes || {})
+    return this.tagNames[element.tagName] && deepEqual(this.attributes || {}, element.attributes || {})
   }
 
   wrap (generateNodes) {

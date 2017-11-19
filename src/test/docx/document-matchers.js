@@ -1,9 +1,8 @@
-import _ from 'underscore'
 import hamjest from 'hamjest'
 
 import * as documents from '../../lib/documents'
 
-export const isDocumentElement = (type, properties) => hamjest.hasProperties(_.extend({type: hamjest.equalTo(type)}, properties))
+export const isDocumentElement = (type, properties) => hamjest.hasProperties(Object.assign({type: hamjest.equalTo(type)}, properties))
 
 export const isRun = properties => isDocumentElement(documents.types.run, properties)
 

@@ -1,6 +1,5 @@
-import _ from 'underscore'
-
 import * as xml from '../xml/index'
+import { flatten } from '../utils'
 
 const xmlNamespaceMap = {
   'http://schemas.openxmlformats.org/wordprocessingml/2006/main': 'w',
@@ -31,7 +30,7 @@ const collapseAlternateContent = node => {
   if (node.type === 'element') {
     if (node.name === 'mc:AlternateContent') return node.first('mc:Fallback').children
     else {
-      node.children = _.flatten(node.children.map(collapseAlternateContent, true))
+      node.children = flatten(node.children.map(collapseAlternateContent, true))
       return [node]
     }
   } else return [node]

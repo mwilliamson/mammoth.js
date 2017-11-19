@@ -1,5 +1,3 @@
-import _ from 'underscore'
-
 const defaultStyleMap = [
   'p.Heading1 => h1:fresh',
   'p.Heading2 => h2:fresh',
@@ -51,17 +49,15 @@ const defaultStyleMap = [
   'p[style-name=\'Normal\'] => p:fresh'
 ]
 
-const identity = value => value
-
 const standardOptions = {
-  transformDocument: identity,
+  transformDocument: x => x,
   includeDefaultStyleMap: true,
   includeEmbeddedStyleMap: true
 }
 
 export { standardOptions as _standardOptions }
 
-export const readOptions = (options = {}) => _.extend({}, standardOptions, options, {
+export const readOptions = (options = {}) => Object.assign({}, standardOptions, options, {
   customStyleMap: readStyleMap(options.styleMap),
   readStyleMap () {
     let styleMap = this.customStyleMap
@@ -73,7 +69,7 @@ export const readOptions = (options = {}) => _.extend({}, standardOptions, optio
 
 const readStyleMap = styleMap => {
   if (!styleMap) return []
-  else if (_.isString(styleMap)) {
+  else if (typeof styleMap === 'string') {
     return styleMap.split('\n')
       .map(line => line.trim())
       .filter(line => line !== '' && line.charAt(0) !== '#')

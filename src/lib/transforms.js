@@ -1,5 +1,3 @@
-import _ from 'underscore'
-
 export const paragraph = transform => elementsOfType('paragraph', transform)
 
 export const run = transform => elementsOfType('run', transform)
@@ -8,8 +6,8 @@ const elementsOfType = (elementType, transform) => elements(element => element.t
 
 const elements = transform => function transformElement (element) {
   if (element.children) {
-    const children = _.map(element.children, transformElement)
-    element = _.extend(element, {children: children})
+    const children = element.children.map(transformElement)
+    element = Object.assign(element, {children: children})
   }
   return transform(element)
 }

@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import assert from 'assert'
 
 import * as transforms from '../lib/transforms'
@@ -49,7 +48,7 @@ test('elements()', {
 
     const setCount = node => {
       currentCount++
-      return _.extend(node, {count: currentCount})
+      return Object.assign(node, {count: currentCount})
     }
 
     const result = transforms._elements(setCount)(root)

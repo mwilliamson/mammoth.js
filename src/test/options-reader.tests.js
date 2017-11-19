@@ -1,6 +1,6 @@
-import _ from 'underscore'
 import assert from 'assert'
 import * as optionsReader from '../lib/options-reader'
+import { omit } from '../lib/utils'
 
 const standardOptions = optionsReader._standardOptions
 const readOptions = optionsReader.readOptions
@@ -8,13 +8,13 @@ const test = require('./test')(module)
 
 test('standard options are used if options is undefined', function () {
   const options = readOptions(undefined)
-  assert.deepEqual(standardOptions, _.omit(options, 'customStyleMap', 'readStyleMap'))
+  assert.deepEqual(standardOptions, omit(options, 'customStyleMap', 'readStyleMap'))
   assert.deepEqual(options.customStyleMap, [])
 })
 
 test('standard options are used if options is empty', function () {
   const options = readOptions({})
-  assert.deepEqual(standardOptions, _.omit(options, 'customStyleMap', 'readStyleMap'))
+  assert.deepEqual(standardOptions, omit(options, 'customStyleMap', 'readStyleMap'))
   assert.deepEqual(options.customStyleMap, [])
 })
 

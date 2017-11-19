@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import { indexBy } from './utils'
 
 export const types = {
   document: 'document',
@@ -94,7 +94,7 @@ export class NoteReference {
 
 export class Notes {
   constructor (notes) {
-    this._notes = _.indexBy(notes, note => noteKey(note.noteType, note.noteId))
+    this._notes = indexBy(notes, note => noteKey(note.noteType, note.noteId))
   }
 
   resolve (reference) {

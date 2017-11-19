@@ -1,20 +1,18 @@
-import _ from 'underscore'
 import { Result, warning } from '../results'
 import * as documents from '../documents'
 import * as uris from './uris'
+import { flatten, negate } from '../utils'
 
 const combineResults = results => {
-  const result = Result.combine(_.pluck(results, '_result'))
+  const result = Result.combine(results.map(x => x._result))
   return new ReadResult(
-    _.flatten(_.pluck(result.value, 'element')),
-    _.filter(_.flatten(_.pluck(result.value, 'extra')), identity),
+    flatten(result.value.map(x => x.element)),
+    flatten(result.value.map(x => x.extra)).filter(x => x),
     result.messages
   )
 }
 
-const joinElements = (first, second) => _.flatten([first, second])
-
-const identity = value => value
+const joinElements = (first, second) => flatten([first, second])
 
 class BodyReader {
   constructor (options) {
@@ -33,7 +31,7 @@ class BodyReader {
     this.xmlElementReaders = {
       'w:p': element => this.readXmlElements(element.children)
         .map(children => {
-          const properties = _.find(children, isParagraphProperties)
+          const properties = children.find(isParagraphProperties)
           return new documents.Paragraph(
             children.filter(negate(isParagraphProperties)),
             properties
@@ -49,7 +47,7 @@ class BodyReader {
       })),
       'w:r': element => this.readXmlElements(element.children)
         .map(children => {
-          const properties = _.find(children, isRunProperties)
+          const properties = children.find(isRunProperties)
           children = children.filter(negate(isRunProperties))
 
           const hyperlinkHref = this.currentHyperlinkHref()
@@ -72,7 +70,7 @@ class BodyReader {
 
             return new documents.Hyperlink(
               children,
-              _.extend({targetFrame: targetFrame}, options)
+              Object.assign({targetFrame: targetFrame}, options)
             )
           }
 
@@ -210,7 +208,7 @@ class BodyReader {
   }
 
   currentHyperlinkHref () {
-    const topHyperlink = _.last(this.complexFieldStack.filter(complexField => complexField.type === 'hyperlink'))
+    const topHyperlink = this.complexFieldStack.filter(complexField => complexField.type === 'hyperlink').slice(-1).pop()
     return topHyperlink ? topHyperlink.href : null
   }
 
@@ -287,13 +285,13 @@ class BodyReader {
   }
 
   calculateRowSpans (rows) {
-    const unexpectedNonRows = _.any(rows, row => row.type !== documents.types.tableRow)
+    const unexpectedNonRows = rows.some(row => row.type !== documents.types.tableRow)
     if (unexpectedNonRows) {
       return elementResultWithMessages(rows, [warning(
         'unexpected non-row element in table, cell merging may be incorrect'
       )])
     }
-    const unexpectedNonCells = _.any(rows, row => _.any(row.children, cell => cell.type !== documents.types.tableCell))
+    const unexpectedNonCells = rows.some(row => row.children.some(cell => cell.type !== documents.types.tableCell))
     if (unexpectedNonCells) {
       return elementResultWithMessages(rows, [warning(
         'unexpected non-cell element in table row, cell merging may be incorrect'
@@ -432,8 +430,6 @@ const ignoreElements = {
 const isParagraphProperties = element => element.type === 'paragraphProperties'
 
 const isRunProperties = element => element.type === 'runProperties'
-
-const negate = predicate => value => !predicate(value)
 
 const emptyResultWithMessages = messages => new ReadResult(null, null, messages)
 

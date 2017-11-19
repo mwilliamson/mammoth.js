@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import assert from 'assert'
 import * as path from 'path'
 import { allOf, assertThat, contains, FeatureMatcher, hasProperties, promiseThat, willBe } from 'hamjest'
@@ -12,6 +11,7 @@ import { Styles } from '../../lib/docx/styles-reader'
 import * as documentMatchers from './document-matchers'
 
 import * as testing from '../testing'
+import { omit } from '../../lib/utils'
 
 const isEmptyRun = documentMatchers.isEmptyRun
 const isHyperlink = documentMatchers.isHyperlink
@@ -163,7 +163,7 @@ test('complex fields', (function () {
   function isHyperlinkedRun (hyperlinkProperties) {
     return isRun({
       children: contains(
-        isHyperlink(_.extend({href: uri}, hyperlinkProperties))
+        isHyperlink(Object.assign({href: uri}, hyperlinkProperties))
       )
     })
   }
@@ -742,7 +742,7 @@ function isSuccess (valueMatcher) {
 }
 
 function isImage (options) {
-  const matcher = hasProperties(_.extend({type: 'image'}, _.omit(options, 'buffer')))
+  const matcher = hasProperties(Object.assign({type: 'image'}, omit(options, 'buffer')))
   if (options.buffer) {
     return allOf(
       matcher,

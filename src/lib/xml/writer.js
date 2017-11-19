@@ -1,8 +1,10 @@
-import _ from 'underscore'
 import xmlbuilder from 'xmlbuilder'
 
 export const writeString = (root, namespaces) => {
-  const uriToPrefix = _.invert(namespaces)
+  const uriToPrefix = Object.keys(namespaces).reduce((result, prefix) => {
+    result[namespaces[prefix]] = prefix
+    return result
+  }, {})
 
   const writeNode = (builder, node) => nodeWriters[node.type](builder, node)
 
@@ -36,7 +38,8 @@ export const writeString = (root, namespaces) => {
         standalone: true
       })
 
-    _.forEach(namespaces, (uri, prefix) => {
+    Object.keys(namespaces).forEach(prefix => {
+      const uri = namespaces[prefix]
       const key = `xmlns${prefix === '' ? '' : ':' + prefix}`
       builder.attribute(key, uri)
     })

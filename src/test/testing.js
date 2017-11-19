@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import * as path from 'path'
 import * as fs from 'fs'
 
@@ -26,7 +25,7 @@ export const createFakeFiles = files => ({
 
 const createRead = files => (path, encoding) =>
   Promise.resolve(files[path], buffer => {
-    if (_.isString(buffer)) buffer = Buffer.from(buffer)
+    if (typeof buffer === 'string') buffer = Buffer.from(buffer)
 
     if (!Buffer.isBuffer(buffer)) return Promise.reject(new Error('file was not a buffer'))
     else if (encoding) return Promise.resolve(buffer.toString(encoding))

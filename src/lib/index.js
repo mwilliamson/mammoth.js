@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import { Result } from './results'
 import openZip from './unzip'
 import * as transforms from './transforms'
@@ -41,7 +40,7 @@ export const readEmbeddedStyleMap = input => openZip(input)
 
 const convertDocumentToHtml = (documentResult, options) => {
   const styleMapResult = parseStyleMap(options.readStyleMap())
-  const parsedOptions = _.extend({}, options, {
+  const parsedOptions = Object.assign({}, options, {
     styleMap: styleMapResult.value
   })
   const documentConverter = new DocumentConverter(parsedOptions)

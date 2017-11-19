@@ -1,5 +1,3 @@
-import _ from 'underscore'
-
 import * as xml from '../xml/index'
 
 const schema = 'http://schemas.zwobble.org/mammoth/style-map'
@@ -48,7 +46,7 @@ const updateContentTypes = docxFile => {
 }
 
 const addOrUpdateElement = (elements, name, identifyingAttribute, attributes) => {
-  const existingElement = _.find(elements, element => element.name === name &&
+  const existingElement = elements.find(element => element.name === name &&
     element.attributes[identifyingAttribute] === attributes[identifyingAttribute])
   if (existingElement) existingElement.attributes = attributes
   else elements.push(xml.element(name, attributes))

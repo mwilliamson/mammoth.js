@@ -1,8 +1,8 @@
-import _ from 'underscore'
 import sax from 'sax'
 
 import * as promises from '../promises'
 import * as nodes from './nodes'
+import { mapObject } from '../utils'
 
 const Element = nodes.Element
 
@@ -62,12 +62,4 @@ export const readString = (xmlString, namespaceMap) => {
   parser.write(xmlString).close()
 
   return deferred.promise
-}
-
-function mapObject (input, valueFunc, keyFunc) {
-  return _.reduce(input, (result, value, key) => {
-    const mappedKey = keyFunc(value, key, input)
-    result[mappedKey] = valueFunc(value, key, input)
-    return result
-  }, {})
 }

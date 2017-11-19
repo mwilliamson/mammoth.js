@@ -1,11 +1,9 @@
-import _ from 'underscore'
-
 import * as Html from './html/index'
 
 export const imgElement = func => (element, messages) =>
   Promise.resolve(func(element))
     .then(result => {
-      const attributes = _.clone(result)
+      const attributes = Object.assign({}, result)
       if (element.altText) attributes.alt = element.altText
       return [Html.freshElement('img', attributes)]
     })

@@ -1,4 +1,4 @@
-import _ from 'underscore'
+import { flatten } from '../utils'
 
 export const element = (name, attributes, children) => new Element(name, attributes, children)
 
@@ -22,7 +22,7 @@ export class Element {
   }
 
   first (name) {
-    return _.find(this.children, child => child.name === name)
+    return this.children.find(child => child.name === name)
   }
 
   firstOrEmpty (name) {
@@ -30,7 +30,7 @@ export class Element {
   }
 
   getElementsByTagName (name) {
-    const elements = _.filter(this.children, child => child.name === name)
+    const elements = this.children.filter(child => child.name === name)
     return toElementList(elements)
   }
 
@@ -42,9 +42,9 @@ export class Element {
 }
 
 const elementListPrototype = {
-  getElementsByTagName: function (name) {
-    return toElementList(_.flatten(this.map(element => element.getElementsByTagName(name), true)))
+  getElementsByTagName (name) {
+    return toElementList(flatten(this.map(element => element.getElementsByTagName(name), true)))
   }
 }
 
-const toElementList = array => _.extend(array, elementListPrototype)
+const toElementList = array => Object.assign(array, elementListPrototype)

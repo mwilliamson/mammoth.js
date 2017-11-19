@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import { promisify } from 'util'
 
 export { promisify }
@@ -10,7 +9,7 @@ export const nfcall = function (func) {
 }
 
 export const also = func => value => {
-  const returnValue = _.extend({}, value, func(value))
+  const returnValue = Object.assign({}, value, func(value))
   return props(returnValue)
 }
 export const defer = () => {

@@ -1,5 +1,3 @@
-import _ from 'underscore'
-
 import * as promises from './promises'
 import * as results from './results'
 import * as images from './images'
@@ -7,6 +5,7 @@ import * as Html from './html/index'
 import * as htmlPaths from './styles/html-paths'
 import * as documents from './documents'
 import * as writers from './writers/index'
+import { flatMap, indexBy } from './utils'
 
 class DocumentConversion {
   constructor (options, comments) {
@@ -16,7 +15,7 @@ class DocumentConversion {
 
     this.referencedComments = []
     this.comments = comments
-    this.options = _.extend({ignoreEmptyParagraphs: true}, options)
+    this.options = Object.assign({ignoreEmptyParagraphs: true}, options)
     this.idPrefix = this.options.idPrefix === undefined ? '' : this.options.idPrefix
     this.ignoreEmptyParagraphs = this.options.ignoreEmptyParagraphs
 
@@ -106,7 +105,7 @@ class DocumentConversion {
           if (node.type === 'deferred') return deferredValues[node.id]
           else if (node.children) {
             return [
-              _.extend({}, node, {
+              Object.assign({}, node, {
                 children: replaceDeferred(node.children)
               })
             ]
@@ -238,7 +237,7 @@ class DocumentConversion {
   }
 
   convertTableChildren (element, messages, options) {
-    let bodyIndex = _.findIndex(element.children, child => !child.type === documents.types.tableRow || !child.isHeader)
+    let bodyIndex = element.children.findIndex(child => !child.type === documents.types.tableRow || !child.isHeader)
     if (bodyIndex === -1) bodyIndex = element.children.length
 
     let children
@@ -246,18 +245,18 @@ class DocumentConversion {
       children = this.convertElements(
         element.children,
         messages,
-        _.extend({}, options, {isTableHeader: false})
+        Object.assign({}, options, {isTableHeader: false})
       )
     } else {
       const headRows = this.convertElements(
         element.children.slice(0, bodyIndex),
         messages,
-        _.extend({}, options, {isTableHeader: true})
+        Object.assign({}, options, {isTableHeader: true})
       )
       const bodyRows = this.convertElements(
         element.children.slice(bodyIndex),
         messages,
-        _.extend({}, options, {isTableHeader: false})
+        Object.assign({}, options, {isTableHeader: false})
       )
       children = [
         Html.freshElement('thead', {}, headRows),
@@ -346,10 +345,8 @@ class DocumentConversion {
 
 export class DocumentConverter extends DocumentConversion {
   convertToHtml (element) {
-    this.comments = _.indexBy(
-      element.type === documents.types.document ? element.comments : [],
-      'commentId'
-    )
+    this.comments = indexBy((element.type === documents.types.document ? element.comments : []), 'commentId')
+
     return super.convertToHtml(element)
   }
 }
@@ -368,8 +365,6 @@ const unrecognisedStyleWarning = (type, element) => results.warning(
   'Unrecognised ' + type + ' style: \'' + element.styleName + '\'' +
   ' (Style ID: ' + element.styleId + ')'
 )
-
-const flatMap = (values, func) => _.flatten(values.map(func), true)
 
 const walkHtml = (nodes, callback) => {
   nodes.forEach(node => {

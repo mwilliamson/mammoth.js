@@ -1,4 +1,3 @@
-import _ from 'underscore'
 import assert from 'assert'
 import * as path from 'path'
 import * as fs from 'fs'
@@ -199,7 +198,7 @@ test('mammoth.transforms.paragraph only transforms paragraphs', function () {
     'word/document.xml': testData('simple/word/document.xml')
   })
   const options = {
-    transformDocument: mammoth.transforms.paragraph(paragraph => _.extend(paragraph, {styleId: 'Heading1'}))
+    transformDocument: mammoth.transforms.paragraph(paragraph => Object.assign(paragraph, {styleId: 'Heading1'}))
   }
   return mammoth.convertToHtml({file: docxFile}, options)
     .then(result => {

@@ -1,5 +1,3 @@
-import _ from 'underscore'
-
 const symmetricMarkdownElement = end => markdownElement(end, end)
 
 const markdownElement = (start, end) => () => ({start: start, end: end})
@@ -98,7 +96,7 @@ export const markdownWriter = () => {
   const close = tagName => {
     const element = elementStack.pop()
     list = element.list
-    const end = _.isFunction(element.end) ? element.end() : element.end
+    const end = typeof element.end === 'function' ? element.end() : element.end
     fragments.push(end || '')
   }
 

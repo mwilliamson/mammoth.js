@@ -55,10 +55,11 @@ gulp.task('build-dist', ['clean-dist'], () => {
 
   b.transform('rollupify', {
     config: {
-      external: ['underscore', 'jszip', 'lop', 'path-is-absolute', 'sax', 'xmlbuilder'],
+      external: ['jszip', 'lop', 'path-is-absolute', 'sax', 'xmlbuilder'],
       plugins: [
         nodeResolve({
-          browser: true
+          browser: true,
+          jsnext: true
         })
       ]
     }
