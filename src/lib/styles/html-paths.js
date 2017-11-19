@@ -1,75 +1,65 @@
-var _ = require("underscore");
+import _ from 'underscore'
 
-var html = require("../html");
+import * as html from '../html/index'
 
-exports.topLevelElement = topLevelElement;
-exports.elements = elements;
-exports.element = element;
+export const topLevelElement = (tagName, attributes) => elements([element(tagName, attributes, {fresh: true})])
 
-function topLevelElement(tagName, attributes) {
-    return elements([element(tagName, attributes, {fresh: true})]);
-}
+export const elements = elementStyles =>
+  new HtmlPath(elementStyles
+    .map(elementStyle => _.isString(elementStyle) ? element(elementStyle) : elementStyle))
 
-function elements(elementStyles) {
-    return new HtmlPath(elementStyles.map(function(elementStyle) {
-        if (_.isString(elementStyle)) {
-            return element(elementStyle);
-        } else {
-            return elementStyle;
-        }
-    }));
-}
+class HtmlPath {
+  constructor (elements) {
+    this._elements = elements
+  }
 
-function HtmlPath(elements) {
-    this._elements = elements;
-}
-
-HtmlPath.prototype.wrap = function wrap(children) {
-    var result = children();
-    for (var index = this._elements.length - 1; index >= 0; index--) {
-        result = this._elements[index].wrapNodes(result);
+  wrap (children) {
+    let result = children()
+    for (let index = this._elements.length - 1; index >= 0; index--) {
+      result = this._elements[index].wrapNodes(result)
     }
-    return result;
-};
-
-function element(tagName, attributes, options) {
-    options = options || {};
-    return new Element(tagName, attributes, options);
+    return result
+  }
 }
 
-function Element(tagName, attributes, options) {
-    var tagNames = {};
+export const element = (tagName, attributes, options) => {
+  options = options || {}
+  return new Element(tagName, attributes, options)
+}
+
+class Element {
+  constructor (tagName, attributes, options) {
+    const tagNames = {}
     if (_.isArray(tagName)) {
-        tagName.forEach(function(tagName) {
-            tagNames[tagName] = true;
-        });
-        tagName = tagName[0];
-    } else {
-        tagNames[tagName] = true;
-    }
-    
-    this.tagName = tagName;
-    this.tagNames = tagNames;
-    this.attributes = attributes || {};
-    this.fresh = options.fresh;
-    this.separator = options.separator;
+      tagName.forEach(tagName => {
+        tagNames[tagName] = true
+      })
+      tagName = tagName[0]
+    } else tagNames[tagName] = true
+
+    this.tagName = tagName
+    this.tagNames = tagNames
+    this.attributes = attributes || {}
+    this.fresh = options.fresh
+    this.separator = options.separator
+  }
+
+  matchesElement (element) {
+    return this.tagNames[element.tagName] && _.isEqual(this.attributes || {}, element.attributes || {})
+  }
+
+  wrap (generateNodes) {
+    return this.wrapNodes(generateNodes())
+  }
+
+  wrapNodes (nodes) {
+    return [html.elementWithTag(this, nodes)]
+  }
 }
 
-Element.prototype.matchesElement = function(element) {
-    return this.tagNames[element.tagName] && _.isEqual(this.attributes || {}, element.attributes || {});
-};
-
-Element.prototype.wrap = function wrap(generateNodes) {
-    return this.wrapNodes(generateNodes());
-};
-
-Element.prototype.wrapNodes = function wrapNodes(nodes) {
-    return [html.elementWithTag(this, nodes)];
-};
-
-exports.empty = elements([]);
-exports.ignore = {
-    wrap: function() {
-        return [];
-    }
-};
+export const empty = elements([])
+export const ignore = {
+  wrap: function () {
+    return []
+  }
+}

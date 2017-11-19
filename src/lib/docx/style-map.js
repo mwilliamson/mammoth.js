@@ -1,75 +1,60 @@
-var _ = require("underscore");
+import _ from 'underscore'
 
-var promises = require("../promises");
-var xml = require("../xml");
+import * as xml from '../xml/index'
 
-exports.writeStyleMap = writeStyleMap;
-exports.readStyleMap = readStyleMap;
+const schema = 'http://schemas.zwobble.org/mammoth/style-map'
+const styleMapPath = 'mammoth/style-map'
+const styleMapAbsolutePath = '/' + styleMapPath
 
-
-var schema = "http://schemas.zwobble.org/mammoth/style-map";
-var styleMapPath = "mammoth/style-map";
-var styleMapAbsolutePath = "/" + styleMapPath;
-
-function writeStyleMap(docxFile, styleMap) {
-    docxFile.write(styleMapPath, styleMap);
-    return updateRelationships(docxFile).then(function() {
-        return updateContentTypes(docxFile);
-    });
+export const writeStyleMap = (docxFile, styleMap) => {
+  docxFile.write(styleMapPath, styleMap)
+  return updateRelationships(docxFile).then(() => updateContentTypes(docxFile))
 }
 
-function updateRelationships(docxFile) {
-    var path = "word/_rels/document.xml.rels";
-    var relationshipsUri = "http://schemas.openxmlformats.org/package/2006/relationships";
-    var relationshipElementName = "{" + relationshipsUri + "}Relationship";
-    return docxFile.read(path, "utf8")
-        .then(xml.readString)
-        .then(function(relationshipsContainer) {
-            var relationships = relationshipsContainer.children;
-            addOrUpdateElement(relationships, relationshipElementName, "Id", {
-                "Id": "rMammothStyleMap",
-                "Type": schema,
-                "Target": styleMapAbsolutePath
-            });
-            
-            var namespaces = {"": relationshipsUri};
-            return docxFile.write(path, xml.writeString(relationshipsContainer, namespaces));
-        });
+const updateRelationships = docxFile => {
+  const path = 'word/_rels/document.xml.rels'
+  const relationshipsUri = 'http://schemas.openxmlformats.org/package/2006/relationships'
+  const relationshipElementName = '{' + relationshipsUri + '}Relationship'
+  return docxFile.read(path, 'utf8')
+    .then(xml.readString)
+    .then(relationshipsContainer => {
+      const relationships = relationshipsContainer.children
+      addOrUpdateElement(relationships, relationshipElementName, 'Id', {
+        'Id': 'rMammothStyleMap',
+        'Type': schema,
+        'Target': styleMapAbsolutePath
+      })
+
+      const namespaces = {'': relationshipsUri}
+      return docxFile.write(path, xml.writeString(relationshipsContainer, namespaces))
+    })
 }
 
-function updateContentTypes(docxFile) {
-    var path = "[Content_Types].xml";
-    var contentTypesUri = "http://schemas.openxmlformats.org/package/2006/content-types";
-    var overrideName = "{" + contentTypesUri + "}Override";
-    return docxFile.read(path, "utf8")
-        .then(xml.readString)
-        .then(function(typesElement) {
-            var children = typesElement.children;
-            addOrUpdateElement(children, overrideName, "PartName", {
-                "PartName": styleMapAbsolutePath,
-                "ContentType": "text/prs.mammoth.style-map"
-            });
-            var namespaces = {"": contentTypesUri};
-            return docxFile.write(path, xml.writeString(typesElement, namespaces));
-        });
+const updateContentTypes = docxFile => {
+  const path = '[Content_Types].xml'
+  const contentTypesUri = 'http://schemas.openxmlformats.org/package/2006/content-types'
+  const overrideName = '{' + contentTypesUri + '}Override'
+  return docxFile.read(path, 'utf8')
+    .then(xml.readString)
+    .then(typesElement => {
+      const children = typesElement.children
+      addOrUpdateElement(children, overrideName, 'PartName', {
+        'PartName': styleMapAbsolutePath,
+        'ContentType': 'text/prs.mammoth.style-map'
+      })
+      const namespaces = {'': contentTypesUri}
+      return docxFile.write(path, xml.writeString(typesElement, namespaces))
+    })
 }
 
-function addOrUpdateElement(elements, name, identifyingAttribute, attributes) {
-    var existingElement = _.find(elements, function(element) {
-        return element.name === name &&
-            element.attributes[identifyingAttribute] === attributes[identifyingAttribute];
-    });
-    if (existingElement) {
-        existingElement.attributes = attributes;
-    } else {
-        elements.push(xml.element(name, attributes));
-    }
+const addOrUpdateElement = (elements, name, identifyingAttribute, attributes) => {
+  const existingElement = _.find(elements, element => element.name === name &&
+    element.attributes[identifyingAttribute] === attributes[identifyingAttribute])
+  if (existingElement) existingElement.attributes = attributes
+  else elements.push(xml.element(name, attributes))
 }
 
-function readStyleMap(docxFile) {
-    if (docxFile.exists(styleMapPath)) {
-        return docxFile.read(styleMapPath, "utf8");
-    } else {
-        return promises.resolve(null);
-    }
+export const readStyleMap = docxFile => {
+  if (docxFile.exists(styleMapPath)) return docxFile.read(styleMapPath, 'utf8')
+  else return Promise.resolve(null)
 }

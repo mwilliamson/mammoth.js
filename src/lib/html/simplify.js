@@ -1,88 +1,57 @@
-var _ = require("underscore");
+import _ from 'underscore'
 
-var ast = require("./ast");
+import * as ast from './ast'
 
-function simplify(nodes) {
-    return collapse(removeEmpty(nodes));
+export default nodes => collapse(removeEmpty(nodes))
+
+const collapse = nodes => {
+  const children = []
+
+  nodes.map(collapseNode).forEach(child => {
+    appendChild(children, child)
+  })
+  return children
 }
 
-function collapse(nodes) {
-    var children = [];
-    
-    nodes.map(collapseNode).forEach(function(child) {
-        appendChild(children, child);
-    });
-    return children;
+const collapseNode = node => collapsers[node.type](node)
+
+const collapseElement = node => ast.elementWithTag(node.tag, collapse(node.children))
+
+const identity = value => value
+
+const collapsers = {
+  element: collapseElement,
+  text: identity,
+  forceWrite: identity
 }
 
-function collapseNode(node) {
-    return collapsers[node.type](node);
+const appendChild = (children, child) => {
+  const lastChild = children[children.length - 1]
+  if (child.type === 'element' && !child.tag.fresh && lastChild && lastChild.type === 'element' && child.tag.matchesElement(lastChild.tag)) {
+    if (child.tag.separator) appendChild(lastChild.children, ast.text(child.tag.separator))
+    child.children.forEach(grandChild => {
+      // Mutation is fine since simplifying elements create a copy of the children.
+      appendChild(lastChild.children, grandChild)
+    })
+  } else children.push(child)
 }
 
-var collapsers = {
-    element: collapseElement,
-    text: identity,
-    forceWrite: identity
-};
+const removeEmpty = nodes => flatMap(nodes, node => emptiers[node.type](node))
 
-function collapseElement(node) {
-    return ast.elementWithTag(node.tag, collapse(node.children));
+const flatMap = (values, func) => _.flatten(_.map(values, func), true)
+
+const neverEmpty = node => [node]
+
+const elementEmptier = element => {
+  const children = removeEmpty(element.children)
+  if (children.length === 0 && !ast.isVoidElement(element)) return []
+  else return [ast.elementWithTag(element.tag, children)]
 }
 
-function identity(value) {
-    return value;
+const textEmptier = node => (node.value.length === 0) ? [] : [node]
+
+const emptiers = {
+  element: elementEmptier,
+  text: textEmptier,
+  forceWrite: neverEmpty
 }
-
-function appendChild(children, child) {
-    var lastChild = children[children.length - 1];
-    if (child.type === "element" && !child.tag.fresh && lastChild && lastChild.type === "element" && child.tag.matchesElement(lastChild.tag)) {
-        if (child.tag.separator) {
-            appendChild(lastChild.children, ast.text(child.tag.separator));
-        }
-        child.children.forEach(function(grandChild) {
-            // Mutation is fine since simplifying elements create a copy of the children.
-            appendChild(lastChild.children, grandChild);
-        });
-    } else {
-        children.push(child);
-    }
-}
-
-function removeEmpty(nodes) {
-    return flatMap(nodes, function(node) {
-        return emptiers[node.type](node);
-    });
-}
-
-function flatMap(values, func) {
-    return _.flatten(_.map(values, func), true);
-}
-
-var emptiers = {
-    element: elementEmptier,
-    text: textEmptier,
-    forceWrite: neverEmpty
-};
-
-function neverEmpty(node) {
-    return [node];
-}
-
-function elementEmptier(element) {
-    var children = removeEmpty(element.children);
-    if (children.length === 0 && !ast.isVoidElement(element)) {
-        return [];
-    } else {
-        return [ast.elementWithTag(element.tag, children)];
-    }
-}
-
-function textEmptier(node) {
-    if (node.value.length === 0) {
-        return [];
-    } else {
-        return [node];
-    }
-}
-
-module.exports = simplify;

@@ -1,61 +1,55 @@
-var _ = require("underscore");
-var xmlbuilder = require("xmlbuilder");
+import _ from 'underscore'
+import xmlbuilder from 'xmlbuilder'
 
+export const writeString = (root, namespaces) => {
+  const uriToPrefix = _.invert(namespaces)
 
-exports.writeString = writeString;
+  const writeNode = (builder, node) => nodeWriters[node.type](builder, node)
 
+  const writeElement = (builder, element) => {
+    const elementBuilder = builder.element(mapElementName(element.name), element.attributes)
+    element.children.forEach(child => {
+      writeNode(elementBuilder, child)
+    })
+  }
 
-function writeString(root, namespaces) {
-    var uriToPrefix = _.invert(namespaces);
-    
-    var nodeWriters = {
-        element: writeElement,
-        text: writeTextNode
-    };
+  const nodeWriters = {
+    element: writeElement,
+    text: writeTextNode
+  }
 
-    function writeNode(builder, node) {
-        return nodeWriters[node.type](builder, node);
+  const mapElementName = name => {
+    const longFormMatch = /^\{(.*)\}(.*)$/.exec(name)
+    if (longFormMatch) {
+      const prefix = uriToPrefix[longFormMatch[1]]
+      return prefix + (prefix === '' ? '' : ':') + longFormMatch[2]
+    } else {
+      return name
     }
+  }
 
-    function writeElement(builder, element) {
-        var elementBuilder = builder.element(mapElementName(element.name), element.attributes);
-        element.children.forEach(function(child) {
-            writeNode(elementBuilder, child);
-        });
-    }
-    
-    function mapElementName(name) {
-        var longFormMatch = /^\{(.*)\}(.*)$/.exec(name);
-        if (longFormMatch) {
-            var prefix = uriToPrefix[longFormMatch[1]];
-            return prefix + (prefix === "" ? "" : ":") + longFormMatch[2];
-        } else {
-            return name;
-        }
-    }
-    
-    function writeDocument(root) {
-        var builder = xmlbuilder
-            .create(mapElementName(root.name), {
-                version: '1.0',
-                encoding: 'UTF-8',
-                standalone: true
-            });
-        
-        _.forEach(namespaces, function(uri, prefix) {
-            var key = "xmlns" + (prefix === "" ? "" : ":" + prefix);
-            builder.attribute(key, uri);
-        });
-        
-        root.children.forEach(function(child) {
-            writeNode(builder, child);
-        });
-        return builder.end();
-    }
+  const writeDocument = root => {
+    const builder = xmlbuilder
+      .create(mapElementName(root.name), {
+        version: '1.0',
+        encoding: 'UTF-8',
+        standalone: true
+      })
 
-    return writeDocument(root);
+    _.forEach(namespaces, (uri, prefix) => {
+      const key = `xmlns${prefix === '' ? '' : ':' + prefix}`
+      builder.attribute(key, uri)
+    })
+
+    root.children.forEach(child => {
+      writeNode(builder, child)
+    })
+    return builder.end()
+  }
+
+  return writeDocument(root)
 }
 
-function writeTextNode(builder, node) {
-    builder.text(node.value);
+const writeTextNode = (builder, node) => {
+  builder.text(node.value)
 }

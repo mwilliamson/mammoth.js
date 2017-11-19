@@ -1,37 +1,18 @@
-var hamjest = require("hamjest");
-var _ = require("underscore");
+import _ from 'underscore'
+import hamjest from 'hamjest'
 
-var documents = require("../../lib/documents");
+import * as documents from '../../lib/documents'
 
+export const isDocumentElement = (type, properties) => hamjest.hasProperties(_.extend({type: hamjest.equalTo(type)}, properties))
 
-exports.isEmptyRun = isRun({children: []});
-exports.isRun = isRun;
-exports.isText = isText;
-exports.isHyperlink = isHyperlink;
-exports.isTable = isTable;
-exports.isRow = isRow;
+export const isRun = properties => isDocumentElement(documents.types.run, properties)
 
+export const isEmptyRun = isRun({children: []})
 
-function isRun(properties) {
-    return isDocumentElement(documents.types.run, properties);
-}
+export const isText = text => isDocumentElement(documents.types.text, {value: text})
 
-function isText(text) {
-    return isDocumentElement(documents.types.text, {value: text});
-}
+export const isHyperlink = properties => isDocumentElement(documents.types.hyperlink, properties)
 
-function isHyperlink(properties) {
-    return isDocumentElement(documents.types.hyperlink, properties);
-}
+export const isTable = options => isDocumentElement(documents.types.table, options)
 
-function isTable(options) {
-    return isDocumentElement(documents.types.table, options);
-}
-
-function isRow(options) {
-    return isDocumentElement(documents.types.tableRow, options);
-}
-
-function isDocumentElement(type, properties) {
-    return hamjest.hasProperties(_.extend({type: hamjest.equalTo(type)}, properties));
-}
+export const isRow = options => isDocumentElement(documents.types.tableRow, options)

@@ -1,69 +1,50 @@
-var _ = require("underscore");
+import _ from 'underscore'
 
+export const element = (name, attributes, children) => new Element(name, attributes, children)
 
-exports.Element = Element;
-exports.element = function(name, attributes, children) {
-    return new Element(name, attributes, children);
-};
-exports.text = function(value) {
-    return {
-        type: "text",
-        value: value
-    };
-};
+export const text = value => ({
+  type: 'text',
+  value: value
+})
 
-
-var emptyElement = {
-    first: function() {
-        return null;
-    },
-    firstOrEmpty: function() {
-        return emptyElement;
-    },
-    attributes: {}
-};
-
-function Element(name, attributes, children) {
-    this.type = "element";
-    this.name = name;
-    this.attributes = attributes || {};
-    this.children = children || [];
+const emptyElement = {
+  first: () => null,
+  firstOrEmpty: () => emptyElement,
+  attributes: {}
 }
 
-Element.prototype.first = function(name) {
-    return _.find(this.children, function(child) {
-        return child.name === name;
-    });
-};
+export class Element {
+  constructor (name, attributes, children) {
+    this.type = 'element'
+    this.name = name
+    this.attributes = attributes || {}
+    this.children = children || []
+  }
 
-Element.prototype.firstOrEmpty = function(name) {
-    return this.first(name) || emptyElement;
-};
+  first (name) {
+    return _.find(this.children, child => child.name === name)
+  }
 
-Element.prototype.getElementsByTagName = function(name) {
-    var elements = _.filter(this.children, function(child) {
-        return child.name === name;
-    });
-    return toElementList(elements);
-};
+  firstOrEmpty (name) {
+    return this.first(name) || emptyElement
+  }
 
-Element.prototype.text = function() {
-    if (this.children.length === 0) {
-        return "";
-    } else if (this.children.length !== 1 || this.children[0].type !== "text") {
-        throw new Error("Not implemented");
-    }
-    return this.children[0].value;
-};
+  getElementsByTagName (name) {
+    const elements = _.filter(this.children, child => child.name === name)
+    return toElementList(elements)
+  }
 
-var elementListPrototype = {
-    getElementsByTagName: function(name) {
-        return toElementList(_.flatten(this.map(function(element) {
-            return element.getElementsByTagName(name);
-        }, true)));
-    }
-};
-
-function toElementList(array) {
-    return _.extend(array, elementListPrototype);
+  text () {
+    if (this.children.length === 0) return ''
+    else if (this.children.length !== 1 || this.children[0].type !== 'text') throw new Error('Not implemented')
+    else return this.children[0].value
+  }
 }
+
+const elementListPrototype = {
+  getElementsByTagName: function (name) {
+    return toElementList(_.flatten(this.map(element => element.getElementsByTagName(name), true)))
+  }
+}
+
+const toElementList = array => _.extend(array, elementListPrototype)

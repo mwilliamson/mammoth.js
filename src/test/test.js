@@ -1,11 +1,10 @@
-var path = require("path");
+import * as path from 'path'
 
+const root = path.dirname(__dirname)
 
-var root = path.dirname(__dirname);
-    
-module.exports = function(testModule) {
-    var tests = testModule.exports[path.relative(root, testModule.filename)] = {};
-    return function(name, func) {
-        tests[name] = func;
-    };
-};
+module.exports = function (testModule) {
+  const tests = testModule.exports[path.relative(root, testModule.filename)] = {}
+  return function (name, func) {
+    tests[name] = func
+  }
+}

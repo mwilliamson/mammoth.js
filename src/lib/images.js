@@ -1,29 +1,21 @@
-var _ = require("underscore");
+import _ from 'underscore'
 
-var promises = require("./promises");
-var Html = require("./html");
+import * as Html from './html/index'
 
-exports.imgElement = imgElement;
-
-function imgElement(func) {
-    return function(element, messages) {
-        return promises.when(func(element)).then(function(result) {
-            var attributes = _.clone(result);
-            if (element.altText) {
-                attributes.alt = element.altText;
-            }
-            return [Html.freshElement("img", attributes)];
-        });
-    };
-}
+export const imgElement = func => (element, messages) =>
+  Promise.resolve(func(element))
+    .then(result => {
+      const attributes = _.clone(result)
+      if (element.altText) attributes.alt = element.altText
+      return [Html.freshElement('img', attributes)]
+    })
 
 // Undocumented, but retained for backwards-compatibility with 0.3.x
-exports.inline = exports.imgElement;
+export { imgElement as inline }
 
-exports.dataUri = imgElement(function(element) {
-    return element.read("base64").then(function(imageBuffer) {
-        return {
-            src: "data:" + element.contentType + ";base64," + imageBuffer
-        };
-    });
-});
+export const dataUri = imgElement(element =>
+  element.read('base64')
+    .then(imageBuffer => ({
+      src: 'data:' + element.contentType + ';base64,' + imageBuffer
+    }))
+)

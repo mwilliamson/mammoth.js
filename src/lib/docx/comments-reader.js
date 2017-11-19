@@ -1,31 +1,25 @@
-var documents = require("../documents");
-var Result = require("../results").Result;
+import { Result } from '../results'
+import * as documents from '../documents'
 
-function createCommentsReader(bodyReader) {
-    function readCommentsXml(element) {
-        return Result.combine(element.getElementsByTagName("w:comment")
-            .map(readCommentElement));
-    }
+export default bodyReader => {
+  const readCommentsXml = element => Result.combine(
+    element.getElementsByTagName('w:comment')
+    .map(readCommentElement)
+  )
 
-    function readCommentElement(element) {
-        var id = element.attributes["w:id"];
+  const readCommentElement = element => {
+    const id = element.attributes['w:id']
 
-        function readOptionalAttribute(name) {
-            return (element.attributes[name] || "").trim() || null;
-        }
+    const readOptionalAttribute = name => (element.attributes[name] || '').trim() || null
 
-        return bodyReader.readXmlElements(element.children)
-            .map(function(body) {
-                return documents.comment({
-                    commentId: id,
-                    body: body,
-                    authorName: readOptionalAttribute("w:author"),
-                    authorInitials: readOptionalAttribute("w:initials")
-                });
-            });
-    }
-    
-    return readCommentsXml;
+    return bodyReader.readXmlElements(element.children)
+            .map(body => new documents.Comment({
+              commentId: id,
+              body: body,
+              authorName: readOptionalAttribute('w:author'),
+              authorInitials: readOptionalAttribute('w:initials')
+            }))
+  }
+
+  return readCommentsXml
 }
-
-exports.createCommentsReader = createCommentsReader;

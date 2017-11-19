@@ -1,15 +1,15 @@
-var assert = require("assert");
+import assert from 'assert'
 
-var results = require("../lib/results");
-var Result = results.Result;
-var test = require("./test")(module);
+import * as results from '../lib/results'
 
+const Result = results.Result
+const test = require('./test')(module)
 
-test("Result.combine removes any duplicate messages", function() {
-    var first = new Result(null, [results.warning("Warning...")]);
-    var second = new Result(null, [results.warning("Warning...")]);
+test('Result.combine removes any duplicate messages', function () {
+  const first = new Result(null, [results.warning('Warning...')])
+  const second = new Result(null, [results.warning('Warning...')])
 
-    var combined = Result.combine([first, second]);
+  const combined = Result.combine([first, second])
 
-    assert.deepEqual(combined.messages, [results.warning("Warning...")]);
-});
+  assert.deepEqual(combined.messages, [results.warning('Warning...')])
+})

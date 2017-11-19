@@ -1,74 +1,54 @@
-exports.paragraph = paragraph;
-exports.run = run;
-exports.table = table;
-exports.bold = new Matcher("bold");
-exports.italic = new Matcher("italic");
-exports.underline = new Matcher("underline");
-exports.strikethrough = new Matcher("strikethrough");
-exports.smallCaps = new Matcher("smallCaps");
-exports.commentReference = new Matcher("commentReference");
-exports.lineBreak = new Matcher("break", {breakType: "line"});
-exports.pageBreak = new Matcher("break", {breakType: "page"});
-exports.columnBreak = new Matcher("break", {breakType: "column"});
-exports.equalTo = equalTo;
-exports.startsWith = startsWith;
+export const paragraph = options => new Matcher('paragraph', options)
 
+export const run = options => new Matcher('run', options)
 
-function paragraph(options) {
-    return new Matcher("paragraph", options);
-}
+export const table = options => new Matcher('table', options)
 
-function run(options) {
-    return new Matcher("run", options);
-}
-
-function table(options) {
-    return new Matcher("table", options);
-}
-
-function Matcher(elementType, options) {
-    options = options || {};
-    this._elementType = elementType;
-    this._styleId = options.styleId;
-    this._styleName = options.styleName;
+export class Matcher {
+  constructor (elementType, options) {
+    options = options || {}
+    this._elementType = elementType
+    this._styleId = options.styleId
+    this._styleName = options.styleName
     if (options.list) {
-        this._listIndex = options.list.levelIndex;
-        this._listIsOrdered = options.list.isOrdered;
+      this._listIndex = options.list.levelIndex
+      this._listIsOrdered = options.list.isOrdered
     }
-}
+  }
 
-Matcher.prototype.matches = function(element) {
+  matches (element) {
     return element.type === this._elementType &&
-        (this._styleId === undefined || element.styleId === this._styleId) &&
-        (this._styleName === undefined || (element.styleName && this._styleName.operator(this._styleName.operand, element.styleName))) &&
-        (this._listIndex === undefined || isList(element, this._listIndex, this._listIsOrdered)) &&
-        (this._breakType === undefined || this._breakType === element.breakType);
-};
-
-function isList(element, levelIndex, isOrdered) {
-    return element.numbering &&
-        element.numbering.level == levelIndex &&
-        element.numbering.isOrdered == isOrdered;
+      (this._styleId === undefined || element.styleId === this._styleId) &&
+      (this._styleName === undefined || (element.styleName && this._styleName.operator(this._styleName.operand, element.styleName))) &&
+      (this._listIndex === undefined || isList(element, this._listIndex, this._listIsOrdered)) &&
+      (this._breakType === undefined || this._breakType === element.breakType)
+  }
 }
 
-function equalTo(value) {
-    return {
-        operator: operatorEqualTo,
-        operand: value
-    };
-}
+const isList = (element, levelIndex, isOrdered) => element.numbering &&
+  (typeof element.numbering.level === 'string' ? parseInt(element.numbering.level) : element.numbering.level) === levelIndex &&
+  element.numbering.isOrdered === isOrdered
 
-function startsWith(value) {
-    return {
-        operator: operatorStartsWith,
-        operand: value
-    };
-}
+const operatorEqualTo = (first, second) => first.toUpperCase() === second.toUpperCase()
 
-function operatorEqualTo(first, second) {
-    return first.toUpperCase() === second.toUpperCase();
-}
+const operatorStartsWith = (first, second) => second.toUpperCase().indexOf(first.toUpperCase()) === 0
 
-function operatorStartsWith(first, second) {
-    return second.toUpperCase().indexOf(first.toUpperCase()) === 0;
-}
+export const equalTo = value => ({
+  operator: operatorEqualTo,
+  operand: value
+})
+
+export const startsWith = value => ({
+  operator: operatorStartsWith,
+  operand: value
+})
+
+export const bold = new Matcher('bold')
+export const italic = new Matcher('italic')
+export const underline = new Matcher('underline')
+export const strikethrough = new Matcher('strikethrough')
+export const smallCaps = new Matcher('smallCaps')
+export const commentReference = new Matcher('commentReference')
+export const lineBreak = new Matcher('break', {breakType: 'line'})
+export const pageBreak = new Matcher('break', {breakType: 'page'})
+export const columnBreak = new Matcher('break', {breakType: 'column'})

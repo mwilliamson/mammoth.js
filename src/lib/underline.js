@@ -1,11 +1,4 @@
-var htmlPaths = require("./styles/html-paths");
-var Html = require("./html");
+import * as Html from './html/index'
+import * as htmlPaths from './styles/html-paths'
 
-
-exports.element = element;
-
-function element(name) {
-    return function(html) {
-        return Html.elementWithTag(htmlPaths.element(name), [html]);
-    };
-}
+export default name => html => Html.elementWithTag(htmlPaths.element(name), [html])

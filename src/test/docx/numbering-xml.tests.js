@@ -1,30 +1,30 @@
-var duck = require("duck");
+import duck from 'duck'
 
-var readNumberingXml = require("../../lib/docx/numbering-xml").readNumberingXml;
-var XmlElement = require("../../lib/xml").Element;
-var test = require("../test")(module);
+import { Element as XmlElement } from '../../lib/xml'
+import { readNumberingXml } from '../../lib/docx/numbering-xml'
 
+const test = require('../test')(module)
 
-test('w:num element inherits levels from w:abstractNum', function() {
-    var numbering = readNumberingXml(
-        new XmlElement("w:numbering", {}, [
-            new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
-                new XmlElement("w:lvl", {"w:ilvl": "0"}, [
-                    new XmlElement("w:numFmt", {"w:val": "bullet"})
-                ]),
-                new XmlElement("w:lvl", {"w:ilvl": "1"}, [
-                    new XmlElement("w:numFmt", {"w:val": "decimal"})
-                ])
-            ]),
-            new XmlElement("w:num", {"w:numId": "47"}, [
-                new XmlElement("w:abstractNumId", {"w:val": "42"})
-            ])
+test('w:num element inherits levels from w:abstractNum', function () {
+  const numbering = readNumberingXml(
+    new XmlElement('w:numbering', {}, [
+      new XmlElement('w:abstractNum', {'w:abstractNumId': '42'}, [
+        new XmlElement('w:lvl', {'w:ilvl': '0'}, [
+          new XmlElement('w:numFmt', {'w:val': 'bullet'})
+        ]),
+        new XmlElement('w:lvl', {'w:ilvl': '1'}, [
+          new XmlElement('w:numFmt', {'w:val': 'decimal'})
         ])
-    );
-    duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
-        isOrdered: false
-    }));
-    duck.assertThat(numbering.findLevel("47", "1"), duck.hasProperties({
-        isOrdered: true
-    }));
-});
+      ]),
+      new XmlElement('w:num', {'w:numId': '47'}, [
+        new XmlElement('w:abstractNumId', {'w:val': '42'})
+      ])
+    ])
+  )
+  duck.assertThat(numbering.findLevel('47', '0'), duck.hasProperties({
+    isOrdered: false
+  }))
+  duck.assertThat(numbering.findLevel('47', '1'), duck.hasProperties({
+    isOrdered: true
+  }))
+})

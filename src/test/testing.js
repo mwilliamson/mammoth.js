@@ -1,55 +1,34 @@
-var path = require("path");
-var fs = require("fs");
-var promises = require("../lib/promises");
-var _ = require("underscore");
+import _ from 'underscore'
+import * as path from 'path'
+import * as fs from 'fs'
 
-exports.testPath = testPath;
-exports.testData = testData;
-exports.createFakeDocxFile = createFakeDocxFile;
-exports.createFakeFiles = createFakeFiles;
+import * as promises from '../lib/promises'
 
+export const testPath = filename => path.join(__dirname, 'test-data', filename)
 
-function testPath(filename) {
-    return path.join(__dirname, "test-data", filename);
+export const testData = testDataPath => {
+  const fullPath = testPath(testDataPath)
+  return promises.nfcall(fs.readFile, fullPath, 'utf-8')
 }
 
-function testData(testDataPath) {
-    var fullPath = testPath(testDataPath);
-    return promises.nfcall(fs.readFile, fullPath, "utf-8");
+export const createFakeDocxFile = files => {
+  const exists = path => !!files[path]
+
+  return {
+    read: createRead(files),
+    exists: exists
+  }
 }
 
-function createFakeDocxFile(files) {
-    function exists(path) {
-        return !!files[path];
-    }
-    
-    return {
-        read: createRead(files),
-        exists: exists
-    };
-}
+export const createFakeFiles = files => ({
+  read: createRead(files)
+})
 
-function createFakeFiles(files) {
-    return {
-        read: createRead(files)
-    };
-}
+const createRead = files => (path, encoding) =>
+  Promise.resolve(files[path], buffer => {
+    if (_.isString(buffer)) buffer = Buffer.from(buffer)
 
-function createRead(files) {
-    function read(path, encoding) {
-        return promises.when(files[path], function(buffer) {
-            if (_.isString(buffer)) {
-                buffer = new Buffer(buffer);
-            }
-            
-            if (!Buffer.isBuffer(buffer)) {
-                return promises.reject(new Error("file was not a buffer"));
-            } else if (encoding) {
-                return promises.when(buffer.toString(encoding));
-            } else {
-                return promises.when(buffer);
-            }
-        });
-    }
-    return read;
-}
+    if (!Buffer.isBuffer(buffer)) return Promise.reject(new Error('file was not a buffer'))
+    else if (encoding) return Promise.resolve(buffer.toString(encoding))
+    else return Promise.resolve(buffer)
+  })

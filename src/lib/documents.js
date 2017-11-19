@@ -1,214 +1,188 @@
-var _ = require("underscore");
+import _ from 'underscore'
 
-var types = exports.types = {
-    document: "document",
-    paragraph: "paragraph",
-    run: "run",
-    text: "text",
-    tab: "tab",
-    hyperlink: "hyperlink",
-    noteReference: "noteReference",
-    image: "image",
-    note: "note",
-    commentReference: "commentReference",
-    comment: "comment",
-    table: "table",
-    tableRow: "tableRow",
-    tableCell: "tableCell",
-    "break": "break",
-    bookmarkStart: "bookmarkStart"
-};
-
-function Document(children, options) {
-    options = options || {};
-    return {
-        type: types.document,
-        children: children,
-        notes: options.notes || new Notes({}),
-        comments: options.comments || []
-    };
+export const types = {
+  document: 'document',
+  paragraph: 'paragraph',
+  run: 'run',
+  text: 'text',
+  tab: 'tab',
+  hyperlink: 'hyperlink',
+  noteReference: 'noteReference',
+  image: 'image',
+  note: 'note',
+  commentReference: 'commentReference',
+  comment: 'Comment',
+  table: 'table',
+  tableRow: 'tableRow',
+  tableCell: 'tableCell',
+  'break': 'break',
+  bookmarkStart: 'bookmarkStart'
 }
 
-function Paragraph(children, properties) {
-    properties = properties || {};
-    return {
-        type: types.paragraph,
-        children: children,
-        styleId: properties.styleId || null,
-        styleName: properties.styleName || null,
-        numbering: properties.numbering || null,
-        alignment: properties.alignment || null
-    };
+export class Document {
+  constructor (children, options = {}) {
+    this.type = types.document
+    this.children = children
+    this.notes = options.notes || new Notes({})
+    this.comments = options.comments || []
+  }
 }
 
-function Run(children, properties) {
-    properties = properties || {};
-    return {
-        type: types.run,
-        children: children,
-        styleId: properties.styleId || null,
-        styleName: properties.styleName || null,
-        isBold: properties.isBold,
-        isUnderline: properties.isUnderline,
-        isItalic: properties.isItalic,
-        isStrikethrough: properties.isStrikethrough,
-        isSmallCaps: properties.isSmallCaps,
-        verticalAlignment: properties.verticalAlignment || verticalAlignment.baseline,
-        font: properties.font || null
-    };
+export class Paragraph {
+  constructor (children, properties = {}) {
+    this.type = types.paragraph
+    this.children = children
+    this.styleId = properties.styleId || null
+    this.styleName = properties.styleName || null
+    this.numbering = properties.numbering || null
+    this.alignment = properties.alignment || null
+  }
 }
 
-var verticalAlignment = {
-    baseline: "baseline",
-    superscript: "superscript",
-    subscript: "subscript"
-};
-
-function Text(value) {
-    return {
-        type: types.text,
-        value: value
-    };
+export class Run {
+  constructor (children, properties = {}) {
+    this.type = types.run
+    this.children = children
+    this.styleId = properties.styleId || null
+    this.styleName = properties.styleName || null
+    this.isBold = properties.isBold
+    this.isUnderline = properties.isUnderline
+    this.isItalic = properties.isItalic
+    this.isStrikethrough = properties.isStrikethrough
+    this.isSmallCaps = properties.isSmallCaps
+    this.verticalAlignment = properties.verticalAlignment || verticalAlignment.baseline
+    this.font = properties.font || null
+  }
 }
 
-function Tab() {
-    return {
-        type: types.tab
-    };
+export const verticalAlignment = {
+  baseline: 'baseline',
+  superscript: 'superscript',
+  subscript: 'subscript'
 }
 
-function Hyperlink(children, options) {
-    return {
-        type: types.hyperlink,
-        children: children,
-        href: options.href,
-        anchor: options.anchor,
-        targetFrame: options.targetFrame
-    };
+export class Text {
+  constructor (value) {
+    this.type = types.text
+    this.value = value
+  }
 }
 
-function NoteReference(options) {
-    return {
-        type: types.noteReference,
-        noteType: options.noteType,
-        noteId: options.noteId
-    };
+export class Tab {
+  constructor () {
+    this.type = types.tab
+  }
 }
 
-function Notes(notes) {
-    this._notes = _.indexBy(notes, function(note) {
-        return noteKey(note.noteType, note.noteId);
-    });
+export class Hyperlink {
+  constructor (children, options) {
+    this.type = types.hyperlink
+    this.children = children
+    this.href = options.href
+    this.anchor = options.anchor
+    this.targetFrame = options.targetFrame
+  }
 }
 
-Notes.prototype.resolve = function(reference) {
-    return this.findNoteByKey(noteKey(reference.noteType, reference.noteId));
-};
-
-Notes.prototype.findNoteByKey = function(key) {
-    return this._notes[key] || null;
-};
-
-function Note(options) {
-    return {
-        type: types.note,
-        noteType: options.noteType,
-        noteId: options.noteId,
-        body: options.body
-    };
+export class NoteReference {
+  constructor (options) {
+    this.type = types.noteReference
+    this.noteType = options.noteType
+    this.noteId = options.noteId
+  }
 }
 
-function commentReference(options) {
-    return {
-        type: types.commentReference,
-        commentId: options.commentId
-    };
+export class Notes {
+  constructor (notes) {
+    this._notes = _.indexBy(notes, note => noteKey(note.noteType, note.noteId))
+  }
+
+  resolve (reference) {
+    return this.findNoteByKey(noteKey(reference.noteType, reference.noteId))
+  }
+
+  findNoteByKey (key) {
+    return this._notes[key] || null
+  }
 }
 
-function comment(options) {
-    return {
-        type: types.comment,
-        commentId: options.commentId,
-        body: options.body,
-        authorName: options.authorName,
-        authorInitials: options.authorInitials
-    };
+export class Note {
+  constructor (options) {
+    this.type = types.note
+    this.noteType = options.noteType
+    this.noteId = options.noteId
+    this.body = options.body
+  }
 }
 
-function noteKey(noteType, id) {
-    return noteType + "-" + id;
+export class CommentReference {
+  constructor (options) {
+    this.type = types.commentReference
+    this.commentId = options.commentId
+  }
 }
 
-function Image(options) {
-    return {
-        type: types.image,
-        read: options.readImage,
-        altText: options.altText,
-        contentType: options.contentType
-    };
+export class Comment {
+  constructor (options) {
+    this.type = types.comment
+    this.commentId = options.commentId
+    this.body = options.body
+    this.authorName = options.authorName
+    this.authorInitials = options.authorInitials
+  }
 }
 
-function Table(children, properties) {
-    properties = properties || {};
-    return {
-        type: types.table,
-        children: children,
-        styleId: properties.styleId || null,
-        styleName: properties.styleName || null
-    };
+const noteKey = (noteType, id) => noteType + '-' + id
+
+export class Image {
+  constructor (options) {
+    this.type = types.image
+    this.read = options.readImage
+    this.altText = options.altText
+    this.contentType = options.contentType
+  }
 }
 
-function TableRow(children, options) {
-    options = options || {};
-    return {
-        type: types.tableRow,
-        children: children,
-        isHeader: options.isHeader || false
-    };
+export class Table {
+  constructor (children, properties = {}) {
+    this.type = types.table
+    this.children = children
+    this.styleId = properties.styleId || null
+    this.styleName = properties.styleName || null
+  }
 }
 
-function TableCell(children, options) {
-    options = options || {};
-    return {
-        type: types.tableCell,
-        children: children,
-        colSpan: options.colSpan == null ? 1 : options.colSpan,
-        rowSpan: options.rowSpan == null ? 1 : options.rowSpan
-    };
+export class TableRow {
+  constructor (children, options = {}) {
+    this.type = types.tableRow
+    this.children = children
+    this.isHeader = options.isHeader || false
+  }
 }
 
-function Break(breakType) {
-    return {
-        type: types["break"],
-        breakType: breakType
-    };
+export class TableCell {
+  constructor (children, options = {}) {
+    this.type = types.tableCell
+    this.children = children
+    this.colSpan = options.colSpan == null ? 1 : options.colSpan
+    this.rowSpan = options.rowSpan == null ? 1 : options.rowSpan
+  }
 }
 
-function BookmarkStart(options) {
-    return {
-        type: types.bookmarkStart,
-        name: options.name
-    };
+class Break {
+  constructor (breakType) {
+    this.type = types['break']
+    this.breakType = breakType
+  }
 }
 
-exports.document = exports.Document = Document;
-exports.paragraph = exports.Paragraph = Paragraph;
-exports.run = exports.Run = Run;
-exports.Text = Text;
-exports.tab = exports.Tab = Tab;
-exports.Hyperlink = Hyperlink;
-exports.noteReference = exports.NoteReference = NoteReference;
-exports.Notes = Notes;
-exports.Note = Note;
-exports.commentReference = commentReference;
-exports.comment = comment;
-exports.Image = Image;
-exports.Table = Table;
-exports.TableRow = TableRow;
-exports.TableCell = TableCell;
-exports.lineBreak = Break("line");
-exports.pageBreak = Break("page");
-exports.columnBreak = Break("column");
-exports.BookmarkStart = BookmarkStart;
+export class BookmarkStart {
+  constructor (options) {
+    this.type = types.bookmarkStart
+    this.name = options.name
+  }
+}
 
-exports.verticalAlignment = verticalAlignment;
+export const lineBreak = new Break('line')
+export const pageBreak = new Break('page')
+export const columnBreak = new Break('column')

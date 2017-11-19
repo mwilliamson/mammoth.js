@@ -1,40 +1,40 @@
-var assert = require("assert");
+import assert from 'assert'
 
-var docxReader = require("../../lib/docx/docx-reader");
-var documents = require("../../lib/documents");
+import * as documents from '../../lib/documents'
+import * as docxReader from '../../lib/docx/docx-reader'
 
-var testing = require("../testing");
-var test = require("../test")(module);
-var testData = testing.testData;
-var createFakeDocxFile = testing.createFakeDocxFile;
+import * as testing from '../testing'
 
+const test = require('../test')(module)
+const testData = testing.testData
+const createFakeDocxFile = testing.createFakeDocxFile
 
-test("can read document with single paragraph with single run of text", function() {
-    var expectedDocument = documents.Document([
-        documents.Paragraph([
-            documents.Run([
-                documents.Text("Hello.")
-            ])
-        ])
-    ]);
-    var docxFile = createFakeDocxFile({
-        "word/document.xml": testData("simple/word/document.xml")
-    });
-    return docxReader.read(docxFile).then(function(result) {
-        assert.deepEqual(expectedDocument, result.value);
-    });
-});
+test('can read document with single paragraph with single run of text', function () {
+  const expectedDocument = new documents.Document([
+    new documents.Paragraph([
+      new documents.Run([
+        new documents.Text('Hello.')
+      ])
+    ])
+  ])
+  const docxFile = createFakeDocxFile({
+    'word/document.xml': testData('simple/word/document.xml')
+  })
+  return docxReader.read(docxFile).then(result => {
+    assert.deepEqual(expectedDocument, result.value)
+  })
+})
 
-test("hyperlink hrefs are read from relationships file", function() {
-    var docxFile = createFakeDocxFile({
-        "word/document.xml": testData("hyperlinks/word/document.xml"),
-        "word/_rels/document.xml.rels": testData("hyperlinks/word/_rels/document.xml.rels")
-    });
-    return docxReader.read(docxFile).then(function(result) {
-        var paragraph = result.value.children[0];
-        assert.equal(1, paragraph.children.length);
-        var hyperlink = paragraph.children[0];
-        assert.equal(hyperlink.href, "http://www.example.com");
-        assert.equal(hyperlink.children.length, 1);
-    });
-});
+test('hyperlink hrefs are read from relationships file', function () {
+  const docxFile = createFakeDocxFile({
+    'word/document.xml': testData('hyperlinks/word/document.xml'),
+    'word/_rels/document.xml.rels': testData('hyperlinks/word/_rels/document.xml.rels')
+  })
+  return docxReader.read(docxFile).then(result => {
+    const paragraph = result.value.children[0]
+    assert.equal(1, paragraph.children.length)
+    const hyperlink = paragraph.children[0]
+    assert.equal(hyperlink.href, 'http://www.example.com')
+    assert.equal(hyperlink.children.length, 1)
+  })
+})

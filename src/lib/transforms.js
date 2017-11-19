@@ -1,61 +1,38 @@
-var _ = require("underscore");
+import _ from 'underscore'
 
-exports.paragraph = paragraph;
-exports.run = run;
-exports._elements = elements;
-exports.getDescendantsOfType = getDescendantsOfType;
-exports.getDescendants = getDescendants;
+export const paragraph = transform => elementsOfType('paragraph', transform)
 
-function paragraph(transform) {
-    return elementsOfType("paragraph", transform);
+export const run = transform => elementsOfType('run', transform)
+
+const elementsOfType = (elementType, transform) => elements(element => element.type === elementType ? transform(element) : element)
+
+const elements = transform => function transformElement (element) {
+  if (element.children) {
+    const children = _.map(element.children, transformElement)
+    element = _.extend(element, {children: children})
+  }
+  return transform(element)
 }
 
-function run(transform) {
-    return elementsOfType("run", transform);
+export const getDescendantsOfType = (element, type) => getDescendants(element).filter(descendant => descendant.type === type)
+
+export const getDescendants = element => {
+  const descendants = []
+
+  visitDescendants(element, descendant => {
+    descendants.push(descendant)
+  })
+
+  return descendants
 }
 
-function elementsOfType(elementType, transform) {
-    return elements(function(element) {
-        if (element.type === elementType) {
-            return transform(element);
-        } else {
-            return element;
-        }
-    });
+const visitDescendants = (element, visit) => {
+  if (element.children) {
+    element.children.forEach(child => {
+      visitDescendants(child, visit)
+      visit(child)
+    })
+  }
 }
 
-function elements(transform) {
-    return function transformElement(element) {
-        if (element.children) {
-            var children = _.map(element.children, transformElement);
-            element = _.extend(element, {children: children});
-        }
-        return transform(element);
-    };
-}
-
-
-function getDescendantsOfType(element, type) {
-    return getDescendants(element).filter(function(descendant) {
-        return descendant.type === type;
-    });
-}
-
-function getDescendants(element) {
-    var descendants = [];
-
-    visitDescendants(element, function(descendant) {
-        descendants.push(descendant);
-    });
-
-    return descendants;
-}
-
-function visitDescendants(element, visit) {
-    if (element.children) {
-        element.children.forEach(function(child) {
-            visitDescendants(child, visit);
-            visit(child);
-        });
-    }
-}
+export { elements as _elements }

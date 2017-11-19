@@ -1,50 +1,33 @@
-var htmlPaths = require("../styles/html-paths");
+import * as htmlPaths from '../styles/html-paths'
 
+export const nonFreshElement = (tagName, attributes, children) => elementWithTag(
+  htmlPaths.element(tagName, attributes, {fresh: false}),
+  children)
 
-function nonFreshElement(tagName, attributes, children) {
-    return elementWithTag(
-        htmlPaths.element(tagName, attributes, {fresh: false}),
-        children);
+export const freshElement = (tagName, attributes, children) => {
+  const tag = htmlPaths.element(tagName, attributes, {fresh: true})
+  return elementWithTag(tag, children)
 }
 
-function freshElement(tagName, attributes, children) {
-    var tag = htmlPaths.element(tagName, attributes, {fresh: true});
-    return elementWithTag(tag, children);
+export const elementWithTag = (tag, children) => ({
+  type: 'element',
+  tag: tag,
+  children: children || []
+})
+
+export const text = value => ({
+  type: 'text',
+  value: value
+})
+
+export const forceWrite = {
+  type: 'forceWrite'
 }
 
-function elementWithTag(tag, children) {
-    return {
-        type: "element",
-        tag: tag,
-        children: children || []
-    };
+const voidTagNames = {
+  'br': true,
+  'hr': true,
+  'img': true
 }
 
-function text(value) {
-    return {
-        type: "text",
-        value: value
-    };
-}
-
-var forceWrite = {
-    type: "forceWrite"
-};
-
-exports.freshElement = freshElement;
-exports.nonFreshElement = nonFreshElement;
-exports.elementWithTag = elementWithTag;
-exports.text = text;
-exports.forceWrite = forceWrite;
-
-var voidTagNames = {
-    "br": true,
-    "hr": true,
-    "img": true
-};
-
-function isVoidElement(node) {
-    return (node.children.length === 0) && voidTagNames[node.tag.tagName];
-}
-
-exports.isVoidElement = isVoidElement;
+export const isVoidElement = node => (node.children.length === 0) && voidTagNames[node.tag.tagName]

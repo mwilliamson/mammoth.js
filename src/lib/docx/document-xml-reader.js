@@ -1,26 +1,20 @@
-exports.DocumentXmlReader = DocumentXmlReader;
+import { Result } from '../results'
+import * as documents from '../documents'
 
-var documents = require("../documents");
-var Result = require("../results").Result;
+export default class DocumentXmlReader {
+  constructor (options) {
+    this.options = options
+    this.bodyReader = options.bodyReader
+  }
 
+  convertXmlToDocument (element) {
+    const body = element.first('w:body')
 
-function DocumentXmlReader(options) {
-    var bodyReader = options.bodyReader;
-    
-    function convertXmlToDocument(element) {
-        var body = element.first("w:body");
-        
-        var result = bodyReader.readXmlElements(body.children)
-            .map(function(children) {
-                return new documents.Document(children, {
-                    notes: options.notes,
-                    comments: options.comments
-                });
-            });
-        return new Result(result.value, result.messages);
-    }
-    
-    return {
-        convertXmlToDocument: convertXmlToDocument
-    };
+    const result = this.bodyReader.readXmlElements(body.children)
+      .map(children => new documents.Document(children, {
+        notes: this.options.notes,
+        comments: this.options.comments
+      }))
+    return new Result(result.value, result.messages)
+  }
 }

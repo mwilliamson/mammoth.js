@@ -1,22 +1,21 @@
-var assert = require("assert");
+import assert from 'assert'
 
-var zipfile = require("../../lib/docx/uris");
-var test = require("../test")(module);
+import * as uris from '../../lib/docx/uris'
 
+const test = require('../test')(module)
 
-test("uriToZipEntryName", {
-    "when path does not have leading slash then path is resolved relative to base": function() {
-        assert.equal(
-            zipfile.uriToZipEntryName("one/two", "three/four"),
-            "one/two/three/four"
+test('uriToZipEntryName', {
+  'when path does not have leading slash then path is resolved relative to base': function () {
+    assert.equal(
+            uris.uriToZipEntryName('one/two', 'three/four'),
+            'one/two/three/four'
         )
-    },
+  },
 
-    "when path has leading slash then base is ignored": function() {
-        assert.equal(
-            zipfile.uriToZipEntryName("one/two", "/three/four"),
-            "three/four"
+  'when path has leading slash then base is ignored': function () {
+    assert.equal(
+            uris.uriToZipEntryName('one/two', '/three/four'),
+            'three/four'
         )
-    }
-});
-
+  }
+})

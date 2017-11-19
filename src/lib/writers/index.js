@@ -1,14 +1,7 @@
-var htmlWriter = require("./html-writer");
-var markdownWriter = require("./markdown-writer");
+import * as htmlWriter from './html-writer'
+import * as markdownWriter from './markdown-writer'
 
-exports.writer = writer;
-
-
-function writer(options) {
-    options = options || {};
-    if (options.outputFormat === "markdown") {
-        return markdownWriter.writer();
-    } else {
-        return htmlWriter.writer(options);
-    }
-}
+export const writer = (options = {}) =>
+  (options).outputFormat === 'markdown'
+    ? markdownWriter.writer()
+    : htmlWriter.writer(options)

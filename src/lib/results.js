@@ -1,72 +1,53 @@
-var _ = require("underscore");
+import _ from 'underscore'
 
+export class Result {
+  constructor (value, messages) {
+    this.value = value
+    this.messages = messages || []
+  }
 
-exports.Result = Result;
-exports.success = success;
-exports.warning = warning;
-exports.error = error;
+  map (func) {
+    return new Result(func(this.value), this.messages)
+  }
 
+  flatMap (func) {
+    const funcResult = func(this.value)
+    return new Result(funcResult.value, combineMessages([this, funcResult]))
+  }
 
-function Result(value, messages) {
-    this.value = value;
-    this.messages = messages || [];
+  flatMapThen (func) {
+    const that = this
+    return func(this.value).then(otherResult => new Result(otherResult.value, combineMessages([that, otherResult])))
+  }
+
+  static combine (results) {
+    const values = _.flatten(_.pluck(results, 'value'))
+    const messages = combineMessages(results)
+    return new Result(values, messages)
+  }
 }
 
-Result.prototype.map = function(func) {
-    return new Result(func(this.value), this.messages);
-};
+export const success = value => new Result(value, [])
 
-Result.prototype.flatMap = function(func) {
-    var funcResult = func(this.value);
-    return new Result(funcResult.value, combineMessages([this, funcResult]));
-};
+export const warning = message => ({
+  type: 'warning',
+  message: message
+})
 
-Result.prototype.flatMapThen = function(func) {
-    var that = this;
-    return func(this.value).then(function(otherResult) {
-        return new Result(otherResult.value, combineMessages([that, otherResult]));
-    });
-};
+export const error = exception => ({
+  type: 'error',
+  message: exception.message,
+  error: exception
+})
 
-Result.combine = function(results) {
-    var values = _.flatten(_.pluck(results, "value"));
-    var messages = combineMessages(results);
-    return new Result(values, messages);
-};
-
-function success(value) {
-    return new Result(value, []);
+const combineMessages = results => {
+  const messages = []
+  _.flatten(_.pluck(results, 'messages'), true).forEach(message => {
+    if (!containsMessage(messages, message)) messages.push(message)
+  })
+  return messages
 }
 
-function warning(message) {
-    return {
-        type: "warning",
-        message: message
-    };
-}
+const containsMessage = (messages, message) => _.find(messages, isSameMessage.bind(null, message)) !== undefined
 
-function error(exception) {
-    return {
-        type: "error",
-        message: exception.message,
-        error: exception
-    };
-}
-
-function combineMessages(results) {
-    var messages = [];
-    _.flatten(_.pluck(results, "messages"), true).forEach(function(message) {
-        if (!containsMessage(messages, message)) {
-            messages.push(message);
-        }
-    });
-    return messages;
-}
-
-function containsMessage(messages, message) {
-    return _.find(messages, isSameMessage.bind(null, message)) !== undefined;
-}
-
-function isSameMessage(first, second) {
-    return first.type === second.type && first.message === second.message;
-}
+const isSameMessage = (first, second) => first.type === second.type && first.message === second.message

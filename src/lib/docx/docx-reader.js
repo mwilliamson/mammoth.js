@@ -1,129 +1,87 @@
-exports.read = read;
+import * as path from 'path'
 
-var path = require("path");
+import * as promises from '../promises'
+import { Result } from '../results'
+import * as documents from '../documents'
+import { CreateBodyReader } from './body-reader'
+import createCommentsReader from './comments-reader'
+import { default as readContentTypesFromXml, defaultContentTypes } from './content-types-reader'
+import DocumentXmlReader from './document-xml-reader'
+import { Files } from './files'
+import * as notesReader from './notes-reader'
+import * as numberingXml from './numbering-xml'
+import { readXmlFromZipFile } from './office-xml-reader'
+import readRelationships from './relationships-reader'
+import * as stylesReader from './styles-reader'
 
-var promises = require("../promises");
-var documents = require("../documents");
-var Result = require("../results").Result;
+export const read = (docxFile, input = {}) =>
+  promises.props({
+    contentTypes: readContentTypesFromZipFile(docxFile),
+    numbering: readNumberingFromZipFile(docxFile),
+    styles: readStylesFromZipFile(docxFile),
+    docxFile: docxFile,
+    files: new Files(input.path ? path.dirname(input.path) : null)
+  })
+    .then(promises.also(result => ({
+      footnotes: readXmlFileWithBody('footnotes', result, (bodyReader, xml) => xml ? notesReader.createFootnotesReader(bodyReader)(xml) : new Result([])),
+      endnotes: readXmlFileWithBody('endnotes', result, (bodyReader, xml) => xml ? notesReader.createEndnotesReader(bodyReader)(xml) : new Result([])),
+      comments: readXmlFileWithBody('comments', result, (bodyReader, xml) => xml ? createCommentsReader(bodyReader)(xml) : new Result([]))
+    })))
+    .then(promises.also(result => ({
+      notes: result.footnotes.flatMap(footnotes => result.endnotes.map(endnotes => new documents.Notes(footnotes.concat(endnotes))))
+    })))
+    .then(result => readXmlFileWithBody('document', result, (bodyReader, xml) => {
+      if (xml) {
+        return result.notes.flatMap(notes => result.comments.flatMap(comments => {
+          const reader = new DocumentXmlReader({
+            bodyReader: bodyReader,
+            notes: notes,
+            comments: comments
+          })
+          return reader.convertXmlToDocument(xml)
+        }))
+      } else throw new Error('Could not find word/document.xml in ZIP file. Are you sure this is a valid .docx file?')
+    }))
 
-var readXmlFromZipFile = require("./office-xml-reader").readXmlFromZipFile;
-var createBodyReader = require("./body-reader").createBodyReader;
-var DocumentXmlReader = require("./document-xml-reader").DocumentXmlReader;
-var relationshipsReader = require("./relationships-reader");
-var contentTypesReader = require("./content-types-reader");
-var numberingXml = require("./numbering-xml");
-var stylesReader = require("./styles-reader");
-var notesReader = require("./notes-reader");
-var commentsReader = require("./comments-reader");
-var Files = require("./files").Files;
+const xmlFileReader = options => zipFile =>
+  readXmlFromZipFile(zipFile, options.filename)
+    .then(element => element ? options.readElement(element) : options.defaultValue)
 
+const readXmlFileWithBody = (name, options, func) => {
+  const readRelationshipsFromZipFile = xmlFileReader({
+    filename: 'word/_rels/' + name + '.xml.rels',
+    readElement: readRelationships,
+    defaultValue: {}
+  })
 
-function read(docxFile, input) {
-    input = input || {};
-    return promises.props({
-        contentTypes: readContentTypesFromZipFile(docxFile),
-        numbering: readNumberingFromZipFile(docxFile),
-        styles: readStylesFromZipFile(docxFile),
-        docxFile: docxFile,
-        files: new Files(input.path ? path.dirname(input.path) : null)
-    }).also(function(result) {
-        return {
-            footnotes: readXmlFileWithBody("footnotes", result, function(bodyReader, xml) {
-                if (xml) {
-                    return notesReader.createFootnotesReader(bodyReader)(xml);
-                } else {
-                    return new Result([]);
-                }
-            }),
-            endnotes: readXmlFileWithBody("endnotes", result, function(bodyReader, xml) {
-                if (xml) {
-                    return notesReader.createEndnotesReader(bodyReader)(xml);
-                } else {
-                    return new Result([]);
-                }
-            }),
-            comments: readXmlFileWithBody("comments", result, function(bodyReader, xml) {
-                if (xml) {
-                    return commentsReader.createCommentsReader(bodyReader)(xml);
-                } else {
-                    return new Result([]);
-                }
-            })
-        };
-    }).also(function(result) {
-        return {
-            notes: result.footnotes.flatMap(function(footnotes) {
-                return result.endnotes.map(function(endnotes) {
-                    return new documents.Notes(footnotes.concat(endnotes));
-                });
-            })
-        };
-    }).then(function(result) {
-        return readXmlFileWithBody("document", result, function(bodyReader, xml) {
-            if (xml) {
-                return result.notes.flatMap(function(notes) {
-                    return result.comments.flatMap(function(comments) {
-                        var reader = new DocumentXmlReader({
-                            bodyReader: bodyReader,
-                            notes: notes,
-                            comments: comments
-                        });
-                        return reader.convertXmlToDocument(xml);
-                    });
-                });
-            } else {
-                throw new Error("Could not find word/document.xml in ZIP file. Are you sure this is a valid .docx file?");
-            }
-        });
-    });
+  return readRelationshipsFromZipFile(options.docxFile).then(relationships => {
+    const bodyReader = CreateBodyReader({
+      relationships: relationships,
+      contentTypes: options.contentTypes,
+      docxFile: options.docxFile,
+      numbering: options.numbering,
+      styles: options.styles,
+      files: options.files
+    })
+    return readXmlFromZipFile(options.docxFile, 'word/' + name + '.xml')
+      .then(xml => func(bodyReader, xml))
+  })
 }
 
-function xmlFileReader(options) {
-    return function(zipFile) {
-        return readXmlFromZipFile(zipFile, options.filename)
-            .then(function(element) {
-                return element ? options.readElement(element) : options.defaultValue;
-            });
-    };
-}
+const readContentTypesFromZipFile = xmlFileReader({
+  filename: '[Content_Types].xml',
+  readElement: readContentTypesFromXml,
+  defaultValue: defaultContentTypes
+})
 
-function readXmlFileWithBody(name, options, func) {
-    var readRelationshipsFromZipFile = xmlFileReader({
-        filename: "word/_rels/" + name + ".xml.rels",
-        readElement: relationshipsReader.readRelationships,
-        defaultValue: {}
-    });
-    
-    return readRelationshipsFromZipFile(options.docxFile).then(function(relationships) {
-        var bodyReader = new createBodyReader({
-            relationships: relationships,
-            contentTypes: options.contentTypes,
-            docxFile: options.docxFile,
-            numbering: options.numbering,
-            styles: options.styles,
-            files: options.files
-        });
-        return readXmlFromZipFile(options.docxFile, "word/" + name + ".xml")
-            .then(function(xml) {
-                return func(bodyReader, xml);
-            });
-    });
-}
+const readNumberingFromZipFile = xmlFileReader({
+  filename: 'word/numbering.xml',
+  readElement: numberingXml.readNumberingXml,
+  defaultValue: numberingXml.defaultNumbering
+})
 
-var readContentTypesFromZipFile = xmlFileReader({
-    filename: "[Content_Types].xml",
-    readElement: contentTypesReader.readContentTypesFromXml,
-    defaultValue: contentTypesReader.defaultContentTypes
-});
-
-var readNumberingFromZipFile = xmlFileReader({
-    filename: "word/numbering.xml",
-    readElement: numberingXml.readNumberingXml,
-    defaultValue: numberingXml.defaultNumbering
-});
-
-var readStylesFromZipFile = xmlFileReader({
-    filename: "word/styles.xml",
-    readElement: stylesReader.readStylesXml,
-    defaultValue: stylesReader.defaultStyles
-});
+const readStylesFromZipFile = xmlFileReader({
+  filename: 'word/styles.xml',
+  readElement: stylesReader.readStylesXml,
+  defaultValue: stylesReader.defaultStyles
+})
