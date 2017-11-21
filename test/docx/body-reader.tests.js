@@ -97,34 +97,34 @@ test("paragraph has justification read from paragraph properties if present", fu
 test("paragraph has indent left read from paragraph properties if present", function() {
     var paragraphXml = paragraphWithIndent({"w:left": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.deepEqual(paragraph.indent.left, "720");
+    assert.equal(paragraph.indent.left, "720");
 });
 
 test("paragraph has indent right read from paragraph properties if present", function() {
     var paragraphXml = paragraphWithIndent({"w:right": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.deepEqual(paragraph.indent.right, "720");
+    assert.equal(paragraph.indent.right, "720");
 });
 
 test("paragraph has indent firstLine read from paragraph properties if present", function() {
     var paragraphXml = paragraphWithIndent({"w:firstLine": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.deepEqual(paragraph.indent.firstLine, "720");
+    assert.equal(paragraph.indent.firstLine, "720");
 });
 
 test("paragraph has indent hanging read from paragraph properties if present", function() {
     var paragraphXml = paragraphWithIndent({"w:hanging": "720"});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.deepEqual(paragraph.indent.hanging, "720");
+    assert.equal(paragraph.indent.hanging, "720");
 });
 
-test("paragraph has no indent read from paragraph properties", function() {
+test("when indent attributes aren't set then indents are null", function() {
     var paragraphXml = paragraphWithIndent({});
     var paragraph = readXmlElementValue(paragraphXml);
-    assert.deepEqual(paragraph.indent.left, null);
-    assert.deepEqual(paragraph.indent.right, null);
-    assert.deepEqual(paragraph.indent.firstLine, null);
-    assert.deepEqual(paragraph.indent.hanging, null);
+    assert.equal(paragraph.indent.left, null);
+    assert.equal(paragraph.indent.right, null);
+    assert.equal(paragraph.indent.firstLine, null);
+    assert.equal(paragraph.indent.hanging, null);
 });
 
 function paragraphWithIndent(indentAttributes) {
