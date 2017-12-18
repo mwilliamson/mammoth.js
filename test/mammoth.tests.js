@@ -260,7 +260,7 @@ test('word tables are converted to html tables', function() {
     var docxPath = path.join(__dirname, "test-data/tables.docx");
     return mammoth.convertToHtml({path: docxPath}).then(function(result) {
         var expectedHtml = "<p>Above</p>" +
-            "<table data-table-grid=\"[&quot;4621&quot;,&quot;4621&quot;]\">" +
+            "<table data-table-grid=\"[4621,4621]\">" +
             "<tr><td><p>Top left</p></td><td><p>Top right</p></td></tr>" +
             "<tr><td><p>Bottom left</p></td><td><p>Bottom right</p></td></tr>" +
             "</table>" +
