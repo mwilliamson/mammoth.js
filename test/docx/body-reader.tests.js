@@ -25,6 +25,7 @@ var documents = require("../../lib/documents");
 var xml = require("../../lib/xml");
 var XmlElement = xml.Element;
 var Numbering = require("../../lib/docx/numbering-xml").Numbering;
+var Relationships = require("../../lib/docx/relationships-reader").Relationships;
 var Styles = require("../../lib/docx/styles-reader").Styles;
 var warning = require("../../lib/results").warning;
 
@@ -810,9 +811,9 @@ function isImage(options) {
 
 function readEmbeddedImage(element) {
     return readXmlElement(element, {
-        relationships: {
-            "rId5": {target: "media/hat.png"}
-        },
+        relationships: new Relationships([
+            imageRelationship("rId5", "media/hat.png")
+        ]),
         contentTypes: fakeContentTypes,
         docxFile: createFakeDocxFile({
             "word/media/hat.png": IMAGE_BUFFER
@@ -932,9 +933,9 @@ test("can read linked pictures", function() {
     });
     
     var element = single(readXmlElementValue(drawing, {
-        relationships: {
-            "rId5": {target: "file:///media/hat.png"}
-        },
+        relationships: new Relationships([
+            imageRelationship("rId5", "file:///media/hat.png")
+        ]),
         contentTypes: fakeContentTypes,
         files: testing.createFakeFiles({
             "file:///media/hat.png": IMAGE_BUFFER
@@ -954,9 +955,9 @@ test("warning if unsupported image type", function() {
     });
     
     var result = readXmlElement(drawing, {
-        relationships: {
-            "rId5": {target: "media/hat.emf"}
-        },
+        relationships: new Relationships([
+            imageRelationship("rId5", "media/hat.emf")
+        ]),
         contentTypes: fakeContentTypes,
         docxFile: createFakeDocxFile({
             "word/media/hat.emf": IMAGE_BUFFER
@@ -1009,9 +1010,9 @@ test("w:hyperlink", {
     "is read as external hyperlink if it has a relationship ID": function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
-        var relationships = {
-            "r42": {target: "http://example.com"}
-        };
+        var relationships = new Relationships([
+            hyperlinkRelationship("r42", "http://example.com")
+        ]);
         var result = readXmlElement(hyperlinkXml, {relationships: relationships});
         assert.deepEqual(result.value.href, "http://example.com");
         assert.deepEqual(result.value.children[0].type, "run");
@@ -1020,9 +1021,9 @@ test("w:hyperlink", {
     "is read as external hyperlink if it has a relationship ID and an anchor": function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42", "w:anchor": "fragment"}, [runXml]);
-        var relationships = {
-            "r42": {target: "http://example.com/"}
-        };
+        var relationships = new Relationships([
+            hyperlinkRelationship("r42", "http://example.com/")
+        ]);
         var result = readXmlElement(hyperlinkXml, {relationships: relationships});
         assert.deepEqual(result.value.href, "http://example.com/#fragment");
         assert.deepEqual(result.value.children[0].type, "run");
@@ -1031,9 +1032,9 @@ test("w:hyperlink", {
     "existing fragment is replaced when anchor is set on external link": function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42", "w:anchor": "fragment"}, [runXml]);
-        var relationships = {
-            "r42": {target: "http://example.com/#previous"}
-        };
+        var relationships = new Relationships([
+            hyperlinkRelationship("r42", "http://example.com/#previous")
+        ]);
         var result = readXmlElement(hyperlinkXml, {relationships: relationships});
         assert.deepEqual(result.value.href, "http://example.com/#fragment");
         assert.deepEqual(result.value.children[0].type, "run");
@@ -1250,4 +1251,20 @@ function assertImageBuffer(element, expectedImageBuffer) {
         .then(function(readValue) {
             assert.equal(readValue, expectedImageBuffer);
         });
+}
+
+function hyperlinkRelationship(relationshipId, target) {
+    return {
+        relationshipId: relationshipId,
+        target: target,
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
+    };
+}
+
+function imageRelationship(relationshipId, target) {
+    return {
+        relationshipId: relationshipId,
+        target: target,
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
+    };
 }
