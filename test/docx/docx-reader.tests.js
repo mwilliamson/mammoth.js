@@ -2,6 +2,7 @@ var assert = require("assert");
 
 var docxReader = require("../../lib/docx/docx-reader");
 var documents = require("../../lib/documents");
+var xml = require("../../lib/xml");
 
 var testing = require("../testing");
 var test = require("../test")(module);
@@ -36,5 +37,33 @@ test("hyperlink hrefs are read from relationships file", function() {
         var hyperlink = paragraph.children[0];
         assert.equal(hyperlink.href, "http://www.example.com");
         assert.equal(hyperlink.children.length, 1);
+    });
+});
+
+var relationshipNamespaces = {
+    "r": "http://schemas.openxmlformats.org/package/2006/relationships"
+};
+
+test("when document.xml is not present then document is found using _rels/.rels", function() {
+    var relationships = xml.element("r:Relationships", {}, [
+        xml.element("r:Relationship", {
+            "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
+            "Target": "word/document2.xml"
+        })
+    ]);
+    
+    var docxFile = createFakeDocxFile({
+        "word/document2.xml": testData("simple/word/document.xml"),
+        "_rels/.rels": xml.writeString(relationships, relationshipNamespaces)
+    });
+    var expectedDocument = documents.Document([
+        documents.Paragraph([
+            documents.Run([
+                documents.Text("Hello.")
+            ])
+        ])
+    ]);
+    return docxReader.read(docxFile).then(function(result) {
+        assert.deepEqual(expectedDocument, result.value);
     });
 });
