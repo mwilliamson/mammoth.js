@@ -48,7 +48,7 @@ test("when document.xml is not present then document is found using _rels/.rels"
     var relationships = xml.element("r:Relationships", {}, [
         xml.element("r:Relationship", {
             "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
-            "Target": "word/document2.xml"
+            "Target": "/word/document2.xml"
         })
     ]);
     
