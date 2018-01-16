@@ -647,7 +647,7 @@ test('comment references are linked to comment after main body', function() {
     });
     return converter.convertToHtml(document).then(function(result) {
         var expectedHtml = (
-            '<p>Knock knock<sup><a href="#doc-42-comment-4" id="doc-42-comment-ref-4">[TP1]</a></sup></p>' +
+            '<p>Knock knock<sup><a href="#doc-42-comment-4" id="doc-42-comment-ref-4" data-comment-id="4" data-comment-author="The Piemaker">[TP1]</a></sup></p>' +
             '<dl><dt id="doc-42-comment-4">Comment [TP1]</dt><dd><p>Who\'s there? <a href="#doc-42-comment-ref-4">↑</a></p></dd></dl>'
         );
         assert.equal(result.value, expectedHtml);

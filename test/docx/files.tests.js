@@ -43,7 +43,7 @@ test("Files", {
     "error if relative uri cannot be opened": function() {
         var files = new Files("/tmp");
         return assertError(files.read("not-a-real-file.png", "base64"), function(err) {
-            assertRegex(err.message, /could not open external image: 'not-a-real-file.png' \(document directory: '\/tmp'\)\nENOENT.*\/tmp\/not-a-real-file.png.*/);
+            assertRegex(err.message, /could not open external image: 'not-a-real-file.png' \(document directory: '\/tmp'\)\nENOENT.*(\/|\\)tmp(\/|\\)not-a-real-file.png.*/);
         });
     }
 });
