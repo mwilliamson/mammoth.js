@@ -1,5 +1,7 @@
 {
-    "codeArray":[{"unicodeValue":"03B1","symbolCodeValue":"f061"},
+    "codeArray":[{"unicodeValue":"2295","symbolCodeValue":"00c5"},
+                {"unicodeValue":"2295","symbolCodeValue":"00c5"},
+                {"unicodeValue":"03B1","symbolCodeValue":"f061"},
                 {"unicodeValue":"2192","symbolCodeValue":"f0e0"},
                 {"unicodeValue":"221D","symbolCodeValue":"f0b5"},
                 {"unicodeValue":"03B2","symbolCodeValue":"f062"},
@@ -44,7 +46,7 @@
                 {"unicodeValue":"039D","symbolCodeValue":"f04e"},
                 {"unicodeValue":"039F","symbolCodeValue":"f04f"},
                 {"unicodeValue":"03A0","symbolCodeValue":"f050"},
-                {"unicodeValue":"0398","symbolCodeValue":"f051"},
+                {"unicodeValue":"2235","symbolCodeValue":"f051"},
                 {"unicodeValue":"03A1","symbolCodeValue":"f052"},
                 {"unicodeValue":"03A3","symbolCodeValue":"f053"},
                 {"unicodeValue":"03A4","symbolCodeValue":"f054"},
@@ -197,7 +199,7 @@
                 {"unicodeValue":"039D","symbolCodeValue":"004e"},
                 {"unicodeValue":"039F","symbolCodeValue":"004f"},
                 {"unicodeValue":"03A0","symbolCodeValue":"0050"},
-                {"unicodeValue":"0398","symbolCodeValue":"0051"},
+                {"unicodeValue":"2235","symbolCodeValue":"0051"},
                 {"unicodeValue":"03A1","symbolCodeValue":"0052"},
                 {"unicodeValue":"03A3","symbolCodeValue":"0053"},
                 {"unicodeValue":"03A4","symbolCodeValue":"0054"},
@@ -305,3 +307,4 @@
                 {"unicodeValue":"2211","symbolCodeValue":"00e5"},
                 {"unicodeValue":"222B","symbolCodeValue":"00f2"}]
 }
+
