@@ -44,7 +44,7 @@ var relationshipNamespaces = {
     "r": "http://schemas.openxmlformats.org/package/2006/relationships"
 };
 
-test("when document.xml is not present then document is found using _rels/.rels", function() {
+test("main document is found using _rels/.rels", function() {
     var relationships = xml.element("r:Relationships", {}, [
         xml.element("r:Relationship", {
             "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
