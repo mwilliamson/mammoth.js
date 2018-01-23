@@ -67,3 +67,22 @@ test("main document is found using _rels/.rels", function() {
         assert.deepEqual(expectedDocument, result.value);
     });
 });
+
+
+test("error is thrown when main document part does not exist", function() {
+    var relationships = xml.element("r:Relationships", {}, [
+        xml.element("r:Relationship", {
+            "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
+            "Target": "/word/document2.xml"
+        })
+    ]);
+    
+    var docxFile = createFakeDocxFile({
+        "_rels/.rels": xml.writeString(relationships, relationshipNamespaces)
+    });
+    return docxReader.read(docxFile).then(function(result) {
+        assert.ok(false, "Expected error");
+    }, function(error) {
+        assert.equal(error.message, "Could not find main document part. Are you sure this is a valid .docx file?");
+    });
+});
