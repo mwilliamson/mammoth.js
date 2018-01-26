@@ -2,6 +2,9 @@
 
 * Parse paragraph indents.
 
+* Read part paths using relationships. This improves support for documents
+  created by Word Online.
+
 # 1.4.3
 
 * Add style mapping for small caps.
