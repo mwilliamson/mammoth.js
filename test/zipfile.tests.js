@@ -39,6 +39,7 @@ test("when path has no forward slashes then splitPath returns empty dirname", fu
 test("joinPath joins arguments with forward slashes", function() {
     assert.equal(zipfile.joinPath("a", "b"), "a/b");
     assert.equal(zipfile.joinPath("a/b", "c"), "a/b/c");
+    assert.equal(zipfile.joinPath("a", "b/c"), "a/b/c");
     assert.equal(zipfile.joinPath("/a/b", "c"), "/a/b/c");
 });
 
@@ -47,4 +48,12 @@ test("empty parts are ignored when joining paths", function() {
     assert.equal(zipfile.joinPath("a", ""), "a");
     assert.equal(zipfile.joinPath("", "b"), "b");
     assert.equal(zipfile.joinPath("a", "", "b"), "a/b");
+});
+
+
+test("when joining paths then absolute paths ignore earlier paths", function() {
+    assert.equal(zipfile.joinPath("a", "/b"), "/b");
+    assert.equal(zipfile.joinPath("a", "/b", "c"), "/b/c");
+    assert.equal(zipfile.joinPath("/a", "/b"), "/b");
+    assert.equal(zipfile.joinPath("/a"), "/a");
 });

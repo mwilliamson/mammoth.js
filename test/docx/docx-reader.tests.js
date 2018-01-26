@@ -113,5 +113,43 @@ test("part paths", {
         return docxReader._findPartPaths(docxFile).then(function(partPaths) {
             assert.equal(partPaths.mainDocument, "word/document.xml");
         });
+    },
+    
+    "comments part is found using main document relationships": function() {
+        var docxFile = createFakeDocxFile({
+            "_rels/.rels": createPackageRelationships("word/document.xml"),
+            "word/document.xml": " ",
+            "word/_rels/document.xml.rels": xml.writeString(xml.element("r:Relationships", {}, [
+                xml.element("r:Relationship", {
+                    "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
+                    "Target": "comments2.xml"
+                })
+            ]), relationshipNamespaces),
+            "word/comments2.xml": " "
+        });
+        return docxReader._findPartPaths(docxFile).then(function(partPaths) {
+            assert.equal(partPaths.comments, "word/comments2.xml");
+        });
+    },
+    
+    "word/comments.xml is used as fallback location for comments part": function() {
+        var docxFile = createFakeDocxFile({
+            "_rels/.rels": createPackageRelationships("word/document.xml"),
+            "word/document.xml": " ",
+            "word/comments.xml": " "
+        });
+        return docxReader._findPartPaths(docxFile).then(function(partPaths) {
+            assert.equal(partPaths.comments, "word/comments.xml");
+        });
     }
 });
+
+
+function createPackageRelationships(mainDocumentPath) {
+    return xml.writeString(xml.element("r:Relationships", {}, [
+        xml.element("r:Relationship", {
+            "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
+            "Target": mainDocumentPath
+        })
+    ]), relationshipNamespaces);
+}
