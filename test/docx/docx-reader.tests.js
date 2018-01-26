@@ -86,3 +86,32 @@ test("error is thrown when main document part does not exist", function() {
         assert.equal(error.message, "Could not find main document part. Are you sure this is a valid .docx file?");
     });
 });
+
+
+test("part paths", {
+    "main document part is found using package relationships": function() {
+        var relationships = xml.element("r:Relationships", {}, [
+            xml.element("r:Relationship", {
+                "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument",
+                "Target": "/word/document2.xml"
+            })
+        ]);
+        
+        var docxFile = createFakeDocxFile({
+            "word/document2.xml": " ",
+            "_rels/.rels": xml.writeString(relationships, relationshipNamespaces)
+        });
+        return docxReader._findPartPaths(docxFile).then(function(partPaths) {
+            assert.equal(partPaths.mainDocument, "word/document2.xml");
+        });
+    },
+    
+    "word/document.xml is used as fallback location for main document part": function() {
+        var docxFile = createFakeDocxFile({
+            "word/document.xml": " "
+        });
+        return docxReader._findPartPaths(docxFile).then(function(partPaths) {
+            assert.equal(partPaths.mainDocument, "word/document.xml");
+        });
+    }
+});
