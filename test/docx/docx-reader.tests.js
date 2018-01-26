@@ -88,6 +88,7 @@ test("error is thrown when main document part does not exist", function() {
 });
 
 
+
 test("part paths", {
     "main document part is found using package relationships": function() {
         var relationships = xml.element("r:Relationships", {}, [
@@ -113,35 +114,59 @@ test("part paths", {
         return docxReader._findPartPaths(docxFile).then(function(partPaths) {
             assert.equal(partPaths.mainDocument, "word/document.xml");
         });
+    }
+});
+
+[
+    {
+        name: "comments",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
     },
-    
-    "comments part is found using main document relationships": function() {
+    {
+        name: "endnotes",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes",
+    },
+    {
+        name: "footnotes",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes",
+    },
+    {
+        name: "numbering",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering",
+    },
+    {
+        name: "styles",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
+    }
+].forEach(function(options) {
+    test(options.name + " part is found using main document relationships", function() {
         var docxFile = createFakeDocxFile({
             "_rels/.rels": createPackageRelationships("word/document.xml"),
             "word/document.xml": " ",
             "word/_rels/document.xml.rels": xml.writeString(xml.element("r:Relationships", {}, [
                 xml.element("r:Relationship", {
-                    "Type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
-                    "Target": "comments2.xml"
+                    "Type": options.type,
+                    "Target": "target-path.xml"
                 })
             ]), relationshipNamespaces),
-            "word/comments2.xml": " "
+            "word/target-path.xml": " "
         });
         return docxReader._findPartPaths(docxFile).then(function(partPaths) {
-            assert.equal(partPaths.comments, "word/comments2.xml");
+            assert.equal(partPaths[options.name], "word/target-path.xml");
         });
-    },
-    
-    "word/comments.xml is used as fallback location for comments part": function() {
-        var docxFile = createFakeDocxFile({
+    });
+
+    test("word/" + options.name + ".xml is used as fallback location for " + options.name + " part", function() {
+        var zipContents = {
             "_rels/.rels": createPackageRelationships("word/document.xml"),
-            "word/document.xml": " ",
-            "word/comments.xml": " "
-        });
+            "word/document.xml": " "
+        };
+        zipContents["word/" + options.name + ".xml"] = " ";
+        var docxFile = createFakeDocxFile(zipContents);
         return docxReader._findPartPaths(docxFile).then(function(partPaths) {
-            assert.equal(partPaths.comments, "word/comments.xml");
+            assert.equal(partPaths[options.name], "word/" + options.name + ".xml");
         });
-    }
+    });
 });
 
 
