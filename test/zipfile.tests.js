@@ -22,3 +22,29 @@ function emptyZipFile() {
     var buffer = zip.generate({type: "arraybuffer"});
     return zipfile.openArrayBuffer(buffer);
 }
+
+
+test("splitPath splits zip paths on last forward slash", function() {
+    assert.deepEqual(zipfile.splitPath("a/b"), {dirname: "a", basename: "b"});
+    assert.deepEqual(zipfile.splitPath("a/b/c"), {dirname: "a/b", basename: "c"});
+    assert.deepEqual(zipfile.splitPath("/a/b/c"), {dirname: "/a/b", basename: "c"});
+});
+
+
+test("when path has no forward slashes then splitPath returns empty dirname", function() {
+    assert.deepEqual(zipfile.splitPath("name"), {dirname: "", basename: "name"});
+});
+
+
+test("joinPath joins arguments with forward slashes", function() {
+    assert.equal(zipfile.joinPath("a", "b"), "a/b");
+    assert.equal(zipfile.joinPath("a/b", "c"), "a/b/c");
+    assert.equal(zipfile.joinPath("/a/b", "c"), "/a/b/c");
+});
+
+
+test("empty parts are ignored when joining paths", function() {
+    assert.equal(zipfile.joinPath("a", ""), "a");
+    assert.equal(zipfile.joinPath("", "b"), "b");
+    assert.equal(zipfile.joinPath("a", "", "b"), "a/b");
+});
