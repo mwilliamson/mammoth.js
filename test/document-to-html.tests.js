@@ -296,6 +296,30 @@ test('subscript runs are wrapped in <sub> tags', function() {
     });
 });
 
+test('small caps runs are ignored by default', function() {
+    var run = runOfText("Hello.", {isSmallCaps: true});
+    var converter = new DocumentConverter();
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "Hello.");
+    });
+});
+
+test('small caps runs can be configured with style mapping', function() {
+    var run = runOfText("Hello.", {isSmallCaps: true});
+    var converter = new DocumentConverter({
+        styleMap: [
+            {
+                from: documentMatchers.smallCaps,
+                to: htmlPaths.elements([htmlPaths.element("span")])
+            }
+        ]
+    });
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "<span>Hello.</span>");
+    });
+});
+
+
 test('run styles are converted to HTML if mapping exists', function() {
     var run = runOfText("Hello.", {styleId: "Heading1Char", styleName: "Heading 1 Char"});
     var converter = new DocumentConverter({
@@ -391,6 +415,23 @@ test('docx table is converted to table in HTML', function() {
             "<tr><td><p>Top left</p></td><td><p>Top right</p></td></tr>" +
             "<tr><td><p>Bottom left</p></td><td><p>Bottom right</p></td></tr>" +
             "</table>";
+        assert.equal(result.value, expectedHtml);
+    });
+});
+
+test('table style mappings can be used to map tables', function() {
+    var table = new documents.Table([], {styleName: "Normal Table"});
+    var converter = new DocumentConverter({
+        styleMap: [
+            {
+                from: documentMatchers.table({styleName: documentMatchers.equalTo("Normal Table")}),
+                to: htmlPaths.topLevelElement("table", {"class": "normal-table"})
+            }
+        ]
+    });
+
+    return converter.convertToHtml(table).then(function(result) {
+        var expectedHtml = '<table class="normal-table"></table>';
         assert.equal(result.value, expectedHtml);
     });
 });

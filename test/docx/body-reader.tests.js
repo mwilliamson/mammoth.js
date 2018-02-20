@@ -25,6 +25,7 @@ var documents = require("../../lib/documents");
 var xml = require("../../lib/xml");
 var XmlElement = xml.Element;
 var Numbering = require("../../lib/docx/numbering-xml").Numbering;
+var Relationships = require("../../lib/docx/relationships-reader").Relationships;
 var Styles = require("../../lib/docx/styles-reader").Styles;
 var warning = require("../../lib/results").warning;
 
@@ -93,6 +94,59 @@ test("paragraph has justification read from paragraph properties if present", fu
     var paragraph = readXmlElementValue(paragraphXml);
     assert.deepEqual(paragraph.alignment, "center");
 });
+
+test("paragraph indent", {
+    "when w:start is set then start indent is read from w:start": function() {
+        var paragraphXml = paragraphWithIndent({"w:start": "720", "w:left": "40"});
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.equal(paragraph.indent.start, "720");
+    },
+    
+    "when w:start is not set then start indent is read from w:left": function() {
+        var paragraphXml = paragraphWithIndent({"w:left": "720"});
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.equal(paragraph.indent.start, "720");
+    },
+
+    "when w:end is set then end indent is read from w:end": function() {
+        var paragraphXml = paragraphWithIndent({"w:end": "720", "w:right": "40"});
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.equal(paragraph.indent.end, "720");
+    },
+
+    "when w:end is not set then end indent is read from w:right": function() {
+        var paragraphXml = paragraphWithIndent({"w:right": "720"});
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.equal(paragraph.indent.end, "720");
+    },
+
+    "paragraph has indent firstLine read from paragraph properties if present": function() {
+        var paragraphXml = paragraphWithIndent({"w:firstLine": "720"});
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.equal(paragraph.indent.firstLine, "720");
+    },
+
+    "paragraph has indent hanging read from paragraph properties if present": function() {
+        var paragraphXml = paragraphWithIndent({"w:hanging": "720"});
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.equal(paragraph.indent.hanging, "720");
+    },
+
+    "when indent attributes aren't set then indents are null": function() {
+        var paragraphXml = paragraphWithIndent({});
+        var paragraph = readXmlElementValue(paragraphXml);
+        assert.equal(paragraph.indent.start, null);
+        assert.equal(paragraph.indent.end, null);
+        assert.equal(paragraph.indent.firstLine, null);
+        assert.equal(paragraph.indent.hanging, null);
+    }
+});
+
+function paragraphWithIndent(indentAttributes) {
+    var indentXml = new XmlElement("w:ind", indentAttributes, []);
+    var propertiesXml = new XmlElement("w:pPr", {}, [indentXml]);
+    return new XmlElement("w:p", {}, [propertiesXml]);
+}
 
 test("paragraph has numbering properties from paragraph properties if present", function() {
     var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
@@ -431,11 +485,25 @@ test("isItalic is true if bold element is present", function() {
     assert.equal(run.isItalic, true);
 });
 
+test("isSmallCaps is false if smallcaps element is not present", function() {
+    var runXml = runWithProperties([]);
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.isSmallCaps, false);
+});
+
+test("isSmallCaps is true if smallcaps element is present", function() {
+    var smallCapsXml = new XmlElement("w:smallCaps");
+    var runXml = runWithProperties([smallCapsXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isSmallCaps, true);
+});
+
 var booleanRunProperties = [
     {name: "isBold", tagName: "w:b"},
     {name: "isUnderline", tagName: "w:u"},
     {name: "isItalic", tagName: "w:i"},
     {name: "isStrikethrough", tagName: "w:strike"},
+    {name: "isSmallCaps", tagName: "w:smallCaps"},
 ];
 
 booleanRunProperties.forEach(function(runProperty) {
@@ -533,6 +601,36 @@ test("w:tbl is read as document table element", function() {
             ])
         ])
     ]));
+});
+
+test("table has no style if it has no properties", function() {
+    var tableXml = new XmlElement("w:tbl", {}, []);
+    var table = readXmlElementValue(tableXml);
+    assert.deepEqual(table.styleId, null);
+});
+
+test("table has style ID and name read from table properties if present", function() {
+    var styleXml = new XmlElement("w:tblStyle", {"w:val": "TableNormal"}, []);
+    var propertiesXml = new XmlElement("w:tblPr", {}, [styleXml]);
+    var tableXml = new XmlElement("w:tbl", {}, [propertiesXml]);
+    
+    var styles = new Styles({}, {}, {"TableNormal": {name: "Normal Table"}});
+    
+    var table = readXmlElementValue(tableXml, {styles: styles});
+    assert.deepEqual(table.styleId, "TableNormal");
+    assert.deepEqual(table.styleName, "Normal Table");
+});
+
+test("warning is emitted when table style cannot be found", function() {
+    var styleXml = new XmlElement("w:tblStyle", {"w:val": "TableNormal"}, []);
+    var propertiesXml = new XmlElement("w:tblPr", {}, [styleXml]);
+    var tableXml = new XmlElement("w:tbl", {}, [propertiesXml]);
+    
+    var result = readXmlElement(tableXml, {styles: Styles.EMPTY});
+    var table = result.value;
+    assert.deepEqual(table.styleId, "TableNormal");
+    assert.deepEqual(table.styleName, null);
+    assert.deepEqual(result.messages, [warning("Table style with ID TableNormal was referenced but not defined in the document")]);
 });
 
 test("w:tblHeader marks table row as header", function() {
@@ -713,9 +811,9 @@ function isImage(options) {
 
 function readEmbeddedImage(element) {
     return readXmlElement(element, {
-        relationships: {
-            "rId5": {target: "media/hat.png"}
-        },
+        relationships: new Relationships([
+            imageRelationship("rId5", "media/hat.png")
+        ]),
         contentTypes: fakeContentTypes,
         docxFile: createFakeDocxFile({
             "word/media/hat.png": IMAGE_BUFFER
@@ -835,9 +933,9 @@ test("can read linked pictures", function() {
     });
     
     var element = single(readXmlElementValue(drawing, {
-        relationships: {
-            "rId5": {target: "file:///media/hat.png"}
-        },
+        relationships: new Relationships([
+            imageRelationship("rId5", "file:///media/hat.png")
+        ]),
         contentTypes: fakeContentTypes,
         files: testing.createFakeFiles({
             "file:///media/hat.png": IMAGE_BUFFER
@@ -857,9 +955,9 @@ test("warning if unsupported image type", function() {
     });
     
     var result = readXmlElement(drawing, {
-        relationships: {
-            "rId5": {target: "media/hat.emf"}
-        },
+        relationships: new Relationships([
+            imageRelationship("rId5", "media/hat.emf")
+        ]),
         contentTypes: fakeContentTypes,
         docxFile: createFakeDocxFile({
             "word/media/hat.emf": IMAGE_BUFFER
@@ -898,6 +996,10 @@ test("children of w:smartTag are converted normally", function() {
     assertChildrenAreConvertedNormally("w:smartTag");
 });
 
+test("children of v:group are converted normally", function() {
+    assertChildrenAreConvertedNormally("v:group");
+});
+
 function assertChildrenAreConvertedNormally(tagName) {
     var runXml = new XmlElement("w:r", {}, []);
     var result = readXmlElement(new XmlElement(tagName, {}, [runXml]));
@@ -908,9 +1010,9 @@ test("w:hyperlink", {
     "is read as external hyperlink if it has a relationship ID": function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42"}, [runXml]);
-        var relationships = {
-            "r42": {target: "http://example.com"}
-        };
+        var relationships = new Relationships([
+            hyperlinkRelationship("r42", "http://example.com")
+        ]);
         var result = readXmlElement(hyperlinkXml, {relationships: relationships});
         assert.deepEqual(result.value.href, "http://example.com");
         assert.deepEqual(result.value.children[0].type, "run");
@@ -919,9 +1021,9 @@ test("w:hyperlink", {
     "is read as external hyperlink if it has a relationship ID and an anchor": function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42", "w:anchor": "fragment"}, [runXml]);
-        var relationships = {
-            "r42": {target: "http://example.com/"}
-        };
+        var relationships = new Relationships([
+            hyperlinkRelationship("r42", "http://example.com/")
+        ]);
         var result = readXmlElement(hyperlinkXml, {relationships: relationships});
         assert.deepEqual(result.value.href, "http://example.com/#fragment");
         assert.deepEqual(result.value.children[0].type, "run");
@@ -930,9 +1032,9 @@ test("w:hyperlink", {
     "existing fragment is replaced when anchor is set on external link": function() {
         var runXml = new XmlElement("w:r", {}, []);
         var hyperlinkXml = new XmlElement("w:hyperlink", {"r:id": "r42", "w:anchor": "fragment"}, [runXml]);
-        var relationships = {
-            "r42": {target: "http://example.com/#previous"}
-        };
+        var relationships = new Relationships([
+            hyperlinkRelationship("r42", "http://example.com/#previous")
+        ]);
         var result = readXmlElement(hyperlinkXml, {relationships: relationships});
         assert.deepEqual(result.value.href, "http://example.com/#fragment");
         assert.deepEqual(result.value.children[0].type, "run");
@@ -1149,4 +1251,20 @@ function assertImageBuffer(element, expectedImageBuffer) {
         .then(function(readValue) {
             assert.equal(readValue, expectedImageBuffer);
         });
+}
+
+function hyperlinkRelationship(relationshipId, target) {
+    return {
+        relationshipId: relationshipId,
+        target: target,
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
+    };
+}
+
+function imageRelationship(relationshipId, target) {
+    return {
+        relationshipId: relationshipId,
+        target: target,
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
+    };
 }

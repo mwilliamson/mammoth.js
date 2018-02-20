@@ -130,6 +130,28 @@ test("styleReader.readDocumentMatcher", {
             documentMatchers.run()
         );
     },
+
+    "reads plain table": function() {
+        assertDocumentMatcher("table", documentMatchers.table());
+    },
+
+    "reads table with style ID": function() {
+        assertDocumentMatcher(
+            "table.TableNormal",
+            documentMatchers.table({
+                styleId: "TableNormal"
+            })
+        );
+    },
+
+    "reads table with style name": function() {
+        assertDocumentMatcher(
+            "table[style-name='Normal Table']",
+            documentMatchers.table({
+                styleName: documentMatchers.equalTo("Normal Table")
+            })
+        );
+    },
     
     "reads bold": function() {
         assertDocumentMatcher(
@@ -159,6 +181,13 @@ test("styleReader.readDocumentMatcher", {
         );
     },
     
+    "reads smallcaps": function() {
+        assertDocumentMatcher(
+            "small-caps",
+            documentMatchers.smallCaps
+        );
+    },
+
     "reads comment-reference": function() {
         assertDocumentMatcher(
             "comment-reference",
@@ -186,6 +215,7 @@ test("styleReader.readDocumentMatcher", {
             documentMatchers.columnBreak
         );
     }
+
 });
     
 function assertDocumentMatcher(input, expected) {
