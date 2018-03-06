@@ -1,6 +1,6 @@
 {
   "name": "h4mammoth",
-  "version": "1.4.10",
+  "version": "1.4.11",
   "author": "Michael Williamson <mike@zwobble.org>",
   "description": "Convert Word documents from docx to simple HTML and Markdown",
   "keywords": [
