@@ -113,3 +113,21 @@ test('newlines in appended HTML are indented', function() {
     writer.close("p");
     return assert.equal(writer.asString(), "<p>\n  One\n  Two\n</p>");
 });
+
+test('newlines in <pre> are not indented', function() {
+    var writer = htmlWriter.writer({prettyPrint: true});
+    writer.open("pre");
+    writer.text("One\nTwo");
+    writer.close("pre");
+    return assert.equal(writer.asString(), "<pre>One\nTwo</pre>");
+});
+
+test('newlines in element in <pre> are not indented', function() {
+    var writer = htmlWriter.writer({prettyPrint: true});
+    writer.open("pre");
+    writer.open("p");
+    writer.text("One\nTwo");
+    writer.close("p");
+    writer.close("pre");
+    return assert.equal(writer.asString(), "<pre><p>One\nTwo</p></pre>");
+});

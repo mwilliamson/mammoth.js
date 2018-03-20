@@ -1,3 +1,7 @@
+# 1.4.5
+
+* When using the pretty HTML writer, don't format HTML inside pre elements.
+
 # 1.4.4
 
 * Parse paragraph indents.
