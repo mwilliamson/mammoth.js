@@ -2,6 +2,8 @@
 
 * When using the pretty HTML writer, don't format HTML inside pre elements.
 
+* Read the children of v:rect elements.
+
 # 1.4.4
 
 * Parse paragraph indents.

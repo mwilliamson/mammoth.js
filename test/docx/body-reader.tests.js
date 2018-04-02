@@ -1000,6 +1000,10 @@ test("children of v:group are converted normally", function() {
     assertChildrenAreConvertedNormally("v:group");
 });
 
+test("children of v:rect are converted normally", function() {
+    assertChildrenAreConvertedNormally("v:rect");
+});
+
 function assertChildrenAreConvertedNormally(tagName) {
     var runXml = new XmlElement("w:r", {}, []);
     var result = readXmlElement(new XmlElement(tagName, {}, [runXml]));
