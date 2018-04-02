@@ -1166,6 +1166,23 @@ test("text boxes have content appended after containing paragraph", function() {
     assert.deepEqual(result.value[1].styleId, "textbox-content");
 });
 
+test("output rectangle content as paragraph", function() {
+    var textbox = new XmlElement("w:pict", {}, [
+        new XmlElement("v:rect", {}, [
+            new XmlElement("v:textbox", {}, [
+                new XmlElement("w:txbxContent", {}, [
+                    paragraphWithStyleId("vrect-textbox-content")
+                ])
+            ])
+        ])
+    ]);
+    var paragraph = new XmlElement("w:p", {}, [
+        new XmlElement("w:r", {}, [textbox])
+    ]);
+    var result = readXmlElement(paragraph);
+    assert.deepEqual(result.value[1].styleId, "vrect-textbox-content");
+});
+
 test("mc:Fallback is used when mc:AlternateContent is read", function() {
     var styles = new Styles({"first": {name: "First"}, "second": {name: "Second"}}, {});
     var textbox = new XmlElement("mc:AlternateContent", {}, [
