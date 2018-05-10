@@ -1,0 +1,91 @@
+Arguments: 
+  /Users/gorjanpetrovski/.nvm/versions/node/v8.9.4/bin/node /Users/gorjanpetrovski/.nvm/versions/node/v8.9.4/bin/yarn test
+
+PATH: 
+  /Users/gorjanpetrovski/.nvm/versions/node/v8.9.4/bin:/Users/gorjanpetrovski/.cargo/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/gorjanpetrovski/.cargo/bin:/Users/gorjanpetrovski/bin:/Users/gorjanpetrovski/bin
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  8.9.4
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "h4mammoth",
+    "version": "1.4.14",
+    "author": "Gorjan Petrovski<gp@hfour.com>, Michael Williamson <mike@zwobble.org>",
+    "description": "Incompatible fork from mammoth.js. Convert Word documents from docx to simple HTML and Markdown",
+    "keywords": [
+      "docx",
+      "html",
+      "office",
+      "word",
+      "markdown",
+      "md"
+    ],
+    "main": "./lib/index.js",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/gorjan-h4/mammoth.js.git"
+    },
+    "dependencies": {
+      "argparse": "~1.0.3",
+      "bluebird": "~3.4.0",
+      "jszip": "~2.5.0",
+      "lop": "~0.4.0",
+      "path-is-absolute": "^1.0.0",
+      "sax": "~1.1.1",
+      "underscore": "~1.8.3",
+      "xmlbuilder": "^10.0.0"
+    },
+    "devDependencies": {
+      "mocha": "~2.2.5",
+      "browserify": "~13.0.1",
+      "browserify-prepend-licenses": "~1.0.0",
+      "duck": "~0.1.11",
+      "uglify-js": "~2.4.8",
+      "temp": "~0.7.0",
+      "eslint": "2.13.1",
+      "hamjest": "2.13.0",
+      "flow-bin": "^0.32.0"
+    },
+    "browser": {
+      "./lib/unzip.js": "./browser/unzip.js",
+      "./lib/docx/files.js": "./browser/docx/files.js"
+    },
+    "bin": {
+      "mammoth": "bin/mammoth"
+    },
+    "scripts": {
+      "pretest": "eslint lib tests",
+      "test": "mocha 'test/**/*.tests.js'",
+      "prepublish": "make mammoth.browser.min.js"
+    },
+    "license": "BSD-2-Clause"
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: Command failed.
+  Exit code: 6
+  Command: sh
+  Arguments: -c mocha 'test/**/*.tests.js'
+  Directory: /Users/gorjanpetrovski/h4/mammoth.js
+  Output:
+  
+      at ProcessTermError.MessageError (/Users/gorjanpetrovski/.nvm/versions/node/v8.9.4/lib/node_modules/yarn/lib/cli.js:186:110)
+      at new ProcessTermError (/Users/gorjanpetrovski/.nvm/versions/node/v8.9.4/lib/node_modules/yarn/lib/cli.js:226:113)
+      at ChildProcess.<anonymous> (/Users/gorjanpetrovski/.nvm/versions/node/v8.9.4/lib/node_modules/yarn/lib/cli.js:30281:17)
+      at emitTwo (events.js:126:13)
+      at ChildProcess.emit (events.js:214:7)
+      at maybeClose (internal/child_process.js:925:16)
+      at Process.ChildProcess._handle.onexit (internal/child_process.js:209:5)
