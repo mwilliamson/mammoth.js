@@ -2,7 +2,6 @@
   "extends": "eslint:recommended",
 
   "rules": {
-    "curly": ["error", "all"],
     "dot-location": ["error", "property"],
     "no-alert": ["error"],
     "no-caller": ["error"],
@@ -43,10 +42,8 @@
       "error",
       {"beforeColon": false, "afterColon": true, "mode": "strict"}
     ],
-    "keyword-spacing": ["error", {"before": true, "after": true}],
     "new-parens": ["error"],
     "no-array-constructor": ["error"],
-    "no-continue": ["error"],
     "no-lonely-if": ["error"],
     "no-multiple-empty-lines": ["error", {"max": 2, "maxEOF": 1}],
     "no-new-object": ["error"],
@@ -59,7 +56,6 @@
     "semi-spacing": ["error", {"before": false}],
     "space-before-function-paren": ["error", "never"],
     "space-in-parens": ["error", "never"],
-    "space-infix-ops": ["error"],
     "space-unary-ops": ["error", {"words": true, "nonwords": false}],
     "spaced-comment": ["error", "always"]
   },

@@ -32,7 +32,7 @@ var imageBase64 = "iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6
 test("inline images are included in output if writing to single file", function() {
     return runMammoth(testPath("tiny-picture.docx")).then(function(result) {
         assert.equal(result.stderrOutput, "");
-        assert.equal(result.output, '<p><img src="data:image/png;base64,' + imageBase64 + '" /></p>');
+        assert.equal(result.output, '<p><img src="data:image/png;base64,' + imageBase64 + '" height="10" width="10" /></p>');
     });
 });
 

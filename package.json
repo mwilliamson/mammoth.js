@@ -1,8 +1,8 @@
 {
   "name": "h4mammoth",
   "version": "1.4.14",
-  "author": "Michael Williamson <mike@zwobble.org>",
-  "description": "Convert Word documents from docx to simple HTML and Markdown",
+  "author": "Gorjan Petrovski<gp@hfour.com>, Michael Williamson <mike@zwobble.org>",
+  "description": "Incompatible fork from mammoth.js. Convert Word documents from docx to simple HTML and Markdown",
   "keywords": [
     "docx",
     "html",
@@ -14,7 +14,7 @@
   "main": "./lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mwilliamson/mammoth.js.git"
+    "url": "https://github.com/gorjan-h4/mammoth.js.git"
   },
   "dependencies": {
     "bluebird": "~3.4.0",

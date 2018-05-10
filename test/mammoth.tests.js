@@ -208,14 +208,14 @@ test('mammoth.transforms.paragraph only transforms paragraphs', function() {
 test('inline images referenced by path relative to part are included in output', function() {
     var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
     return mammoth.convertToHtml({path: docxPath}).then(function(result) {
-        assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
+        assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" height="10" width="10" /></p>');
     });
 });
 
 test('inline images referenced by path relative to base are included in output', function() {
     var docxPath = path.join(__dirname, "test-data/tiny-picture-target-base-relative.docx");
     return mammoth.convertToHtml({path: docxPath}).then(function(result) {
-        assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
+        assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" height="10" width="10" /></p>');
     });
 });
 
@@ -234,7 +234,7 @@ test('src of inline images can be changed', function() {
 test('images stored outside of document are included in output', function() {
     var docxPath = path.join(__dirname, "test-data/external-picture.docx");
     return mammoth.convertToHtml({path: docxPath}).then(function(result) {
-        assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" /></p>');
+        assert.equal(result.value, '<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAIAAAACUFjqAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAOvgAADr4B6kKxwAAAABNJREFUKFNj/M+ADzDhlWUYqdIAQSwBE8U+X40AAAAASUVORK5CYII=" height="10" width="10" /></p>');
         assert.deepEqual(result.messages, []);
     });
 });
@@ -259,12 +259,7 @@ test('simple list is converted to list elements', function() {
 test('word tables are converted to html tables', function() {
     var docxPath = path.join(__dirname, "test-data/tables.docx");
     return mammoth.convertToHtml({path: docxPath}).then(function(result) {
-        var expectedHtml = "<p>Above</p>" +
-            "<table data-table-grid=\"[4621,4621]\">" +
-            "<tr><td><p>Top left</p></td><td><p>Top right</p></td></tr>" +
-            "<tr><td><p>Bottom left</p></td><td><p>Bottom right</p></td></tr>" +
-            "</table>" +
-            "<p>Below</p>";
+        var expectedHtml = `<p>Above</p><table data-table-grid="[4621,4621]"><tr><td style=" border-width: 3px; border-style: none none none none; vertical-align: top;"><p>Top left</p></td><td style=" border-width: 3px; border-style: none none none none; vertical-align: top;"><p>Top right</p></td></tr><tr><td style=" border-width: 3px; border-style: none none none none; vertical-align: top;"><p>Bottom left</p></td><td style=" border-width: 3px; border-style: none none none none; vertical-align: top;"><p>Bottom right</p></td></tr></table><p>Below</p>`;
         assert.equal(result.value, expectedHtml);
         assert.deepEqual(result.messages, []);
     });
