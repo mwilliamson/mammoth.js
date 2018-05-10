@@ -1,3 +1,8 @@
+# 1.4.6
+
+* Fix: default style mappings caused footnotes, endnotes and comments
+  containing multiple paragraphs to be converted into a single paragraph.
+
 # 1.4.5
 
 * When using the pretty HTML writer, don't format HTML inside pre elements.
