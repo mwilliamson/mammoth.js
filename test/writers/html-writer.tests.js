@@ -92,8 +92,8 @@ test('run of text has only one new line', function() {
 test('run of html has only one new line', function() {
     var writer = htmlWriter.writer({prettyPrint: true});
     writer.open("p");
-    writer.append("One");
-    writer.append("Two");
+    writer.text("One");
+    writer.text("Two");
     writer.close("p");
     return assert.equal(writer.asString(), "<p>\n  OneTwo\n</p>");
 });
@@ -109,7 +109,7 @@ test('self closing elements are indented', function() {
 test('newlines in appended HTML are indented', function() {
     var writer = htmlWriter.writer({prettyPrint: true});
     writer.open("p");
-    writer.append("One\nTwo");
+    writer.text("One\nTwo");
     writer.close("p");
     return assert.equal(writer.asString(), "<p>\n  One\n  Two\n</p>");
 });
