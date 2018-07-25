@@ -1,6 +1,6 @@
 {
   "name": "h4mammoth",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "author": "Gorjan Petrovski<gp@hfour.com>, Michael Williamson <mike@zwobble.org>",
   "description": "Incompatible fork from mammoth.js. Convert Word documents from docx to simple HTML and Markdown",
   "keywords": [
