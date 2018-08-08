@@ -13,3 +13,4 @@ mammoth.browser.js:
 
 mammoth.browser.min.js: mammoth.browser.js
 	node_modules/.bin/uglifyjs mammoth.browser.js -c > $@
+	cp mammoth.browser.min.js ../capecon-web/public_html/wp-content/plugins/pragmatic-docx-gutenberg/js/
