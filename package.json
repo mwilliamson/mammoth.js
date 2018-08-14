@@ -27,8 +27,13 @@
     "path-is-absolute": "^1.0.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.6.1",
+    "babelify": "^8.0.0",
     "mocha": "~2.2.5",
-    "browserify": "~13.0.1",
+    "browserify": "^16.1.1",
     "browserify-prepend-licenses": "~1.0.0",
     "duck": "~0.1.11",
     "uglify-js": "~2.4.8",
