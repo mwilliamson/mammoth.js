@@ -17,25 +17,25 @@
     "url": "https://github.com/mwilliamson/mammoth.js.git"
   },
   "dependencies": {
-    "bluebird": "~3.4.0",
-    "sax": "~1.1.1",
-    "underscore": "~1.8.3",
-    "lop": "~0.4.0",
-    "argparse": "~1.0.3",
+    "argparse": "^1.0.10",
+    "bluebird": "^3.5.2",
     "jszip": "~2.5.0",
-    "xmlbuilder": "~2.6.4",
-    "path-is-absolute": "^1.0.0"
+    "lop": "~0.4.0",
+    "path-is-absolute": "^1.0.0",
+    "sax": "^1.2.4",
+    "underscore": "^1.9.1",
+    "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
-    "mocha": "~2.2.5",
-    "browserify": "~13.0.1",
+    "browserify": "^16.2.3",
     "browserify-prepend-licenses": "~1.0.0",
     "duck": "~0.1.11",
-    "uglify-js": "~2.4.8",
-    "temp": "~0.7.0",
-    "eslint": "2.13.1",
-    "hamjest": "2.13.0",
-    "flow-bin": "^0.32.0"
+    "eslint": "^5.6.1",
+    "flow-bin": "^0.81.0",
+    "hamjest": "^3.2.1",
+    "mocha": "^5.2.0",
+    "temp": "^0.8.3",
+    "uglify-js": "^3.4.9"
   },
   "browser": {
     "./lib/unzip.js": "./browser/unzip.js",
