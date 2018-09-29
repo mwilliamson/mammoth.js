@@ -39,7 +39,7 @@ function createRead(files) {
     function read(path, encoding) {
         return promises.when(files[path], function(buffer) {
             if (_.isString(buffer)) {
-                buffer = new Buffer(buffer);
+                buffer = Buffer.from(buffer);
             }
             
             if (!Buffer.isBuffer(buffer)) {

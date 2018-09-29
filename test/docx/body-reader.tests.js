@@ -785,7 +785,7 @@ test('_GoBack bookmark is ignored', function() {
     assert.deepEqual(result.value, []);
 });
 
-var IMAGE_BUFFER = new Buffer("Not an image at all!");
+var IMAGE_BUFFER = Buffer.from("Not an image at all!");
 var IMAGE_RELATIONSHIP_ID = "rId5";
 
 function isSuccess(valueMatcher) {

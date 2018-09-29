@@ -656,7 +656,7 @@ test('comment references are linked to comment after main body', function() {
 });
 
 test('images are written with data URIs', function() {
-    var imageBuffer = new Buffer("Not an image at all!");
+    var imageBuffer = Buffer.from("Not an image at all!");
     var image = new documents.Image({
         readImage: function(encoding) {
             return promises.when(imageBuffer.toString(encoding));
@@ -670,7 +670,7 @@ test('images are written with data URIs', function() {
 });
 
 test('images have alt attribute if available', function() {
-    var imageBuffer = new Buffer("Not an image at all!");
+    var imageBuffer = Buffer.from("Not an image at all!");
     var image = new documents.Image({
         readImage: function() {
             return promises.when(imageBuffer);
@@ -688,7 +688,7 @@ test('images have alt attribute if available', function() {
 });
 
 test('can add custom handler for images', function() {
-    var imageBuffer = new Buffer("Not an image at all!");
+    var imageBuffer = Buffer.from("Not an image at all!");
     var image = new documents.Image({
         readImage: function(encoding) {
             return promises.when(imageBuffer.toString(encoding));
@@ -711,7 +711,7 @@ test('when custom image handler throws error then error is stored in error messa
     var error = new Error("Failed to convert image");
     var image = new documents.Image({
         readImage: function(encoding) {
-            return promises.when(new Buffer().toString(encoding));
+            return promises.when(Buffer.from().toString(encoding));
         },
         contentType: "image/png"
     });

@@ -18,7 +18,7 @@ test('mammoth.images.inline() should be an alias of mammoth.images.imgElement()'
 
 
 test('mammoth.images.dataUri() encodes images in base64', function() {
-    var imageBuffer = new Buffer("abc");
+    var imageBuffer = Buffer.from("abc");
     var image = new documents.Image({
         readImage: function(encoding) {
             return promises.when(imageBuffer.toString(encoding));
