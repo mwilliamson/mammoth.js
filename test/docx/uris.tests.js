@@ -9,14 +9,14 @@ test("uriToZipEntryName", {
         assert.equal(
             zipfile.uriToZipEntryName("one/two", "three/four"),
             "one/two/three/four"
-        )
+        );
     },
 
     "when path has leading slash then base is ignored": function() {
         assert.equal(
             zipfile.uriToZipEntryName("one/two", "/three/four"),
             "three/four"
-        )
+        );
     }
 });
 

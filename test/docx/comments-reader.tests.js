@@ -26,7 +26,6 @@ test('ID and body of comment are read', function() {
 
 
 test('when optional attributes of comment are missing then they are read as null', function() {
-    var body = [xml.element("w:p")];
     var comment = readComment(xml.element("w:comments", {}, [
         xml.element("w:comment", {"w:id": "1"})
     ]));
@@ -36,7 +35,6 @@ test('when optional attributes of comment are missing then they are read as null
 
 
 test('when optional attributes of comment are blank then they are read as null', function() {
-    var body = [xml.element("w:p")];
     var comment = readComment(xml.element("w:comments", {}, [
         xml.element("w:comment", {"w:id": "1", "w:author": " ", "w:initials": " "})
     ]));

@@ -88,7 +88,6 @@ test("error is thrown when main document part does not exist", function() {
 });
 
 
-
 test("part paths", {
     "main document part is found using package relationships": function() {
         var relationships = xml.element("r:Relationships", {}, [

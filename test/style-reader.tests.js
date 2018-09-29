@@ -70,7 +70,7 @@ test('styleReader.readHtmlPath', {
     
     'reads separator with escape sequence': function() {
         var expected = htmlPaths.elements([
-            htmlPaths.element("p", {}, {separator: "\r\n\t\'\\"})
+            htmlPaths.element("p", {}, {separator: "\r\n\t'\\"})
         ]);
         assertHtmlPath("p:separator('\\r\\n\\t\\'\\\\')", expected);
     },
