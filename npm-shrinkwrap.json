@@ -1083,12 +1083,6 @@
         "write": "^0.2.1"
       }
     },
-    "flow-bin": {
-      "version": "0.32.0",
-      "resolved": "http://registry.npmjs.org/flow-bin/-/flow-bin-0.32.0.tgz",
-      "integrity": "sha1-odadFToHsKnNSmM9E790bUrOVzA=",
-      "dev": true
-    },
     "fs.realpath": {
       "version": "1.0.0",
       "resolved": "https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz",
