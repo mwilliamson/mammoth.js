@@ -45,7 +45,7 @@
     "mammoth": "bin/mammoth"
   },
   "scripts": {
-    "pretest": "eslint lib tests",
+    "pretest": "eslint lib",
     "test": "mocha 'test/**/*.tests.js'",
     "prepublish": "make mammoth.browser.min.js"
   },
