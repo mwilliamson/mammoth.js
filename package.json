@@ -17,14 +17,14 @@
     "url": "https://github.com/mwilliamson/mammoth.js.git"
   },
   "dependencies": {
+    "argparse": "~1.0.3",
     "bluebird": "~3.4.0",
+    "jszip": "~2.5.0",
+    "lop": "~0.4.0",
+    "path-is-absolute": "^1.0.0",
     "sax": "~1.1.1",
     "underscore": "~1.8.3",
-    "lop": "~0.4.0",
-    "argparse": "~1.0.3",
-    "jszip": "~2.5.0",
-    "xmlbuilder": "~2.6.4",
-    "path-is-absolute": "^1.0.0"
+    "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
     "mocha": "~2.2.5",
