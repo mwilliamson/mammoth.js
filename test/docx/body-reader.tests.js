@@ -503,7 +503,7 @@ var booleanRunProperties = [
     {name: "isUnderline", tagName: "w:u"},
     {name: "isItalic", tagName: "w:i"},
     {name: "isStrikethrough", tagName: "w:strike"},
-    {name: "isSmallCaps", tagName: "w:smallCaps"},
+    {name: "isSmallCaps", tagName: "w:smallCaps"}
 ];
 
 booleanRunProperties.forEach(function(runProperty) {
@@ -1248,13 +1248,6 @@ function createLinkedBlip(relationshipId) {
 function runOfText(text) {
     var textXml = new XmlElement("w:t", {}, [xml.text(text)]);
     return new XmlElement("w:r", {}, [textXml]);
-}
-
-function assertImageBuffer(element, expectedImageBuffer) {
-    return element.read()
-        .then(function(readValue) {
-            assert.equal(readValue, expectedImageBuffer);
-        });
 }
 
 function hyperlinkRelationship(relationshipId, target) {

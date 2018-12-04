@@ -756,11 +756,11 @@ function runOfText(text, properties) {
 }
 
 test('when initials are not blank then comment author label is initials', function() {
-    assert.equal(commentAuthorLabel({authorInitials: "TP"}), "TP")
+    assert.equal(commentAuthorLabel({authorInitials: "TP"}), "TP");
 });
 
 test('when initials are blank then comment author label is blank', function() {
-    assert.equal(commentAuthorLabel({authorInitials: ""}), "")
-    assert.equal(commentAuthorLabel({authorInitials: undefined}), "")
-    assert.equal(commentAuthorLabel({authorInitials: null}), "")
+    assert.equal(commentAuthorLabel({authorInitials: ""}), "");
+    assert.equal(commentAuthorLabel({authorInitials: undefined}), "");
+    assert.equal(commentAuthorLabel({authorInitials: null}), "");
 });

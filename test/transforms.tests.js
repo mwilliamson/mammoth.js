@@ -91,7 +91,7 @@ test("getDescendants()", {
     "includes children": function() {
         var element = {
             children: [{name: "child 1"}, {name: "child 2"}]
-        }
+        };
         assert.deepEqual(
             transforms.getDescendants(element),
             [{name: "child 1"}, {name: "child 2"}]

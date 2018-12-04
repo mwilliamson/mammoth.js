@@ -88,7 +88,6 @@ test("error is thrown when main document part does not exist", function() {
 });
 
 
-
 test("part paths", {
     "main document part is found using package relationships": function() {
         var relationships = xml.element("r:Relationships", {}, [
@@ -120,23 +119,23 @@ test("part paths", {
 [
     {
         name: "comments",
-        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/comments"
     },
     {
         name: "endnotes",
-        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/endnotes"
     },
     {
         name: "footnotes",
-        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/footnotes"
     },
     {
         name: "numbering",
-        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/numbering"
     },
     {
         name: "styles",
-        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles",
+        type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles"
     }
 ].forEach(function(options) {
     test(options.name + " part is found using main document relationships", function() {
