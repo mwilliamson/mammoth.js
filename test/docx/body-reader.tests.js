@@ -174,6 +174,14 @@ test("numbering properties are converted to numbering at specified level", funct
     assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
 });
 
+test("numbering properties are converted to numbering at specified styleId", function() {
+    var numberingPropertiesXml = new XmlElement("w:pStyle", {"w:val": "a"});
+    
+    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1", pStyle: "a"}}}, {a: {isOrdered: true, level: "1", pStyle: "a"}});
+    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering, "a");
+    assert.deepEqual(numberingLevel, {level: "1", isOrdered: true, pStyle: "a"});
+});
+
 test("numbering properties are ignored if w:ilvl is missing", function() {
     var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
         new XmlElement("w:numId", {"w:val": "42"})
@@ -1265,3 +1273,4 @@ function imageRelationship(relationshipId, target) {
         type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
     };
 }
+
