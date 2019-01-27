@@ -409,7 +409,7 @@ test('docx table is converted to table in HTML', function() {
         ])
     ]);
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(table).then(function(result) {
         var expectedHtml = "<table>" +
             "<tr><td><p>Top left</p></td><td><p>Top right</p></td></tr>" +
@@ -443,7 +443,7 @@ test('header rows are wrapped in thead', function() {
         new documents.TableRow([new documents.TableCell([])], {isHeader: false})
     ]);
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(table).then(function(result) {
         var expectedHtml = "<table>" +
             "<thead><tr><th></th></tr><tr><th></th></tr></thead>" +
@@ -458,7 +458,7 @@ test('tbody is omitted if all rows are headers', function() {
         new documents.TableRow([new documents.TableCell([])], {isHeader: true})
     ]);
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(table).then(function(result) {
         var expectedHtml = "<table>" +
             "<thead><tr><th></th></tr></thead>" +
@@ -472,7 +472,7 @@ test('unexpected table children do not cause error', function() {
         new documents.tab()
     ]);
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(table).then(function(result) {
         var expectedHtml = "<table>\t</table>";
         assert.equal(result.value, expectedHtml);
@@ -487,10 +487,27 @@ test('empty cells are preserved in table', function() {
         ])
     ]);
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(table).then(function(result) {
         var expectedHtml = "<table>" +
             "<tr><td></td><td><p>Top right</p></td></tr>" +
+            "</table>";
+        assert.equal(result.value, expectedHtml);
+    });
+});
+
+test('empty rows are preserved in table', function() {
+    var table = new documents.Table([
+        new documents.TableRow([
+            new documents.TableCell([paragraphOfText("Row 1")])
+        ]),
+        new documents.TableRow([])
+    ]);
+    var converter = new DocumentConverter();
+
+    return converter.convertToHtml(table).then(function(result) {
+        var expectedHtml = "<table>" +
+            "<tr><td><p>Row 1</p></td></tr><tr></tr>" +
             "</table>";
         assert.equal(result.value, expectedHtml);
     });
@@ -504,7 +521,7 @@ test('table cells are written with colSpan if not equal to one', function() {
         ])
     ]);
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(table).then(function(result) {
         var expectedHtml = "<table>" +
             "<tr><td colspan=\"2\"><p>Top left</p></td><td><p>Top right</p></td></tr>" +
@@ -520,7 +537,7 @@ test('table cells are written with rowSpan if not equal to one', function() {
         ])
     ]);
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(table).then(function(result) {
         var expectedHtml = "<table>" +
             "<tr><td rowspan=\"2\"></td></tr>" +
@@ -531,7 +548,7 @@ test('table cells are written with rowSpan if not equal to one', function() {
 
 test('line break is converted to <br>', function() {
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(documents.lineBreak).then(function(result) {
         assert.equal(result.value, "<br />");
     });
@@ -539,7 +556,7 @@ test('line break is converted to <br>', function() {
 
 test('breaks that are not line breaks are ignored', function() {
     var converter = new DocumentConverter();
-    
+
     return converter.convertToHtml(documents.pageBreak).then(function(result) {
         assert.equal(result.value, "");
     });
@@ -554,7 +571,7 @@ test('breaks can be mapped using style mappings', function() {
             }
         ]
     });
-    
+
     return converter.convertToHtml(documents.pageBreak).then(function(result) {
         assert.equal(result.value, "<hr />");
     });
@@ -593,7 +610,7 @@ test('footnotes are included after the main body', function() {
             })
         }
     );
-    
+
     var converter = new DocumentConverter({
         idPrefix: "doc-42-"
     });
@@ -616,14 +633,14 @@ test('comments are ignored by default', function() {
             documents.run([reference])
         ])
     ], {comments: [comment]});
-    
+
     var converter = new DocumentConverter({});
     return converter.convertToHtml(document).then(function(result) {
         assert.equal(result.value, '<p>Knock knock</p>');
         assert.deepEqual(result.messages, []);
     });
 });
-    
+
 test('comment references are linked to comment after main body', function() {
     var reference = documents.commentReference({commentId: "4"});
     var comment = documents.comment({
@@ -638,7 +655,7 @@ test('comment references are linked to comment after main body', function() {
             documents.run([reference])
         ])
     ], {comments: [comment]});
-    
+
     var converter = new DocumentConverter({
         idPrefix: "doc-42-",
         styleMap: [
