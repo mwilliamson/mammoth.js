@@ -79,6 +79,37 @@ test('style name is null if w:name element does not exist', function() {
     assert.equal(styles.findCharacterStyleById("Heading1Char").name, null);
 });
 
+test('numbering style is null if no style with that ID exists', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [])
+    );
+    assert.equal(styles.findNumberingStyleById("List1"), null);
+});
+
+test('numbering style has null numId if style has no paragraph properties', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [
+            new XmlElement("w:style", {"w:type": "numbering", "w:styleId": "List1"})
+        ])
+    );
+    assert.equal(styles.findNumberingStyleById("List1").numId, null);
+});
+
+test('numbering style has numId read from paragraph properties', function() {
+    var styles = readStylesXml(
+        new XmlElement("w:styles", {}, [
+            new XmlElement("w:style", {"w:type": "numbering", "w:styleId": "List1"}, [
+                new XmlElement("w:pPr", {}, [
+                    new XmlElement("w:numPr", {}, [
+                        new XmlElement("w:numId", {"w:val": "42"})
+                    ])
+                ])
+            ])
+        ])
+    );
+    assert.equal(styles.findNumberingStyleById("List1").numId, "42");
+});
+
 function paragraphStyleElement(id, name) {
     return styleElement("paragraph", id, name);
 }
