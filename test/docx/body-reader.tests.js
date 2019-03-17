@@ -65,9 +65,9 @@ test("paragraph has style ID and name read from paragraph properties if present"
     var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
     var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
     var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-    
+
     var styles = new Styles({"Heading1": {name: "Heading 1"}}, {});
-    
+
     var paragraph = readXmlElementValue(paragraphXml, {styles: styles});
     assert.deepEqual(paragraph.styleId, "Heading1");
     assert.deepEqual(paragraph.styleName, "Heading 1");
@@ -77,9 +77,9 @@ test("warning is emitted when paragraph style cannot be found", function() {
     var styleXml = new XmlElement("w:pStyle", {"w:val": "Heading1"}, []);
     var propertiesXml = new XmlElement("w:pPr", {}, [styleXml]);
     var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-    
+
     var styles = new Styles({}, {});
-    
+
     var result = readXmlElement(paragraphXml, {styles: styles});
     var paragraph = result.value;
     assert.deepEqual(paragraph.styleId, "Heading1");
@@ -101,7 +101,7 @@ test("paragraph indent", {
         var paragraph = readXmlElementValue(paragraphXml);
         assert.equal(paragraph.indent.start, "720");
     },
-    
+
     "when w:start is not set then start indent is read from w:left": function() {
         var paragraphXml = paragraphWithIndent({"w:left": "720"});
         var paragraph = readXmlElementValue(paragraphXml);
@@ -155,9 +155,9 @@ test("paragraph has numbering properties from paragraph properties if present", 
     ]);
     var propertiesXml = new XmlElement("w:pPr", {}, [numberingPropertiesXml]);
     var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
-    
-    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
-    
+
+    var numbering = new NumberingMap({"42": {"1": {isOrdered: true, level: "1"}}});
+
     var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering});
     assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
 });
@@ -167,9 +167,9 @@ test("numbering properties are converted to numbering at specified level", funct
         new XmlElement("w:ilvl", {"w:val": "1"}),
         new XmlElement("w:numId", {"w:val": "42"})
     ]);
-    
-    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
-    
+
+    var numbering = new NumberingMap({"42": {"1": {isOrdered: true, level: "1"}}});
+
     var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
 });
@@ -178,9 +178,9 @@ test("numbering properties are ignored if w:ilvl is missing", function() {
     var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
         new XmlElement("w:numId", {"w:val": "42"})
     ]);
-    
+
     var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
-    
+
     var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
@@ -189,9 +189,9 @@ test("numbering properties are ignored if w:numId is missing", function() {
     var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
         new XmlElement("w:ilvl", {"w:val": "1"})
     ]);
-    
+
     var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
-    
+
     var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
@@ -213,7 +213,7 @@ test("complex fields", (function() {
     var hyperlinkRunXml = runOfText("this is a hyperlink");
 
     var isEmptyHyperlinkedRun = isHyperlinkedRun({children: []});
-    
+
     function isHyperlinkedRun(hyperlinkProperties) {
         return isRun({
             children: contains(
@@ -221,13 +221,13 @@ test("complex fields", (function() {
             )
         });
     }
-    
+
     return {
         "stores instrText returns empty result": function() {
             var instrText = readXmlElementValue(hyperlinkInstrText);
             assert.deepEqual(instrText, []);
         },
-        
+
         "runs in a complex field for hyperlinks are read as hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
@@ -238,7 +238,7 @@ test("complex fields", (function() {
                 endXml
             ]);
             var paragraph = readXmlElementValue(paragraphXml);
-            
+
             assertThat(paragraph.children, contains(
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
@@ -250,7 +250,7 @@ test("complex fields", (function() {
                 isEmptyRun
             ));
         },
-        
+
         "runs after a complex field for hyperlinks are not read as hyperlinks": function() {
             var afterEndXml = runOfText("this will not be a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
@@ -261,7 +261,7 @@ test("complex fields", (function() {
                 afterEndXml
             ]);
             var paragraph = readXmlElementValue(paragraphXml);
-            
+
             assertThat(paragraph.children, contains(
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
@@ -366,7 +366,7 @@ test("complex fields", (function() {
                 isEmptyRun
           ));
         },
-        
+
         "field without separate w:fldChar is ignored": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
@@ -379,7 +379,7 @@ test("complex fields", (function() {
                 endXml
             ]);
             var paragraph = readXmlElementValue(paragraphXml);
-            
+
             assertThat(paragraph.children, contains(
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
@@ -405,9 +405,9 @@ test("run has no style if it has no properties", function() {
 test("run has style ID and name read from run properties if present", function() {
     var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
     var runXml = runWithProperties([runStyleXml]);
-    
+
     var styles = new Styles({}, {"Heading1Char": {name: "Heading 1 Char"}});
-    
+
     var run = readXmlElementValue(runXml, {styles: styles});
     assert.deepEqual(run.styleId, "Heading1Char");
     assert.deepEqual(run.styleName, "Heading 1 Char");
@@ -416,9 +416,9 @@ test("run has style ID and name read from run properties if present", function()
 test("warning is emitted when run style cannot be found", function() {
     var runStyleXml = new XmlElement("w:rStyle", {"w:val": "Heading1Char"});
     var runXml = runWithProperties([runStyleXml]);
-    
+
     var styles = new Styles({}, {});
-    
+
     var result = readXmlElement(runXml, {styles: styles});
     var run = result.value;
     assert.deepEqual(run.styleId, "Heading1Char");
@@ -513,21 +513,21 @@ booleanRunProperties.forEach(function(runProperty) {
         var run = readXmlElementValue(runXml);
         assert.equal(run[runProperty.name], false);
     });
-    
+
     test(runProperty.name + " is false if " + runProperty.tagName + " is present and w:val is 0", function() {
         var propertyXml = new XmlElement(runProperty.tagName, {"w:val": "0"});
         var runXml = runWithProperties([propertyXml]);
         var run = readXmlElementValue(runXml);
         assert.equal(run[runProperty.name], false);
     });
-    
+
     test(runProperty.name + " is true if " + runProperty.tagName + " is present and w:val is true", function() {
         var propertyXml = new XmlElement(runProperty.tagName, {"w:val": "true"});
         var runXml = runWithProperties([propertyXml]);
         var run = readXmlElementValue(runXml);
         assert.equal(run[runProperty.name], true);
     });
-    
+
     test(runProperty.name + " is true if " + runProperty.tagName + " is present and w:val is 1", function() {
         var propertyXml = new XmlElement(runProperty.tagName, {"w:val": "1"});
         var runXml = runWithProperties([propertyXml]);
@@ -545,7 +545,7 @@ test("run has baseline vertical alignment by default", function() {
 test("run has vertical alignment read from properties", function() {
     var verticalAlignmentXml = new XmlElement("w:vertAlign", {"w:val": "superscript"});
     var runXml = runWithProperties([verticalAlignmentXml]);
-    
+
     var run = readXmlElementValue(runXml);
     assert.deepEqual(run.verticalAlignment, documents.verticalAlignment.superscript);
 });
@@ -560,7 +560,7 @@ test("run has null font by default", function() {
 test("run has font read from properties", function() {
     var fontXml = new XmlElement("w:rFonts", {"w:ascii": "Arial"});
     var runXml = runWithProperties([fontXml]);
-    
+
     var run = readXmlElementValue(runXml);
     assert.deepEqual(run.font, "Arial");
 });
@@ -613,9 +613,9 @@ test("table has style ID and name read from table properties if present", functi
     var styleXml = new XmlElement("w:tblStyle", {"w:val": "TableNormal"}, []);
     var propertiesXml = new XmlElement("w:tblPr", {}, [styleXml]);
     var tableXml = new XmlElement("w:tbl", {}, [propertiesXml]);
-    
+
     var styles = new Styles({}, {}, {"TableNormal": {name: "Normal Table"}});
-    
+
     var table = readXmlElementValue(tableXml, {styles: styles});
     assert.deepEqual(table.styleId, "TableNormal");
     assert.deepEqual(table.styleName, "Normal Table");
@@ -625,7 +625,7 @@ test("warning is emitted when table style cannot be found", function() {
     var styleXml = new XmlElement("w:tblStyle", {"w:val": "TableNormal"}, []);
     var propertiesXml = new XmlElement("w:tblPr", {}, [styleXml]);
     var tableXml = new XmlElement("w:tbl", {}, [propertiesXml]);
-    
+
     var result = readXmlElement(tableXml, {styles: Styles.EMPTY});
     var table = result.value;
     assert.deepEqual(table.styleId, "TableNormal");
@@ -826,9 +826,9 @@ test("can read imagedata elements with r:id attribute", function() {
         "r:id": IMAGE_RELATIONSHIP_ID,
         "o:title": "It's a hat"
     });
-    
+
     var result = readEmbeddedImage(imagedataElement);
-    
+
     return promiseThat(result, isSuccess(isImage({
         altText: "It's a hat",
         contentType: "image/png",
@@ -838,9 +838,9 @@ test("can read imagedata elements with r:id attribute", function() {
 
 test("when v:imagedata element has no relationship ID then it is ignored with warning", function() {
     var imagedataElement = new XmlElement("v:imagedata");
-    
+
     var result = readXmlElement(imagedataElement);
-    
+
     assert.deepEqual(result.value, []);
     assert.deepEqual(result.messages, [warning("A v:imagedata element without a relationship ID was ignored")]);
 });
@@ -850,9 +850,9 @@ test("can read inline pictures", function() {
         blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),
         description: "It's a hat"
     });
-    
+
     var result = readEmbeddedImage(drawing);
-    
+
     return promiseThat(result, isSuccess(contains(isImage({
         altText: "It's a hat",
         contentType: "image/png",
@@ -865,9 +865,9 @@ test("alt text title is used if alt text description is missing", function() {
         blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),
         title: "It's a hat"
     });
-    
+
     var result = readEmbeddedImage(drawing);
-    
+
     return promiseThat(result, isSuccess(contains(isImage({
         altText: "It's a hat"
     }))));
@@ -879,9 +879,9 @@ test("alt text title is used if alt text description is blank", function() {
         description: " ",
         title: "It's a hat"
     });
-    
+
     var result = readEmbeddedImage(drawing);
-    
+
     return promiseThat(result, isSuccess(contains(isImage({
         altText: "It's a hat"
     }))));
@@ -893,9 +893,9 @@ test("alt text description is preferred to alt text title", function() {
         description: "It's a hat",
         title: "hat"
     });
-    
+
     var result = readEmbeddedImage(drawing);
-    
+
     return promiseThat(result, isSuccess(contains(isImage({
         altText: "It's a hat"
     }))));
@@ -916,9 +916,9 @@ test("can read anchored pictures", function() {
             ])
         ])
     ]);
-    
+
     var result = readEmbeddedImage(drawing);
-    
+
     return promiseThat(result, isSuccess(contains(isImage({
         altText: "It's a hat",
         contentType: "image/png",
@@ -931,7 +931,7 @@ test("can read linked pictures", function() {
         blip: createLinkedBlip("rId5"),
         description: "It's a hat"
     });
-    
+
     var element = single(readXmlElementValue(drawing, {
         relationships: new Relationships([
             imageRelationship("rId5", "file:///media/hat.png")
@@ -953,7 +953,7 @@ test("warning if unsupported image type", function() {
         blip: createEmbeddedBlip("rId5"),
         description: "It's a hat"
     });
-    
+
     var result = readXmlElement(drawing, {
         relationships: new Relationships([
             imageRelationship("rId5", "media/hat.emf")
@@ -970,7 +970,7 @@ test("warning if unsupported image type", function() {
 
 test("no elements created if image cannot be found in w:drawing", function() {
     var drawing = new XmlElement("w:drawing", {}, []);
-    
+
     var result = readXmlElement(drawing);
     assert.deepEqual(result.messages, []);
     assert.deepEqual(result.value, []);
@@ -978,7 +978,7 @@ test("no elements created if image cannot be found in w:drawing", function() {
 
 test("no elements created if image cannot be found in wp:inline", function() {
     var drawing = new XmlElement("wp:inline", {}, []);
-    
+
     var result = readXmlElement(drawing);
     assert.deepEqual(result.messages, []);
     assert.deepEqual(result.value, []);
@@ -1058,7 +1058,7 @@ test("w:hyperlink", {
         var result = readXmlElement(hyperlinkXml);
         assert.deepEqual(result.value[0].type, "run");
     },
-    
+
     "target frame is read": function() {
         var hyperlinkXml = new XmlElement("w:hyperlink", {
             "w:anchor": "Introduction",
@@ -1067,7 +1067,7 @@ test("w:hyperlink", {
         var result = readXmlElementValue(hyperlinkXml);
         assertThat(result, hasProperties({targetFrame: "_blank"}));
     },
-    
+
     "empty target frame is ignored": function() {
         var hyperlinkXml = new XmlElement("w:hyperlink", {
             "w:anchor": "Introduction",
@@ -1263,5 +1263,13 @@ function imageRelationship(relationshipId, target) {
         relationshipId: relationshipId,
         target: target,
         type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image"
+    };
+}
+
+function NumberingMap(nums) {
+    return {
+        findLevel: function(numId, level) {
+            return nums[numId][level];
+        }
     };
 }
