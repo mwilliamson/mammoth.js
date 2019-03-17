@@ -1,3 +1,7 @@
+# 1.4.8
+
+* Improve list support by following w:numStyleLink in w:abstractNum.
+
 # 1.4.7
 
 * Update xmlbuilder dependency.
@@ -117,7 +121,7 @@
 
 * Generate messages of type "error" instead of "warning" when image conversion
   throws an exception.
-  
+
 * Use alt text title as alt text for images when the alt text description is
   blank.
 
@@ -215,7 +219,7 @@
 
 * Generate warnings for not-understood style mappings and continue, rather than
   stopping with an error.
-  
+
 * Add support for embedded style maps.
 
 * Add support for linked images.
@@ -340,9 +344,9 @@
 
 * Allow paragraphs and runs to be matched by style name. For instance, to match
   a paragraph with the style name `Heading 1`:
-  
+
     p[style-name='Heading 1']
-    
+
 * Use an array of raw strings rather than an array of style mappings when
   passing options to convertToHtml.
 
