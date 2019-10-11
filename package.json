@@ -30,7 +30,7 @@
     "browserify": "~13.0.1",
     "browserify-prepend-licenses": "~1.0.0",
     "duck": "~0.1.11",
-    "eslint": "2.13.1",
+    "eslint": "4.18.2",
     "hamjest": "2.13.0",
     "mocha": "~2.2.5",
     "temp": "~0.7.0",
