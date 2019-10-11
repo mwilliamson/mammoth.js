@@ -34,7 +34,7 @@
     "hamjest": "2.13.0",
     "mocha": "~2.2.5",
     "temp": "~0.7.0",
-    "uglify-js": "~2.4.8"
+    "uglify-js": "~2.6.0"
   },
   "browser": {
     "./lib/unzip.js": "./browser/unzip.js",
