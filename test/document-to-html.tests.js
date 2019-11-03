@@ -354,6 +354,23 @@ test('docx hyperlink is converted to <a>', function() {
     });
 });
 
+test('docx hyperlink can be collapsed', function() {
+    var hyperlink = new documents.Document([
+        new documents.Hyperlink(
+            [runOfText("Hello ")],
+            {href: "http://www.example.com"}
+        ),
+        new documents.Hyperlink(
+            [runOfText("world")],
+            {href: "http://www.example.com"}
+        )
+    ]);
+    var converter = new DocumentConverter();
+    return converter.convertToHtml(hyperlink).then(function(result) {
+        assert.equal(result.value, '<a href="http://www.example.com">Hello world</a>');
+    });
+});
+
 test('docx hyperlink with anchor is converted to <a>', function() {
     var hyperlink = new documents.Hyperlink(
         [runOfText("Hello.")],
