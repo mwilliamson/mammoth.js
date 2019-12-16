@@ -432,7 +432,7 @@ it will use the embedded style map.
 For instance:
 
 ```javascript
-mammoth.embedStyleMap({path: sourcePath}, "p[style-name='Section Title'] => h1:fresh");
+mammoth.embedStyleMap({path: sourcePath}, "p[style-name='Section Title'] => h1:fresh")
     .then(function(docx) {
         fs.writeFile(destinationPath, docx.toBuffer(), callback);
     });
