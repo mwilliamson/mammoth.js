@@ -302,3 +302,89 @@ test('generates correct spacing between paragraphs and lists', function() {
     writer.close("p");
     return assert.equal(writer.asString(), "Hello World\n\n- First Item\n- Second Item\n\nHello World\n\n");
 });
+
+test('generates a table just with header', function() {
+    var writer = mdWriter.writer();
+    writer.open("table");
+    writer.open("tr");
+    writer.open("td");
+    writer.text("header");
+    writer.close("td");
+    writer.close("tr");
+    writer.close("table");
+    return assert.equal(writer.asString(), "|header|\n|-|\n\n");
+});
+
+test('generates a table with header and rows', function() {
+    var writer = mdWriter.writer();
+    writer.open("table");
+    writer.open("tr");
+    writer.open("td");
+    writer.text("header");
+    writer.close("td");
+    writer.close("tr");
+    writer.open("tr");
+    writer.open("td");
+    writer.text("first row");
+    writer.close("td");
+    writer.close("tr");
+    writer.open("tr");
+    writer.open("td");
+    writer.text("second row");
+    writer.close("td");
+    writer.close("tr");
+    writer.close("table");
+    return assert.equal(writer.asString(), "|header|\n|-|\n|first row|\n|second row|\n\n");
+});
+
+test('generates a table with paragraphs inside', function() {
+    var writer = mdWriter.writer();
+    writer.open("table");
+    writer.open("tr");
+    writer.open("td");
+    writer.open("p");
+    writer.text("paragraph 1");
+    writer.close("p");
+    writer.open("p");
+    writer.text("paragraph 2");
+    writer.close("p");
+    writer.close("td");
+    writer.close("tr");
+    writer.close("table");
+    return assert.equal(writer.asString(), "|paragraph 1 paragraph 2 |\n|-|\n\n");
+});
+
+test('generates a table with br inside', function() {
+    var writer = mdWriter.writer();
+    writer.open("table");
+    writer.open("tr");
+    writer.open("td");
+    writer.text("paragraph 1");
+    writer.selfClosing("br");
+    writer.text("paragraph 2");
+    writer.close("td");
+    writer.close("tr");
+    writer.close("table");
+    return assert.equal(writer.asString(), "|paragraph 1 paragraph 2|\n|-|\n\n");
+});
+
+test('generates a table with list inside', function() {
+    var writer = mdWriter.writer();
+    writer.open("table");
+    writer.open("tr");
+    writer.open("td");
+
+    writer.open("ol");
+    writer.open("li");
+    writer.text("One");
+    writer.close("li");
+    writer.open("li");
+    writer.text("Two");
+    writer.close("li");
+    writer.close("ol");
+
+    writer.close("td");
+    writer.close("tr");
+    writer.close("table");
+    return assert.equal(writer.asString(), "|One;Two;|\n|-|\n\n");
+});
