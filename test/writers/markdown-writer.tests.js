@@ -388,3 +388,28 @@ test('generates a table with list inside', function() {
     writer.close("table");
     return assert.equal(writer.asString(), "|One;Two;|\n|-|\n\n");
 });
+
+
+test('generates bold text', function() {
+    var writer = mdWriter.writer();
+    writer.open('b');
+    writer.text('bold text');
+    writer.close('b');
+    return assert.equal(writer.asString(), "**bold text**");
+});
+
+test('generates italic text', function() {
+    var writer = mdWriter.writer();
+    writer.open('i');
+    writer.text('italic text');
+    writer.close('i');
+    return assert.equal(writer.asString(), "*italic text*");
+});
+
+test('generates highlighted text', function() {
+    var writer = mdWriter.writer();
+    writer.open('pre');
+    writer.text('highlighted text');
+    writer.close('pre');
+    return assert.equal(writer.asString(), "```highlighted text```");
+});
