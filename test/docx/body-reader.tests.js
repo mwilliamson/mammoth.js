@@ -580,6 +580,14 @@ test("run has fontSize read from properties", function() {
     assert.deepEqual(run.fontSize, 14);
 });
 
+test("run with invalid w:sz has null font size", function() {
+    var fontSizeXml = new XmlElement("w:sz", {"w:val": "28a"});
+    var runXml = runWithProperties([fontSizeXml]);
+
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.fontSize, null);
+});
+
 test("run properties not included as child of run", function() {
     var runStyleXml = new XmlElement("w:rStyle");
     var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
