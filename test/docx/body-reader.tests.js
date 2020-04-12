@@ -565,6 +565,21 @@ test("run has font read from properties", function() {
     assert.deepEqual(run.font, "Arial");
 });
 
+test("run has null fontSize by default", function() {
+    var runXml = runWithProperties([]);
+
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.fontSize, null);
+});
+
+test("run has fontSize read from properties", function() {
+    var fontSizeXml = new XmlElement("w:sz", {"w:val": "28"});
+    var runXml = runWithProperties([fontSizeXml]);
+
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.fontSize, 14);
+});
+
 test("run properties not included as child of run", function() {
     var runStyleXml = new XmlElement("w:rStyle");
     var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
