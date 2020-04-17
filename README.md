@@ -108,13 +108,14 @@ Lines beginning with `#` will be ignored.
 
 #### Markdown
 
+Markdown support is deprecated.
+Generating HTML and using a separate library to convert the HTML to Markdown is recommended,
+and is likely to produce better results.
+
 Using `--output-format=markdown` will cause Markdown to be generated.
 For instance:
 
     mammoth document.docx --output-format=markdown
-
-Markdown support is still in its early stages,
-so you may find some features are unsupported.
 
 ### Library
 
