@@ -104,7 +104,7 @@ Where `custom-style-map` looks something like:
     p[style-name='Aside Heading'] => div.aside > h2:fresh
     p[style-name='Aside Text'] => div.aside > p:fresh
 
-Lines beginning with `#` will be ignored.
+A description of the syntax for style maps can be found in the section ["Writing style maps"](#writing-style-maps).
 
 #### Markdown
 
@@ -168,7 +168,7 @@ Mammoth maps some common .docx styles to HTML elements.
 For instance,
 a paragraph with the style name `Heading 1` is converted to a `h1` element.
 You can pass in a custom map for styles by passing an options object with a `styleMap` property as a second argument to `convertToHtml`.
-A description of the syntax for style maps can be found in the section "Writing style maps".
+A description of the syntax for style maps can be found in the section ["Writing style maps"](#writing-style-maps).
 For instance, if paragraphs with the style name `Section Title` should be converted to `h1` elements,
 and paragraphs with the style name `Subsection Title` should be converted to `h2` elements:
 
@@ -344,7 +344,7 @@ Converts the source document to HTML.
      ignoring blank lines and lines starting with `#`:
      If `options.styleMap` is an array,
      each element is expected to be a string representing a single style mapping.
-     See "Writing style maps" for a reference to the syntax for style maps.
+     See ["Writing style maps"](#writing-style-maps) for a reference to the syntax for style maps.
 
   * `includeEmbeddedStyleMap`: by default,
      if the document contains an embedded style map, then it is combined with the default style map.
