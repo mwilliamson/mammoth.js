@@ -625,7 +625,7 @@ You can specify this by using the `:fresh` modifier:
 
 `p[style-name='Heading 1'] => h1:fresh`
 
-The two consective `Heading 1` .docx paragraphs will then be converted to two separate `h1` elements.
+The two consecutive `Heading 1` .docx paragraphs will then be converted to two separate `h1` elements.
 
 Reusing elements is useful in generating more complicated HTML structures.
 For instance, suppose your .docx contains asides.
