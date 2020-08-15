@@ -608,6 +608,12 @@ test("w:noBreakHyphen is read as non-breaking hyphen character", function() {
     assert.deepEqual(result.value, new documents.Text("\u2011"));
 });
 
+test("soft hyphens are read as text", function() {
+    var element = new XmlElement("w:softHyphen", {}, []);
+    var text = readXmlElementValue(element);
+    assert.deepEqual(text, new documents.Text("\u00AD"));
+});
+
 test("w:tbl is read as document table element", function() {
     var tableXml = new XmlElement("w:tbl", {}, [
         new XmlElement("w:tr", {}, [
@@ -1217,12 +1223,6 @@ test("text nodes are ignored when reading children", function() {
     var runXml = new XmlElement("w:r", {}, [xml.text("[text]")]);
     var run = readXmlElementValue(runXml);
     assert.deepEqual(run, new documents.Run([]));
-});
-
-test("soft hyphens are read as text", function() {
-    var runXml = new XmlElement("w:softHyphen", {}, []);
-    var text = readXmlElementValue(runXml);
-    assert.deepEqual(text, new documents.Text("\u00AD"));
 });
 
 function paragraphWithStyleId(styleId) {
