@@ -1219,6 +1219,12 @@ test("text nodes are ignored when reading children", function() {
     assert.deepEqual(run, new documents.Run([]));
 });
 
+test("soft hyphens are read as text", function() {
+    var runXml = new XmlElement("w:softHyphen", {}, []);
+    var text = readXmlElementValue(runXml);
+    assert.deepEqual(text, new documents.Text("\u00AD"));
+});
+
 function paragraphWithStyleId(styleId) {
     return new XmlElement("w:p", {}, [
         new XmlElement("w:pPr", {}, [
