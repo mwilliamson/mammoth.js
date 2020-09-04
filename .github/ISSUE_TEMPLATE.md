@@ -1,4 +1,4 @@
-If you're reporting a bug or requesting a feature, it's handy to have:
+If you're reporting a bug or requesting a feature, please include:
 * a minimal example document
 * the HTML output that you'd expect
 
