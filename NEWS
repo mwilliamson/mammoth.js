@@ -1,3 +1,7 @@
+# 1.4.13
+
+* Use package-lock.json instead of npm-shrinkwrap.json.
+
 # 1.4.12
 
 * Handle underline elements where w:val is "none".
