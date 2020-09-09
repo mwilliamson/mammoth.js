@@ -452,7 +452,7 @@ test("isUnderline is false if underline element is not present", function() {
     assert.deepEqual(run.isUnderline, false);
 });
 
-test("isUnderline is true if underline element is present", function() {
+test("isUnderline is true if underline element is present without w:val attribute", function() {
     var underlineXml = new XmlElement("w:u");
     var runXml = runWithProperties([underlineXml]);
     var run = readXmlElementValue(runXml);
