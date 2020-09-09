@@ -459,7 +459,7 @@ test("isUnderline is true if underline element is present", function() {
     assert.equal(run.isUnderline, true);
 });
 
-test("isUnderline is false if underline element is 'none'", function() {
+test("isUnderline is false if underline element is present and w:val is none", function() {
     var underlineXml = new XmlElement("w:u", {"w:val": "none"});
     var runXml = runWithProperties([underlineXml]);
     var run = readXmlElementValue(runXml);
