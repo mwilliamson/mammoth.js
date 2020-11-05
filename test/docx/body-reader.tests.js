@@ -531,6 +531,7 @@ var booleanRunProperties = [
     {name: "isUnderline", tagName: "w:u"},
     {name: "isItalic", tagName: "w:i"},
     {name: "isStrikethrough", tagName: "w:strike"},
+    {name: "isAllCaps", tagName: "w:caps"},
     {name: "isSmallCaps", tagName: "w:smallCaps"}
 ];
 

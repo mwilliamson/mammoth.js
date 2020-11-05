@@ -15,11 +15,11 @@ test('styleReader.readHtmlPath', {
     'reads empty path': function() {
         assertHtmlPath("", htmlPaths.empty);
     },
-    
+
     'reads single element': function() {
         assertHtmlPath("p", htmlPaths.elements(["p"]));
     },
-    
+
     'reads choice of elements': function() {
         assertHtmlPath(
             "ul|ol",
@@ -28,18 +28,18 @@ test('styleReader.readHtmlPath', {
             ])
         );
     },
-    
+
     'reads nested elements': function() {
         assertHtmlPath("ul > li", htmlPaths.elements(["ul", "li"]));
     },
-    
+
     'reads class on element': function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "tip"})
         ]);
         assertHtmlPath("p.tip", expected);
     },
-    
+
     'reads class with escaped colon': function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {"class": "a:b"})
@@ -53,21 +53,21 @@ test('styleReader.readHtmlPath', {
         ]);
         assertHtmlPath("p.tip.help", expected);
     },
-    
+
     'reads when element must be fresh': function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {}, {"fresh": true})
         ]);
         assertHtmlPath("p:fresh", expected);
     },
-    
+
     'reads separator for elements': function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {}, {separator: "x"})
         ]);
         assertHtmlPath("p:separator('x')", expected);
     },
-    
+
     'reads separator with escape sequence': function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {}, {separator: "\r\n\t\'\\"})
@@ -88,21 +88,21 @@ test("styleReader.readDocumentMatcher", {
     "reads plain paragraph": function() {
         assertDocumentMatcher("p", documentMatchers.paragraph());
     },
-    
+
     "reads paragraph with style ID": function() {
         assertDocumentMatcher(
             "p.Heading1",
             documentMatchers.paragraph({styleId: "Heading1"})
         );
     },
-    
+
     "reads paragraph with exact style name": function() {
         assertDocumentMatcher(
             "p[style-name='Heading 1']",
             documentMatchers.paragraph({styleName: documentMatchers.equalTo("Heading 1")})
         );
     },
-    
+
     "reads paragraph with style name prefix": function() {
         assertDocumentMatcher(
             "p[style-name^='Heading']",
@@ -116,14 +116,14 @@ test("styleReader.readDocumentMatcher", {
             documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0}})
         );
     },
-    
+
     "reads p:unordered-list(1) as unordered list with index of 0": function() {
         assertDocumentMatcher(
             "p:unordered-list(1)",
             documentMatchers.paragraph({list: {isOrdered: false, levelIndex: 0}})
         );
     },
-    
+
     "reads plain run": function() {
         assertDocumentMatcher(
             "r",
@@ -152,36 +152,43 @@ test("styleReader.readDocumentMatcher", {
             })
         );
     },
-    
+
     "reads bold": function() {
         assertDocumentMatcher(
             "b",
             documentMatchers.bold
         );
     },
-    
+
     "reads italic": function() {
         assertDocumentMatcher(
             "i",
             documentMatchers.italic
         );
     },
-    
+
     "reads underline": function() {
         assertDocumentMatcher(
             "u",
             documentMatchers.underline
         );
     },
-    
+
     "reads strikethrough": function() {
         assertDocumentMatcher(
             "strike",
             documentMatchers.strikethrough
         );
     },
-    
-    "reads smallcaps": function() {
+
+    "reads all-caps": function() {
+        assertDocumentMatcher(
+            "all-caps",
+            documentMatchers.allCaps
+        );
+    },
+
+    "reads small-caps": function() {
         assertDocumentMatcher(
             "small-caps",
             documentMatchers.smallCaps
@@ -194,21 +201,21 @@ test("styleReader.readDocumentMatcher", {
             documentMatchers.commentReference
         );
     },
-    
+
     "reads line breaks": function() {
         assertDocumentMatcher(
             "br[type='line']",
             documentMatchers.lineBreak
         );
     },
-    
+
     "reads page breaks": function() {
         assertDocumentMatcher(
             "br[type='page']",
             documentMatchers.pageBreak
         );
     },
-    
+
     "reads column breaks": function() {
         assertDocumentMatcher(
             "br[type='column']",
@@ -217,7 +224,7 @@ test("styleReader.readDocumentMatcher", {
     }
 
 });
-    
+
 function assertDocumentMatcher(input, expected) {
     assert.deepEqual(readDocumentMatcher(input), results.success(expected));
 }
@@ -232,7 +239,7 @@ test("styleReader.read", {
             }
         );
     },
-    
+
     "reads style mapping with no HTML path": function() {
         assertStyleMapping(
             "r =>",
@@ -242,7 +249,7 @@ test("styleReader.read", {
             }
         );
     },
-    
+
     "error when not all input is consumed": function() {
         assert.deepEqual(
             readStyle("r => span a"),

@@ -726,6 +726,17 @@ strike
 Note that this matches text that has had strikethrough explicitly applied to it.
 It will not match any text that is struckthrough because of its paragraph or run style.
 
+#### All caps
+
+Match explicitly all caps text:
+
+```
+all-caps
+```
+
+Note that this matches text that has had all caps explicitly applied to it.
+It will not match any text that is all caps because of its paragraph or run style.
+
 #### Small caps
 
 Match explicitly small caps text:

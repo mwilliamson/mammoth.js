@@ -1,3 +1,7 @@
+# 1.4.14
+
+* Add style mapping for all caps.
+
 # 1.4.13
 
 * Use package-lock.json instead of npm-shrinkwrap.json.
