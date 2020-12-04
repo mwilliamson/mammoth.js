@@ -1,7 +1,7 @@
 # Mammoth .docx to HTML converter
 
 Mammoth is designed to convert .docx documents,
-such as those created by Microsoft Word,
+such as those created by Microsoft Word, Google Docs and LibreOffice,
 and convert them to HTML.
 Mammoth aims to produce simple and clean HTML by using semantic information in the document,
 and ignoring other details.
