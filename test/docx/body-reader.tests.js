@@ -24,7 +24,7 @@ var _readNumberingProperties = require("../../lib/docx/body-reader")._readNumber
 var documents = require("../../lib/documents");
 var xml = require("../../lib/xml");
 var XmlElement = xml.Element;
-var Numbering = require("../../lib/docx/numbering-xml").Numbering;
+var defaultNumbering = require("../../lib/docx/numbering-xml").defaultNumbering;
 var Relationships = require("../../lib/docx/relationships-reader").Relationships;
 var Styles = require("../../lib/docx/styles-reader").Styles;
 var warning = require("../../lib/results").warning;
@@ -36,6 +36,7 @@ var createFakeDocxFile = testing.createFakeDocxFile;
 function readXmlElement(element, options) {
     options = Object.create(options || {});
     options.styles = options.styles || new Styles({}, {});
+    options.numbering = options.numbering || defaultNumbering;
     return createBodyReader(options).readXmlElement(element);
 }
 
@@ -156,9 +157,31 @@ test("paragraph has numbering properties from paragraph properties if present", 
     var propertiesXml = new XmlElement("w:pPr", {}, [numberingPropertiesXml]);
     var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
 
-    var numbering = new NumberingMap({"42": {"1": {isOrdered: true, level: "1"}}});
+    var numbering = new NumberingMap({
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+    });
 
     var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering});
+    assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
+});
+
+test("numbering on paragraph style takes precedence over numPr", function() {
+    var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+        new XmlElement("w:ilvl", {"w:val": "1"}),
+        new XmlElement("w:numId", {"w:val": "42"})
+    ]);
+    var propertiesXml = new XmlElement("w:pPr", {}, [
+        new XmlElement("w:pStyle", {"w:val": "List"}),
+        numberingPropertiesXml
+    ]);
+    var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+
+    var numbering = new NumberingMap({
+        findLevelByParagraphStyleId: {"List": {isOrdered: true, level: "1"}}
+    });
+    var styles = new Styles({"List": {name: "List"}}, {});
+
+    var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering, styles: styles});
     assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
 });
 
@@ -168,9 +191,11 @@ test("numbering properties are converted to numbering at specified level", funct
         new XmlElement("w:numId", {"w:val": "42"})
     ]);
 
-    var numbering = new NumberingMap({"42": {"1": {isOrdered: true, level: "1"}}});
+    var numbering = new NumberingMap({
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+    });
 
-    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
+    var numberingLevel = _readNumberingProperties(null, numberingPropertiesXml, numbering);
     assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
 });
 
@@ -179,9 +204,11 @@ test("numbering properties are ignored if w:ilvl is missing", function() {
         new XmlElement("w:numId", {"w:val": "42"})
     ]);
 
-    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+    var numbering = new NumberingMap({
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+    });
 
-    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
+    var numberingLevel = _readNumberingProperties(null, numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
 
@@ -190,9 +217,11 @@ test("numbering properties are ignored if w:numId is missing", function() {
         new XmlElement("w:ilvl", {"w:val": "1"})
     ]);
 
-    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+    var numbering = new NumberingMap({
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+    });
 
-    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
+    var numberingLevel = _readNumberingProperties(null, numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
 
@@ -1324,10 +1353,16 @@ function imageRelationship(relationshipId, target) {
     };
 }
 
-function NumberingMap(nums) {
+function NumberingMap(options) {
+    var findLevel = options.findLevel;
+    var findLevelByParagraphStyleId = options.findLevelByParagraphStyleId || {};
+
     return {
         findLevel: function(numId, level) {
-            return nums[numId][level];
+            return findLevel[numId][level];
+        },
+        findLevelByParagraphStyleId: function(styleId) {
+            return findLevelByParagraphStyleId[styleId];
         }
     };
 }
