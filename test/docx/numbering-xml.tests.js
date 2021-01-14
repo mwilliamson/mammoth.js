@@ -25,10 +25,12 @@ test('w:num element inherits levels from w:abstractNum', function() {
         {styles: stylesReader.defaultStyles}
     );
     duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
-        isOrdered: false
+        isOrdered: false,
+        numId: "47"
     }));
     duck.assertThat(numbering.findLevel("47", "1"), duck.hasProperties({
-        isOrdered: true
+        isOrdered: true,
+        numId: "47"
     }));
 });
 
@@ -67,7 +69,8 @@ test('when w:abstractNum has w:numStyleLink then style is used to find w:num', f
         {styles: new stylesReader.Styles({}, {}, {}, {"List1": {numId: "200"}})}
     );
     duck.assertThat(numbering.findLevel("201", "0"), duck.hasProperties({
-        isOrdered: true
+        isOrdered: true,
+        numId: "200"
     }));
 });
 

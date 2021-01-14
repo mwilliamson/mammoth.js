@@ -34,7 +34,7 @@
     "eslint": "2.13.1",
     "hamjest": "2.13.0",
     "mocha": "~2.2.5",
-    "temp": "~0.7.0",
+    "temp": "~0.9.4",
     "uglify-js": "~2.4.8"
   },
   "browser": {
