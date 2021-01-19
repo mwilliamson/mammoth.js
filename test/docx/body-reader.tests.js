@@ -672,6 +672,27 @@ test("soft hyphens are read as text", function() {
     assert.deepEqual(text, new documents.Text("\u00AD"));
 });
 
+test("w:sym with supported font and supported code point in ASCII range is converted to text", function() {
+    var element = new XmlElement("w:sym", {"w:font": "Wingdings", "w:char": "28"}, []);
+    var text = readXmlElementValue(element);
+    assert.deepEqual(text, new documents.Text("🕿"));
+});
+
+test("w:sym with supported font and supported code point in private use area is converted to text", function() {
+    var element = new XmlElement("w:sym", {"w:font": "Wingdings", "w:char": "F028"}, []);
+    var text = readXmlElementValue(element);
+    assert.deepEqual(text, new documents.Text("🕿"));
+});
+
+test("w:sym with unsupported font and code point produces empty result with warning", function() {
+    var element = new XmlElement("w:sym", {"w:font": "Dingwings", "w:char": "28"}, []);
+
+    var result = readXmlElement(element);
+
+    assert.deepEqual(result.value, []);
+    assert.deepEqual(result.messages, [warning("A w:sym element with an unsupported character was ignored: char 28 in font Dingwings")]);
+});
+
 test("w:tbl is read as document table element", function() {
     var tableXml = new XmlElement("w:tbl", {}, [
         new XmlElement("w:tr", {}, [

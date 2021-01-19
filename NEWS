@@ -1,3 +1,7 @@
+# 1.4.16
+
+* Convert symbols in supported fonts to corresponding Unicode characters.
+
 # 1.4.15
 
 * Support numbering defined by paragraph style.
