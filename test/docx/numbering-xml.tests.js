@@ -33,6 +33,19 @@ test('w:num element inherits levels from w:abstractNum', function() {
 });
 
 
+test('w:num element referencing non-existent w:abstractNumId is ignored', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:num", {"w:numId": "47"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "42"})
+            ])
+        ]),
+        {styles: stylesReader.defaultStyles}
+    );
+    duck.assertThat(numbering.findLevel("47", "0"), duck.equalTo(null));
+});
+
+
 test('when w:abstractNum has w:numStyleLink then style is used to find w:num', function() {
     var numbering = readNumberingXml(
         new XmlElement("w:numbering", {}, [
