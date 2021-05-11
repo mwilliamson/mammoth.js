@@ -24,13 +24,13 @@
     "lop": "~0.4.0",
     "path-is-absolute": "^1.0.0",
     "sax": "~1.1.1",
-    "underscore": "~1.8.3",
+    "underscore": "^1.13.1",
     "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
     "browserify": "~13.0.1",
     "browserify-prepend-licenses": "~1.0.0",
-    "duck": "~0.1.11",
+    "duck": "^0.1.12",
     "eslint": "2.13.1",
     "hamjest": "2.13.0",
     "mocha": "~2.2.5",
