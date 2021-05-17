@@ -1,6 +1,7 @@
 # 1.4.17
 
 * Handle w:num with invalid w:abstractNumId.
+* Update underscore to 1.13.1.
 
 # 1.4.16
 
