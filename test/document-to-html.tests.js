@@ -800,6 +800,46 @@ test('long documents do not cause stack overflow', function() {
     });
 });
 
+test('hex text color in <mark> tags', function() {
+    var run = runOfText("0000FF.", {color: "0000FF"});
+    var converter = new DocumentConverter({
+        preserveColors: true
+    });
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "<mark style=\"color: #0000FF; background-color: inherit\">0000FF.</mark>");
+    });
+});
+
+test('named color in <mark> tags', function() {
+    var run = runOfText("Blue.", {color: "blue"});
+    var converter = new DocumentConverter({
+        preserveColors: true
+    });
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "<mark style=\"color: blue; background-color: inherit\">Blue.</mark>");
+    });
+});
+
+test('background color in <mark> tags', function() {
+    var run = runOfText("Yellow Highlighted.", {highlight: "yellow"});
+    var converter = new DocumentConverter({
+        preserveColors: true
+    });
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "<mark style=\"background-color: yellow\">Yellow Highlighted.</mark>");
+    });
+});
+
+test('font in in <font> tags', function() {
+    var run = runOfText("Times New Roman.", {font: "Times New Roman"});
+    var converter = new DocumentConverter({
+        preserveFonts: true
+    });
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "<font style=\"font-family: Times New Roman\">Times New Roman.</font>");
+    });
+});
+
 function paragraphOfText(text, styleId, styleName) {
     var run = runOfText(text);
     return new documents.Paragraph([run], {

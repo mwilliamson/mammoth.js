@@ -8,6 +8,7 @@ and ignoring other details.
 For instance,
 Mammoth converts any paragraph with the style `Heading 1` to `h1` elements,
 rather than attempting to exactly copy the styling (font, text size, colour, etc.) of the heading.
+Note that you can optionally preserve text colour and highlight through a `<mark>` tag.
 
 There's a large mismatch between the structure used by .docx and the structure of HTML,
 meaning that the conversion is unlikely to be perfect for more complicated documents.
@@ -294,6 +295,36 @@ var options = {
     styleMap: [
         "strike => del"
     ]
+};
+mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+```
+
+#### Colors
+
+Text foreground and background colors can be optionally wrapped in `<mark>` 
+tags to preserve colors.
+
+```javascript
+var mammoth = require("mammoth");
+
+var options = {
+    preserveColors: true // preserveColours also works
+};
+mammoth.convertToHtml({path: "path/to/document.docx"}, options);
+```
+
+#### Fonts
+
+Fonts can be optionally wrapped in `<font>` tags. Although the `<font>` tag is 
+deprecated, it may provide useful in some conversions. Typeface is specified
+through a `style="font-family: X"` attribute in case the browser does not 
+support the `face` attribute.
+
+```javascript
+var mammoth = require("mammoth");
+
+var options = {
+    preserveColors: true
 };
 mammoth.convertToHtml({path: "path/to/document.docx"}, options);
 ```
