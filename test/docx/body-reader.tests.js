@@ -246,7 +246,7 @@ test("complex fields", (function() {
     function isHyperlinkedRun(hyperlinkProperties) {
         return isRun({
             children: contains(
-                isHyperlink(_.extend({href: uri}, hyperlinkProperties))
+                isHyperlink(hyperlinkProperties)
             )
         });
     }
@@ -257,7 +257,7 @@ test("complex fields", (function() {
             assert.deepEqual(instrText, []);
         },
 
-        "runs in a complex field for hyperlinks are read as hyperlinks": function() {
+        "runs in a complex field for hyperlink without switch are read as external hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
@@ -272,6 +272,33 @@ test("complex fields", (function() {
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
+                    children: contains(
+                        isText("this is a hyperlink")
+                    )
+                }),
+                isEmptyRun
+            ));
+        },
+
+        "runs in a complex field for hyperlink with l switch are read as internal hyperlinks": function() {
+            var hyperlinkRunXml = runOfText("this is a hyperlink");
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                new XmlElement("w:instrText", {}, [
+                    xml.text(' HYPERLINK \\l "InternalLink"')
+                ]),
+                separateXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
+                    anchor: "InternalLink",
                     children: contains(
                         isText("this is a hyperlink")
                     )
@@ -324,6 +351,7 @@ test("complex fields", (function() {
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
                     children: contains(
                         isText("this is a hyperlink")
                     )
@@ -356,6 +384,7 @@ test("complex fields", (function() {
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
                     children: contains(
                         isText("this is a hyperlink")
                     )
@@ -387,6 +416,7 @@ test("complex fields", (function() {
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
                     children: contains(
                         isText("John Doe")
                     )
@@ -415,6 +445,7 @@ test("complex fields", (function() {
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
                     children: contains(
                         isText("this is a hyperlink")
                     )
