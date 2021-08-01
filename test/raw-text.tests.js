@@ -35,7 +35,7 @@ test('paragraphs are terminated with newlines', function() {
     assert.strictEqual(result, "Hello world.\n\n");
 });
 
-test('children recursively are converted to text', function() {
+test('children are recursively converted to text', function() {
     var element = new documents.Document([
         new documents.Paragraph(
             [
