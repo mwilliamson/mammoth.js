@@ -5,12 +5,20 @@ var test = require("./test")(module);
 var convertElementToRawText = require("../lib/raw-text").convertElementToRawText;
 
 
-test('text node is converted to text content', function() {
+test('text element is converted to text content', function() {
     var element = new documents.Text("Hello.");
 
     var result = convertElementToRawText(element);
 
     assert.strictEqual(result, "Hello.");
+});
+
+test('tab element is converted to tab character', function() {
+    var element = documents.tab();
+
+    var result = convertElementToRawText(element);
+
+    assert.strictEqual(result, "\t");
 });
 
 test('paragraphs are terminated with newlines', function() {
