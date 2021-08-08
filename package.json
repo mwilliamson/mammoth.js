@@ -22,7 +22,7 @@
     "dingbat-to-unicode": "^1.0.1",
     "jszip": "~2.5.0",
     "lop": "^0.4.1",
-    "path-is-absolute": "^1.0.0",
+    "path-is-absolute": "^2.0.0",
     "sax": "~1.1.1",
     "underscore": "^1.13.1",
     "xmlbuilder": "^10.0.0"
