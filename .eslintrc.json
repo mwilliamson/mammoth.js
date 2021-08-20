@@ -1,6 +1,8 @@
 {
   "extends": "eslint:recommended",
-
+  "parserOptions": {
+    "ecmaVersion": 8
+  },
   "rules": {
     "curly": ["error", "all"],
     "dot-location": ["error", "property"],
@@ -53,7 +55,6 @@
     "no-spaced-func": ["error"],
     "no-trailing-spaces": ["error", {"skipBlankLines": true}],
     "no-whitespace-before-property": ["error"],
-    "object-curly-spacing": ["error", "never"],
     "one-var": ["error", "never"],
     "semi": ["error", "always"],
     "semi-spacing": ["error", {"before": false}],

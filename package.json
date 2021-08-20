@@ -20,7 +20,7 @@
     "argparse": "~1.0.3",
     "bluebird": "~3.4.0",
     "dingbat-to-unicode": "^1.0.1",
-    "jszip": "~2.5.0",
+    "jszip": "~3.7.0",
     "lop": "^0.4.1",
     "path-is-absolute": "^1.0.0",
     "sax": "~1.1.1",
@@ -34,8 +34,8 @@
     "eslint": "2.13.1",
     "hamjest": "2.13.0",
     "mocha": "~2.2.5",
-    "temp": "~0.7.0",
-    "uglify-js": "~2.4.8"
+    "temp": "~0.9.4",
+    "uglify-js": "~3.14.1"
   },
   "browser": {
     "./lib/unzip.js": "./browser/unzip.js",
