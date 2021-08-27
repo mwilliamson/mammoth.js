@@ -4,6 +4,8 @@
 
 * Handle internal hyperlinks created with complex fields.
 
+* Update JSZip to 3.2.0. This addresses CVE-2021-23413 in JSZip.
+
 # 1.4.17
 
 * Handle w:num with invalid w:abstractNumId.

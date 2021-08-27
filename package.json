@@ -20,7 +20,7 @@
     "argparse": "~1.0.3",
     "bluebird": "~3.4.0",
     "dingbat-to-unicode": "^1.0.1",
-    "jszip": "~2.5.0",
+    "jszip": "^3.7.1",
     "lop": "^0.4.1",
     "path-is-absolute": "^1.0.0",
     "sax": "~1.1.1",
