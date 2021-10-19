@@ -544,10 +544,12 @@ var options = {
 Or if you want paragraphs that have been explicitly set to use monospace fonts to represent code:
 
 ```javascript
+const monospaceFonts = ["consolas", "courier"];
+
 function transformParagraph(paragraph) {
     var runs = mammoth.transforms.getDescendantsOfType(paragraph, "run");
     var isMatch = runs.length > 0 && runs.every(function(run) {
-        return run.font && fonts.indexOf(run.font.toLowerCase()) !== -1;
+        return run.font && monospaceFonts.indexOf(run.font.toLowerCase()) !== -1;
     });
     if (isMatch) {
         return {
