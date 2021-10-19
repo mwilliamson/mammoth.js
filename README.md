@@ -544,7 +544,7 @@ var options = {
 Or if you want paragraphs that have been explicitly set to use monospace fonts to represent code:
 
 ```javascript
-const monospaceFonts = ["consolas", "courier"];
+const monospaceFonts = ["consolas", "courier", "courier new"];
 
 function transformParagraph(paragraph) {
     var runs = mammoth.transforms.getDescendantsOfType(paragraph, "run");
