@@ -66,6 +66,8 @@ The easiest way to try out mammoth is to use the web demo:
 * [.NET](https://github.com/mwilliamson/dotnet-mammoth).
   Available [on NuGet](https://www.nuget.org/packages/Mammoth/).
 
+* [VSCode](https://marketplace.visualstudio.com/items?itemName=F-loat.vscode-extension-mammoth).
+
 ## Usage
 
 ### CLI
