@@ -1087,6 +1087,18 @@ test("can read linked pictures", function() {
     }));
 });
 
+test("warning if blip has no image file", function() {
+    var drawing = createInlineImage({
+        blip: new XmlElement("a:blip"),
+        description: "It's a hat"
+    });
+
+    var result = readXmlElement(drawing);
+
+    assert.deepEqual(result.messages, [warning("Could not find image file for a:blip element")]);
+    assert.deepEqual(result.value, []);
+});
+
 test("warning if unsupported image type", function() {
     var drawing = createInlineImage({
         blip: createEmbeddedBlip("rId5"),

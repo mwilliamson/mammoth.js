@@ -1,3 +1,8 @@
+# 1.4.20
+
+* Emit warning instead of throwing exception when image file cannot be found for
+  a:blip elements.
+
 # 1.4.19
 
 * Add TypeScript declarations.
