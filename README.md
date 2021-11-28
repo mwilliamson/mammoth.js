@@ -70,7 +70,7 @@ The easiest way to try out mammoth is to use the web demo:
 
 ### CLI
 
-You can convert docx files by passing the path to the docx file and the output file.
+You can convert .docx files by passing the path to the .docx file and the output file.
 For instance:
 
     mammoth document.docx output.html
@@ -94,7 +94,7 @@ Existing files will be overwritten if present.
 
 #### Styles
 
-A custom style map can be read from a file using `--style-map`.
+A custom-style map can be read from a file using `--style-map`.
 For instance:
 
     mammoth document.docx output.html --style-map=custom-style-map
