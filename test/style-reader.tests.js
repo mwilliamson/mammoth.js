@@ -54,6 +54,13 @@ test('styleReader.readHtmlPath', {
         assertHtmlPath("p.tip.help", expected);
     },
 
+    'reads wildcard class on element': function() {
+        var expected = htmlPaths.elements([
+            htmlPaths.element("p", {}, {"ignoreClass": true})
+        ]);
+        assertHtmlPath("p.*", expected);
+    },
+
     'reads when element must be fresh': function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {}, {"fresh": true})
