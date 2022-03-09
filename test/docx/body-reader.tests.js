@@ -512,11 +512,11 @@ test("isUnderline is false if underline element is not present", function() {
     assert.deepEqual(run.isUnderline, false);
 });
 
-test("isUnderline is true if underline element is present without w:val attribute", function() {
+test("isUnderline is false if underline element is present without w:val attribute", function() {
     var underlineXml = new XmlElement("w:u");
     var runXml = runWithProperties([underlineXml]);
     var run = readXmlElementValue(runXml);
-    assert.equal(run.isUnderline, true);
+    assert.equal(run.isUnderline, false);
 });
 
 test("isUnderline is false if underline element is present and w:val is false", function() {
@@ -540,7 +540,7 @@ test("isUnderline is false if underline element is present and w:val is none", f
     assert.equal(run.isUnderline, false);
 });
 
-test("isUnderline is false if underline element is present and w:val is not none or falsy", function() {
+test("isUnderline is true if underline element is present and w:val is not none or falsy", function() {
     var underlineXml = new XmlElement("w:u", {"w:val": "single"});
     var runXml = runWithProperties([underlineXml]);
     var run = readXmlElementValue(runXml);
