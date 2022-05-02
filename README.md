@@ -381,6 +381,10 @@ Converts the source document to HTML.
 
 #### `mammoth.convertToMarkdown(input, options)`
 
+Markdown support is deprecated.
+Generating HTML and using a separate library to convert the HTML to Markdown is recommended,
+and is likely to produce better results.
+
 Converts the source document to Markdown.
 This behaves the same as `convertToHtml`,
 except that the `value` property of the result contains Markdown rather than HTML.
