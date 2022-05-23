@@ -44,6 +44,7 @@
   "bin": {
     "mammoth": "bin/mammoth"
   },
+  "files":["bin","lib"],
   "scripts": {
     "pretest": "eslint lib test",
     "test": "mocha 'test/**/*.tests.js'",
