@@ -241,6 +241,10 @@ test("complex fields", (function() {
     ]);
     var hyperlinkRunXml = runOfText("this is a hyperlink");
 
+    var deletedEnd = new XmlElement("w:del", {}, [
+        endXml
+    ]);
+
     var isEmptyHyperlinkedRun = isHyperlinkedRun({children: []});
 
     function isHyperlinkedRun(hyperlinkProperties) {
@@ -314,6 +318,29 @@ test("complex fields", (function() {
                 hyperlinkInstrText,
                 separateXml,
                 endXml,
+                afterEndXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isEmptyRun,
+                isRun({
+                    children: contains(
+                        isText("this will not be a hyperlink")
+                    )
+                })
+            ));
+        },
+
+        "deleted field-end still closes them": function() {
+            var afterEndXml = runOfText("this will not be a hyperlink");
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                hyperlinkInstrText,
+                separateXml,
+                deletedEnd,
                 afterEndXml
             ]);
             var paragraph = readXmlElementValue(paragraphXml);
