@@ -83,5 +83,30 @@ test('mammoth.images.imgElement()', {
                 })
             ));
         });
+    },
+
+    'image alt text can be overriden by alt attribute returned from function': function() {
+        var imageBuffer = new Buffer("abc");
+        var image = new documents.Image({
+            readImage: function(encoding) {
+                return promises.when(imageBuffer.toString(encoding));
+            },
+            contentType: "image/jpeg",
+            altText: "<alt>"
+        });
+
+        var result = mammoth.images.imgElement(function(image) {
+            return {alt: "<alt override>", src: "<src>"};
+        })(image);
+
+        return result.then(function(result) {
+            assertThat(result, contains(
+                hasProperties({
+                    tag: hasProperties({
+                        attributes: equalTo({alt: "<alt override>", src: "<src>"})
+                    })
+                })
+            ));
+        });
     }
 });

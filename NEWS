@@ -1,3 +1,9 @@
+# 1.5.0
+
+* Only use the alt text of image elements as a fallback. If an alt attribute is
+  returned from the function passed to mammoth.images.imgElement, that value
+  will now be preferred to the alt text of the image element.
+
 # 1.4.21
 
 * Ignore w:u elements when w:val is missing.
