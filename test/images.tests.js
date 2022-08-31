@@ -85,7 +85,7 @@ test('mammoth.images.imgElement()', {
         });
     },
 
-    'image alt text can be overriden by alt attribute returned from function': function() {
+    'image alt text can be overridden by alt attribute returned from function': function() {
         var imageBuffer = new Buffer("abc");
         var image = new documents.Image({
             readImage: function(encoding) {
