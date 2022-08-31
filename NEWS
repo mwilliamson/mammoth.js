@@ -1,3 +1,9 @@
+# 1.5.1
+
+* Fix: npm 7 changed the behaviour of prepublish, causing the browser build not
+  to be updated before publishing to npm. We now use prepare instead of
+  prepublish, which has the same behaviour that prepublish previously had.
+
 # 1.5.0
 
 * Only use the alt text of image elements as a fallback. If an alt attribute is
