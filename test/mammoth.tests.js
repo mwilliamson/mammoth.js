@@ -262,7 +262,8 @@ test('word tables are converted to html tables', function() {
         var expectedHtml = "<p>Above</p>" +
             "<table>" +
             "<tr><td><p>Top left</p></td><td><p>Top right</p></td></tr>" +
-            "<tr><td><p>Bottom left</p></td><td><p>Bottom right</p></td></tr>" +
+            "<tr><td vAlign=\"middle\"><p>Middle left</p></td><td vAlign=\"middle\"><p>Middle right</p></td></tr>" +
+            "<tr><td vAlign=\"bottom\"><p>Bottom left</p></td><td vAlign=\"bottom\"><p>Bottom right</p></td></tr>" +
             "</table>" +
             "<p>Below</p>";
         assert.equal(result.value, expectedHtml);
