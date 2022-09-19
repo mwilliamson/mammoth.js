@@ -30,6 +30,7 @@ interface Options {
     convertImage?: ImageConverter;
     ignoreEmptyParagraphs?: boolean;
     idPrefix?: string;
+    transformDocument?: (element: any) => any;
 }
 
 interface ImageConverter {
