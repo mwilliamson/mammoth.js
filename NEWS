@@ -1,3 +1,7 @@
+# 1.5.2
+
+* Add transformDocument to the TypeScript declarations.
+
 # 1.5.1
 
 * Fix: npm 7 changed the behaviour of prepublish, causing the browser build not
