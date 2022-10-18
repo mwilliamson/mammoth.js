@@ -119,11 +119,25 @@ For instance:
 
 ### Library
 
+#### node.js
+
 In node.js, mammoth can be required in the usual way:
 
 ```javascript
 var mammoth = require("mammoth");
 ```
+
+#### Browser ESM
+
+In the browser with ESM support, mammoth can be required and called like this:
+
+```javascript
+import { convertToHtml } from 'mammoth/mammoth.browser';
+const converted = await convertToHtml({ arrayBuffer: await docxFileContent.arrayBuffer() }, {});
+const html = converted.value;
+```
+
+#### Browser standalone
 
 To generate a standalone JavaScript file for the browser,
 use `mammoth.browser.js` (generate using `make setup` if it is not already present).
