@@ -51,6 +51,7 @@
   },
   "license": "BSD-2-Clause",
   "volta": {
-    "node": "16.18.1"
+    "node": "16.18.1",
+    "npm": "8.19.2"
   }
 }
