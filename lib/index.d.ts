@@ -43,7 +43,7 @@ interface Image {
 }
 
 interface ImageRead {
-    (): Promise<Buffer>;
+    (): Promise<Uint8Array>;
     (encoding: string): Promise<string>;
 }
 
