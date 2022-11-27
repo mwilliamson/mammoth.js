@@ -71,7 +71,7 @@ test("--output-format=markdown option generate markdown output", function() {
 function runMammoth() {
     var args = Array.prototype.slice.call(arguments, 0);
     var deferred = promises.defer();
-    
+
     var processArgs = ["node", "bin/mammoth"].concat(args);
     // TODO: proper escaping of args
     var command = processArgs.join(" ");
@@ -80,10 +80,18 @@ function runMammoth() {
         assert.equal(error, null);
         deferred.resolve({output: stdout, stderrOutput: stderr});
     });
-    
+
     return deferred.promise;
 }
 
 function createTempDir() {
-    return promises.nfcall(temp.mkdir, null);
+    return new Promise(function(resolve, reject) {
+        temp.mkdir(null, function(error, path) {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(path);
+            }
+        });
+    });
 }

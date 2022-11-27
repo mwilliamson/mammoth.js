@@ -1,10 +1,12 @@
 var fs = require("fs");
 var assert = require("assert");
 var path = require("path");
+var util = require("util");
 
 var test = require("./test")(module);
 var unzip = require("../lib/unzip");
-var promises = require("../lib/promises");
+
+var readFile = util.promisify(fs.readFile);
 
 test("unzip fails if given empty object", function() {
     return unzip.openZip({}).then(function() {
@@ -25,7 +27,7 @@ test("unzip can open local zip file", function() {
 
 test('unzip can open Buffer', function() {
     var zipPath = path.join(__dirname, "test-data/hello.zip");
-    return promises.nfcall(fs.readFile, zipPath)
+    return readFile(zipPath)
         .then(function(buffer) {
             return unzip.openZip({buffer: buffer});
         })

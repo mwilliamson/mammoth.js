@@ -142,8 +142,9 @@ mammoth.convertToHtml({path: "path/to/document.docx"})
     .then(function(result){
         var html = result.value; // The generated HTML
         var messages = result.messages; // Any messages, such as warnings during conversion
-    })
-    .done();
+    }, function(error) {
+        console.error(error);
+    });
 ```
 
 Note that `mammoth.convertToHtml` returns a [promise](http://promises-aplus.github.io/promises-spec/).
@@ -157,8 +158,9 @@ mammoth.extractRawText({path: "path/to/document.docx"})
     .then(function(result){
         var text = result.value; // The raw text
         var messages = result.messages;
-    })
-    .done();
+    }, function(error) {
+        console.error(error);
+    });
 ```
 
 #### Custom style map

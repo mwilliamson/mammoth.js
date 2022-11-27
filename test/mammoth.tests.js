@@ -1,10 +1,10 @@
 var assert = require("assert");
 var path = require("path");
 var fs = require("fs");
+var util = require("util");
 var _ = require("underscore");
 
 var mammoth = require("../");
-var promises = require("../lib/promises");
 var results = require("../lib/results");
 
 var testing = require("./testing");
@@ -12,6 +12,7 @@ var test = require("./test")(module);
 var testData = testing.testData;
 var createFakeDocxFile = testing.createFakeDocxFile;
 
+var readFile = util.promisify(fs.readFile);
 
 test('should convert docx containing one paragraph to single p element', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
@@ -23,7 +24,7 @@ test('should convert docx containing one paragraph to single p element', functio
 
 test('should convert docx represented by a Buffer', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
-    return promises.nfcall(fs.readFile, docxPath)
+    return readFile(docxPath)
         .then(function(buffer) {
             return mammoth.convertToHtml({buffer: buffer});
         })
@@ -124,7 +125,7 @@ test('embedded style maps can be disabled', function() {
 
 test('embedded style map can be written and then read', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
-    return promises.nfcall(fs.readFile, docxPath)
+    return readFile(docxPath)
         .then(function(buffer) {
             return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
         })
@@ -139,7 +140,7 @@ test('embedded style map can be written and then read', function() {
 
 test('embedded style map can be retrieved', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
-    return promises.nfcall(fs.readFile, docxPath)
+    return readFile(docxPath)
         .then(function(buffer) {
             return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
         })
@@ -408,7 +409,7 @@ test('extractRawText only retains raw text', function() {
 
 test('extractRawText can use .docx files represented by a Buffer', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
-    return promises.nfcall(fs.readFile, docxPath)
+    return readFile(docxPath)
         .then(function(buffer) {
             return mammoth.extractRawText({buffer: buffer});
         })
