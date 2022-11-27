@@ -49,5 +49,8 @@
     "test": "mocha 'test/**/*.tests.js'",
     "prepare": "make mammoth.browser.min.js"
   },
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "volta": {
+    "node": "16.18.1"
+  }
 }
