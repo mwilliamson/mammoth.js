@@ -125,11 +125,24 @@ In node.js, mammoth can be required in the usual way:
 var mammoth = require("mammoth");
 ```
 
-To generate a standalone JavaScript file for the browser,
-use `mammoth.browser.js` (generate using `make setup` if it is not already present).
+This also works in the browser if node.js core modules
+such as `Buffer` and `Stream`, are polyfilled.
+Some bundlers, such as Webpack before version 5, will automatically polyfill these modules,
+while others, such as Webpack from version 5, require the polyfills to be explicitly configured.
+
+Alternatively, you may use the standalone JavaScript file `mammoth.browser.js`,
+which includes both mammoth and its dependencies.
 This uses any loaded module system.
+For instance, when using CommonJS:
+
+```javascript
+var mammoth = require("mammoth/mammoth.browser");
+```
+
 If no module system is found,
 `mammoth` is set as a window global.
+
+The file can be generated using `make setup` during development.
 
 #### Basic conversion
 
