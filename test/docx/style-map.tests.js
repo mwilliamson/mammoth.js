@@ -7,77 +7,77 @@ var styleMap = require("../../lib/docx/style-map");
 var test = require("../test")(module);
 
 test('reading embedded style map on document without embedded style map returns null', function() {
-    var zip = normalDocx();
-    
-    return styleMap.readStyleMap(zip).then(function(contents) {
-        assert.equal(contents, null);
+    return normalDocx().then(function(zip) {
+        return styleMap.readStyleMap(zip).then(function(contents) {
+            assert.equal(contents, null);
+        });
     });
 });
 
 test('embedded style map can be read after being written', function() {
-    var zip = normalDocx();
-    
-    return styleMap.writeStyleMap(zip, "p => h1").then(function() {
-        return styleMap.readStyleMap(zip).then(function(contents) {
-            assert.equal(contents, "p => h1");
+    return normalDocx().then(function(zip) {
+        return styleMap.writeStyleMap(zip, "p => h1").then(function() {
+            return styleMap.readStyleMap(zip).then(function(contents) {
+                assert.equal(contents, "p => h1");
+            });
         });
     });
 });
 
 test('embedded style map is written to separate file', function() {
-    var zip = normalDocx();
-    
-    return styleMap.writeStyleMap(zip, "p => h1").then(function() {
-        return zip.read("mammoth/style-map", "utf8").then(function(contents) {
-            assert.equal(contents, "p => h1");
+    return normalDocx().then(function(zip) {
+        return styleMap.writeStyleMap(zip, "p => h1").then(function() {
+            return zip.read("mammoth/style-map", "utf8").then(function(contents) {
+                assert.equal(contents, "p => h1");
+            });
         });
     });
 });
 
 test('embedded style map is referenced in relationships', function() {
-    var zip = normalDocx();
-    
-    return styleMap.writeStyleMap(zip, "p => h1").then(function() {
-        return zip.read("word/_rels/document.xml.rels", "utf8").then(function(contents) {
-            assert.equal(contents, expectedRelationshipsXml);
+    return normalDocx().then(function(zip) {
+        return styleMap.writeStyleMap(zip, "p => h1").then(function() {
+            return zip.read("word/_rels/document.xml.rels", "utf8").then(function(contents) {
+                assert.equal(contents, expectedRelationshipsXml);
+            });
         });
     });
 });
 
 test('re-embedding style map replaces original', function() {
-    var zip = normalDocx();
-    
-    return styleMap.writeStyleMap(zip, "p => h1").then(function() {
-        return styleMap.writeStyleMap(zip, "p => h2");
-    }).then(function() {
-        return zip.read("word/_rels/document.xml.rels", "utf8").then(function(contents) {
-            assert.equal(contents, expectedRelationshipsXml);
-        });
-    }).then(function() {
-        return styleMap.readStyleMap(zip).then(function(contents) {
-            assert.equal(contents, "p => h2");
+    return normalDocx().then(function(zip) {
+        return styleMap.writeStyleMap(zip, "p => h1").then(function() {
+            return styleMap.writeStyleMap(zip, "p => h2");
+        }).then(function() {
+            return zip.read("word/_rels/document.xml.rels", "utf8").then(function(contents) {
+                assert.equal(contents, expectedRelationshipsXml);
+            });
+        }).then(function() {
+            return styleMap.readStyleMap(zip).then(function(contents) {
+                assert.equal(contents, "p => h2");
+            });
         });
     });
 });
 
 test('embedded style map has override content type in [Content_Types].xml', function() {
-    var zip = normalDocx();
-    
-    return styleMap.writeStyleMap(zip, "p => h1").then(function() {
-        return zip.read("[Content_Types].xml", "utf8").then(function(contents) {
-            assert.equal(contents, expectedContentTypesXml);
+    return normalDocx().then(function(zip) {
+        return styleMap.writeStyleMap(zip, "p => h1").then(function() {
+            return zip.read("[Content_Types].xml", "utf8").then(function(contents) {
+                assert.equal(contents, expectedContentTypesXml);
+            });
         });
     });
 });
 
 test('replacing style map keeps content type', function() {
-    var zip = normalDocx();
-    
-    return styleMap.writeStyleMap(zip, "p => h1").then(function() {
-        return styleMap.writeStyleMap(zip, "p => h2");
-    }).then(function() {
-        return zip.read("[Content_Types].xml", "utf8").then(function(contents) {
-            assert.equal(contents, expectedContentTypesXml);
+    return normalDocx().then(function(zip) {
+        return styleMap.writeStyleMap(zip, "p => h1").then(function() {
+            return styleMap.writeStyleMap(zip, "p => h2");
+        }).then(function() {
+            return zip.read("[Content_Types].xml", "utf8").then(function(contents) {
+                assert.equal(contents, expectedContentTypesXml);
+            });
         });
     });
 });
@@ -106,7 +106,8 @@ function normalDocx() {
         '</Types>';
     zip.file("word/_rels/document.xml.rels", originalRelationshipsXml);
     zip.file("[Content_Types].xml", originalContentTypesXml);
-    var buffer = zip.generate({type: "arraybuffer"});
-    return zipfile.openArrayBuffer(buffer);
+    return zip.generateAsync({type: "arraybuffer"}).then(function(buffer) {
+        return zipfile.openArrayBuffer(buffer);
+    });
 }
 

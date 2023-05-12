@@ -1,6 +1,6 @@
 {
   "name": "mammoth",
-  "version": "1.4.9",
+  "version": "1.5.1",
   "author": "Michael Williamson <mike@zwobble.org>",
   "description": "Convert Word documents from docx to simple HTML and Markdown",
   "keywords": [
@@ -17,23 +17,24 @@
     "url": "https://github.com/mwilliamson/mammoth.js.git"
   },
   "dependencies": {
+    "@xmldom/xmldom": "^0.8.6",
     "argparse": "~1.0.3",
     "bluebird": "~3.4.0",
-    "jszip": "~2.5.0",
-    "lop": "~0.4.0",
+    "dingbat-to-unicode": "^1.0.1",
+    "jszip": "^3.7.1",
+    "lop": "^0.4.1",
     "path-is-absolute": "^1.0.0",
-    "sax": "~1.1.1",
-    "underscore": "~1.8.3",
+    "underscore": "^1.13.1",
     "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
     "browserify": "~13.0.1",
     "browserify-prepend-licenses": "~1.0.0",
-    "duck": "~0.1.11",
+    "duck": "^0.1.12",
     "eslint": "2.13.1",
     "hamjest": "2.13.0",
     "mocha": "~2.2.5",
-    "temp": "~0.7.0",
+    "temp": "^0.9.4",
     "uglify-js": "~2.4.8"
   },
   "browser": {
@@ -46,7 +47,11 @@
   "scripts": {
     "pretest": "eslint lib test",
     "test": "mocha 'test/**/*.tests.js'",
-    "prepublish": "make mammoth.browser.min.js"
+    "prepare": "make mammoth.browser.min.js"
   },
-  "license": "BSD-2-Clause"
+  "license": "BSD-2-Clause",
+  "volta": {
+    "node": "16.18.1",
+    "npm": "8.19.2"
+  }
 }

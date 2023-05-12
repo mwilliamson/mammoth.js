@@ -296,6 +296,30 @@ test('subscript runs are wrapped in <sub> tags', function() {
     });
 });
 
+test('all caps runs are ignored by default', function() {
+    var run = runOfText("Hello.", {isAllCaps: true});
+    var converter = new DocumentConverter();
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "Hello.");
+    });
+});
+
+test('all caps runs can be configured with style mapping', function() {
+    var run = runOfText("Hello.", {isAllCaps: true});
+    var converter = new DocumentConverter({
+        styleMap: [
+            {
+                from: documentMatchers.allCaps,
+                to: htmlPaths.elements([htmlPaths.element("span")])
+            }
+        ]
+    });
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "<span>Hello.</span>");
+    });
+});
+
+
 test('small caps runs are ignored by default', function() {
     var run = runOfText("Hello.", {isSmallCaps: true});
     var converter = new DocumentConverter();

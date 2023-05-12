@@ -1,7 +1,7 @@
 # Mammoth .docx to HTML converter
 
 Mammoth is designed to convert .docx documents,
-such as those created by Microsoft Word,
+such as those created by Microsoft Word, Google Docs and LibreOffice,
 and convert them to HTML.
 Mammoth aims to produce simple and clean HTML by using semantic information in the document,
 and ignoring other details.
@@ -125,11 +125,24 @@ In node.js, mammoth can be required in the usual way:
 var mammoth = require("mammoth");
 ```
 
-To generate a standalone JavaScript file for the browser,
-use `mammoth.browser.js` (generate using `make setup` if it is not already present).
+This also works in the browser if node.js core modules
+such as `Buffer` and `Stream`, are polyfilled.
+Some bundlers, such as Webpack before version 5, will automatically polyfill these modules,
+while others, such as Webpack from version 5, require the polyfills to be explicitly configured.
+
+Alternatively, you may use the standalone JavaScript file `mammoth.browser.js`,
+which includes both mammoth and its dependencies.
 This uses any loaded module system.
+For instance, when using CommonJS:
+
+```javascript
+var mammoth = require("mammoth/mammoth.browser");
+```
+
 If no module system is found,
 `mammoth` is set as a window global.
+
+The file can be generated using `make setup` during development.
 
 #### Basic conversion
 
@@ -143,7 +156,9 @@ mammoth.convertToHtml({path: "path/to/document.docx"})
         var html = result.value; // The generated HTML
         var messages = result.messages; // Any messages, such as warnings during conversion
     })
-    .done();
+    .catch(function(error) {
+        console.error(error);
+    });
 ```
 
 Note that `mammoth.convertToHtml` returns a [promise](http://promises-aplus.github.io/promises-spec/).
@@ -158,7 +173,9 @@ mammoth.extractRawText({path: "path/to/document.docx"})
         var text = result.value; // The raw text
         var messages = result.messages;
     })
-    .done();
+    .catch(function(error) {
+        console.error(error);
+    });
 ```
 
 #### Custom style map
@@ -381,6 +398,10 @@ Converts the source document to HTML.
 
 #### `mammoth.convertToMarkdown(input, options)`
 
+Markdown support is deprecated.
+Generating HTML and using a separate library to convert the HTML to Markdown is recommended,
+and is likely to produce better results.
+
 Converts the source document to Markdown.
 This behaves the same as `convertToHtml`,
 except that the `value` property of the result contains Markdown rather than HTML.
@@ -544,10 +565,12 @@ var options = {
 Or if you want paragraphs that have been explicitly set to use monospace fonts to represent code:
 
 ```javascript
+const monospaceFonts = ["consolas", "courier", "courier new"];
+
 function transformParagraph(paragraph) {
     var runs = mammoth.transforms.getDescendantsOfType(paragraph, "run");
     var isMatch = runs.length > 0 && runs.every(function(run) {
-        return run.font && fonts.indexOf(run.font.toLowerCase()) !== -1;
+        return run.font && monospaceFonts.indexOf(run.font.toLowerCase()) !== -1;
     });
     if (isMatch) {
         return {
@@ -726,6 +749,17 @@ strike
 Note that this matches text that has had strikethrough explicitly applied to it.
 It will not match any text that is struckthrough because of its paragraph or run style.
 
+#### All caps
+
+Match explicitly all caps text:
+
+```
+all-caps
+```
+
+Note that this matches text that has had all caps explicitly applied to it.
+It will not match any text that is all caps because of its paragraph or run style.
+
 #### Small caps
 
 Match explicitly small caps text:
@@ -736,6 +770,15 @@ small-caps
 
 Note that this matches text that has had small caps explicitly applied to it.
 It will not match any text that is small caps because of its paragraph or run style.
+
+#### Ignoring document elements
+
+Use `!` to ignore a document element.
+For instance, to ignore any paragraph with the style `Comment`:
+
+```
+p[style-name='Comment'] => !
+```
 
 ### HTML paths
 
@@ -798,15 +841,6 @@ div.aside > h2
 ```
 
 You can nest elements to any depth.
-
-#### Ignoring document elements
-
-Use `!` to ignore a document element.
-For instance, to ignore any paragraph with the style `Comment`:
-
-```
-p[style-name='Comment'] => !
-```
 
 ## Upgrading to later versions
 
@@ -882,3 +916,10 @@ Thanks to the following people for their contributions to Mammoth:
 * [Jacob Wang](https://github.com/jaceyshome)
 
   * Supporting styles defined without names
+
+## Donations
+
+If you'd like to say thanks, feel free to [make a donation through Ko-fi](https://ko-fi.com/S6S01MG20).
+
+If you use Mammoth as part of your business,
+please consider supporting the ongoing maintenance of Mammoth by [making a weekly donation through Liberapay](https://liberapay.com/mwilliamson/donate).

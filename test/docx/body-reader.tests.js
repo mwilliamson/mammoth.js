@@ -24,7 +24,7 @@ var _readNumberingProperties = require("../../lib/docx/body-reader")._readNumber
 var documents = require("../../lib/documents");
 var xml = require("../../lib/xml");
 var XmlElement = xml.Element;
-var Numbering = require("../../lib/docx/numbering-xml").Numbering;
+var defaultNumbering = require("../../lib/docx/numbering-xml").defaultNumbering;
 var Relationships = require("../../lib/docx/relationships-reader").Relationships;
 var Styles = require("../../lib/docx/styles-reader").Styles;
 var warning = require("../../lib/results").warning;
@@ -36,6 +36,7 @@ var createFakeDocxFile = testing.createFakeDocxFile;
 function readXmlElement(element, options) {
     options = Object.create(options || {});
     options.styles = options.styles || new Styles({}, {});
+    options.numbering = options.numbering || defaultNumbering;
     return createBodyReader(options).readXmlElement(element);
 }
 
@@ -156,9 +157,31 @@ test("paragraph has numbering properties from paragraph properties if present", 
     var propertiesXml = new XmlElement("w:pPr", {}, [numberingPropertiesXml]);
     var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
 
-    var numbering = new NumberingMap({"42": {"1": {isOrdered: true, level: "1"}}});
+    var numbering = new NumberingMap({
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+    });
 
     var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering});
+    assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
+});
+
+test("numbering on paragraph style takes precedence over numPr", function() {
+    var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
+        new XmlElement("w:ilvl", {"w:val": "1"}),
+        new XmlElement("w:numId", {"w:val": "42"})
+    ]);
+    var propertiesXml = new XmlElement("w:pPr", {}, [
+        new XmlElement("w:pStyle", {"w:val": "List"}),
+        numberingPropertiesXml
+    ]);
+    var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+
+    var numbering = new NumberingMap({
+        findLevelByParagraphStyleId: {"List": {isOrdered: true, level: "1"}}
+    });
+    var styles = new Styles({"List": {name: "List"}}, {});
+
+    var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering, styles: styles});
     assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
 });
 
@@ -168,9 +191,11 @@ test("numbering properties are converted to numbering at specified level", funct
         new XmlElement("w:numId", {"w:val": "42"})
     ]);
 
-    var numbering = new NumberingMap({"42": {"1": {isOrdered: true, level: "1"}}});
+    var numbering = new NumberingMap({
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+    });
 
-    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
+    var numberingLevel = _readNumberingProperties(null, numberingPropertiesXml, numbering);
     assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
 });
 
@@ -179,9 +204,11 @@ test("numbering properties are ignored if w:ilvl is missing", function() {
         new XmlElement("w:numId", {"w:val": "42"})
     ]);
 
-    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+    var numbering = new NumberingMap({
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+    });
 
-    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
+    var numberingLevel = _readNumberingProperties(null, numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
 
@@ -190,9 +217,11 @@ test("numbering properties are ignored if w:numId is missing", function() {
         new XmlElement("w:ilvl", {"w:val": "1"})
     ]);
 
-    var numbering = new Numbering({"42": {"1": {isOrdered: true, level: "1"}}});
+    var numbering = new NumberingMap({
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+    });
 
-    var numberingLevel = _readNumberingProperties(numberingPropertiesXml, numbering);
+    var numberingLevel = _readNumberingProperties(null, numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
 });
 
@@ -217,7 +246,7 @@ test("complex fields", (function() {
     function isHyperlinkedRun(hyperlinkProperties) {
         return isRun({
             children: contains(
-                isHyperlink(_.extend({href: uri}, hyperlinkProperties))
+                isHyperlink(hyperlinkProperties)
             )
         });
     }
@@ -228,7 +257,7 @@ test("complex fields", (function() {
             assert.deepEqual(instrText, []);
         },
 
-        "runs in a complex field for hyperlinks are read as hyperlinks": function() {
+        "runs in a complex field for hyperlink without switch are read as external hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
@@ -243,6 +272,33 @@ test("complex fields", (function() {
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
+                    children: contains(
+                        isText("this is a hyperlink")
+                    )
+                }),
+                isEmptyRun
+            ));
+        },
+
+        "runs in a complex field for hyperlink with l switch are read as internal hyperlinks": function() {
+            var hyperlinkRunXml = runOfText("this is a hyperlink");
+            var paragraphXml = new XmlElement("w:p", {}, [
+                beginXml,
+                new XmlElement("w:instrText", {}, [
+                    xml.text(' HYPERLINK \\l "InternalLink"')
+                ]),
+                separateXml,
+                hyperlinkRunXml,
+                endXml
+            ]);
+            var paragraph = readXmlElementValue(paragraphXml);
+
+            assertThat(paragraph.children, contains(
+                isEmptyRun,
+                isEmptyHyperlinkedRun,
+                isHyperlinkedRun({
+                    anchor: "InternalLink",
                     children: contains(
                         isText("this is a hyperlink")
                     )
@@ -295,6 +351,7 @@ test("complex fields", (function() {
                 isEmptyRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
                     children: contains(
                         isText("this is a hyperlink")
                     )
@@ -327,6 +384,7 @@ test("complex fields", (function() {
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
                     children: contains(
                         isText("this is a hyperlink")
                     )
@@ -358,6 +416,7 @@ test("complex fields", (function() {
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
                     children: contains(
                         isText("John Doe")
                     )
@@ -386,6 +445,7 @@ test("complex fields", (function() {
                 isEmptyHyperlinkedRun,
                 isEmptyHyperlinkedRun,
                 isHyperlinkedRun({
+                    href: uri,
                     children: contains(
                         isText("this is a hyperlink")
                     )
@@ -452,8 +512,36 @@ test("isUnderline is false if underline element is not present", function() {
     assert.deepEqual(run.isUnderline, false);
 });
 
-test("isUnderline is true if underline element is present", function() {
+test("isUnderline is false if underline element is present without w:val attribute", function() {
     var underlineXml = new XmlElement("w:u");
+    var runXml = runWithProperties([underlineXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isUnderline, false);
+});
+
+test("isUnderline is false if underline element is present and w:val is false", function() {
+    var underlineXml = new XmlElement("w:u", {"w:val": "false"});
+    var runXml = runWithProperties([underlineXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isUnderline, false);
+});
+
+test("isUnderline is false if underline element is present and w:val is 0", function() {
+    var underlineXml = new XmlElement("w:u", {"w:val": "0"});
+    var runXml = runWithProperties([underlineXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isUnderline, false);
+});
+
+test("isUnderline is false if underline element is present and w:val is none", function() {
+    var underlineXml = new XmlElement("w:u", {"w:val": "none"});
+    var runXml = runWithProperties([underlineXml]);
+    var run = readXmlElementValue(runXml);
+    assert.equal(run.isUnderline, false);
+});
+
+test("isUnderline is true if underline element is present and w:val is not none or falsy", function() {
+    var underlineXml = new XmlElement("w:u", {"w:val": "single"});
     var runXml = runWithProperties([underlineXml]);
     var run = readXmlElementValue(runXml);
     assert.equal(run.isUnderline, true);
@@ -503,6 +591,7 @@ var booleanRunProperties = [
     {name: "isUnderline", tagName: "w:u"},
     {name: "isItalic", tagName: "w:i"},
     {name: "isStrikethrough", tagName: "w:strike"},
+    {name: "isAllCaps", tagName: "w:caps"},
     {name: "isSmallCaps", tagName: "w:smallCaps"}
 ];
 
@@ -606,6 +695,33 @@ test("w:noBreakHyphen is read as non-breaking hyphen character", function() {
     var noBreakHyphenXml = new XmlElement("w:noBreakHyphen");
     var result = readXmlElement(noBreakHyphenXml);
     assert.deepEqual(result.value, new documents.Text("\u2011"));
+});
+
+test("soft hyphens are read as text", function() {
+    var element = new XmlElement("w:softHyphen", {}, []);
+    var text = readXmlElementValue(element);
+    assert.deepEqual(text, new documents.Text("\u00AD"));
+});
+
+test("w:sym with supported font and supported code point in ASCII range is converted to text", function() {
+    var element = new XmlElement("w:sym", {"w:font": "Wingdings", "w:char": "28"}, []);
+    var text = readXmlElementValue(element);
+    assert.deepEqual(text, new documents.Text("🕿"));
+});
+
+test("w:sym with supported font and supported code point in private use area is converted to text", function() {
+    var element = new XmlElement("w:sym", {"w:font": "Wingdings", "w:char": "F028"}, []);
+    var text = readXmlElementValue(element);
+    assert.deepEqual(text, new documents.Text("🕿"));
+});
+
+test("w:sym with unsupported font and code point produces empty result with warning", function() {
+    var element = new XmlElement("w:sym", {"w:font": "Dingwings", "w:char": "28"}, []);
+
+    var result = readXmlElement(element);
+
+    assert.deepEqual(result.value, []);
+    assert.deepEqual(result.messages, [warning("A w:sym element with an unsupported character was ignored: char 28 in font Dingwings")]);
 });
 
 test("w:tbl is read as document table element", function() {
@@ -976,6 +1092,18 @@ test("can read linked pictures", function() {
     }));
 });
 
+test("warning if blip has no image file", function() {
+    var drawing = createInlineImage({
+        blip: new XmlElement("a:blip"),
+        description: "It's a hat"
+    });
+
+    var result = readXmlElement(drawing);
+
+    assert.deepEqual(result.messages, [warning("Could not find image file for a:blip element")]);
+    assert.deepEqual(result.value, []);
+});
+
 test("warning if unsupported image type", function() {
     var drawing = createInlineImage({
         blip: createEmbeddedBlip("rId5"),
@@ -1294,10 +1422,16 @@ function imageRelationship(relationshipId, target) {
     };
 }
 
-function NumberingMap(nums) {
+function NumberingMap(options) {
+    var findLevel = options.findLevel;
+    var findLevelByParagraphStyleId = options.findLevelByParagraphStyleId || {};
+
     return {
         findLevel: function(numId, level) {
-            return nums[numId][level];
+            return findLevel[numId][level];
+        },
+        findLevelByParagraphStyleId: function(styleId) {
+            return findLevelByParagraphStyleId[styleId];
         }
     };
 }
