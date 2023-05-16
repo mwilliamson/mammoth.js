@@ -427,3 +427,11 @@ test('should throw error if file is not a valid docx document', function() {
         assert.equal(error.message, "Could not find main document part. Are you sure this is a valid .docx file?");
     });
 });
+
+test('document with track changes properly hides deleted content', function() {
+    var docxPath = path.join(__dirname, "test-data/track-changes-test.docx");
+    return mammoth.convertToHtml({path: docxPath, ignoreEmptyParagraphs: false}).then(function(result) {
+        assert.equal(result.value, "<h1>Track Changes Test</h1><p>This is the content.</p><p>And here is much more content.</p><p>This is new content, that I suggest.</p><p>Some more text.</p><p>Link 1: <a href=\"http://www.adobe.com?foo=bar\">www.adobe.com</a></p><p>Link 2: www.hlx.live</p><p>Link 3: <a href=\"http://www.hlx.live\">www.hlx.live</a></p><table><tr><td><p>A1</p></td><td><p>A2</p></td></tr><tr><td></td><td></td></tr></table><ol><li>Point one</li><li>Point three</li></ol><p>And more lists</p><ul><li>One</li><li>Three</li></ul>");
+    });
+});
+
