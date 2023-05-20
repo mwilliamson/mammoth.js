@@ -262,6 +262,11 @@ test("content of deleted paragraph is prepended to next paragraph", function() {
                 new XmlElement("w:pStyle", {"w:val": "Heading2"}, [])
             ]),
             runOfText("Two")
+        ]),
+        // Include a second paragraph that isn't deleted to ensure we only add
+        // the deleted paragraph contents once.
+        new XmlElement("w:p", {}, [
+            runOfText("Three")
         ])
     ];
 
@@ -274,6 +279,12 @@ test("content of deleted paragraph is prepended to next paragraph", function() {
             children: contains(
                 documents.run([documents.text("One")]),
                 documents.run([documents.text("Two")])
+            )
+        }),
+        hasProperties({
+            type: documents.types.paragraph,
+            children: contains(
+                documents.run([documents.text("Three")])
             )
         })
     ));
