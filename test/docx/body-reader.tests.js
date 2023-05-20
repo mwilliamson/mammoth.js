@@ -288,7 +288,6 @@ test("content of deleted paragraph is prepended to next paragraph", function() {
             )
         })
     ));
-
 });
 
 test("complex fields", (function() {
