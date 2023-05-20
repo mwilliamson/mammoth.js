@@ -1,3 +1,7 @@
+# 1.6.0
+
+* Support merged paragraphs when revisions are tracked.
+
 # 1.5.2
 
 * Add transformDocument to the TypeScript declarations.
