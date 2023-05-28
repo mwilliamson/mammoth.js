@@ -219,7 +219,7 @@ test('inline images referenced by path relative to base are included in output',
     });
 });
 
-test('src of inline images can be changed', function() {
+test('src of inline images can be changed using read("base64")', function() {
     var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
     var convertImage = mammoth.images.imgElement(function(element) {
         return element.read("base64").then(function(encodedImage) {
@@ -227,6 +227,50 @@ test('src of inline images can be changed', function() {
         });
     });
     return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
+        assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+    });
+});
+
+test('src of inline images can be changed using readAsBase64String()', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    var convertImage = mammoth.images.imgElement(function(element) {
+        return element.readAsBase64String().then(function(encodedImage) {
+            return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+        });
+    });
+    return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
+        assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+    });
+});
+
+test('src of inline images can be changed using readAsArrayBuffer()', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    var convertImage = mammoth.images.imgElement(function(element) {
+        return element.readAsArrayBuffer().then(function(arrayBuffer) {
+            assert.ok(!Buffer.isBuffer(arrayBuffer));
+            var encodedImage = Buffer.from(arrayBuffer).toString("base64");
+            return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+        });
+    });
+    return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
+        assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+    });
+});
+
+test('src of inline images can be changed using read()', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    var convertImage = mammoth.images.imgElement(function(element) {
+        return element.read().then(function(buffer) {
+            assert.ok(Buffer.isBuffer(buffer));
+            var encodedImage = buffer.toString("base64");
+            return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+        });
+    });
+    return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
         assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
     });
 });

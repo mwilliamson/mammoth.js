@@ -19,6 +19,7 @@
   "dependencies": {
     "@xmldom/xmldom": "^0.8.6",
     "argparse": "~1.0.3",
+    "base64-js": "^1.5.1",
     "bluebird": "~3.4.0",
     "dingbat-to-unicode": "^1.0.1",
     "jszip": "^3.7.1",
@@ -32,7 +33,7 @@
     "browserify-prepend-licenses": "~1.0.0",
     "duck": "^0.1.12",
     "eslint": "2.13.1",
-    "hamjest": "2.13.0",
+    "hamjest": "^4.0.1",
     "mocha": "~2.2.5",
     "temp": "^0.9.4",
     "uglify-js": "~2.4.8"
@@ -50,8 +51,8 @@
     "prepare": "make mammoth.browser.min.js"
   },
   "license": "BSD-2-Clause",
-  "engines" : {
-    "node" : ">=12.0.0"
+  "engines": {
+    "node": ">=12.0.0"
   },
   "volta": {
     "node": "16.18.1",

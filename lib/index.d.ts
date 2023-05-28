@@ -39,7 +39,7 @@ interface ImageConverter {
 
 interface Image {
     contentType: string;
-    readAsText: (encoding: string) => Promise<string>;
+    readAsBase64String: () => Promise<string>;
     read: ImageRead;
 }
 
