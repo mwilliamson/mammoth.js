@@ -39,6 +39,7 @@ interface ImageConverter {
 
 interface Image {
     contentType: string;
+    readAsText: (encoding: string) => Promise<string>;
     read: ImageRead;
 }
 
