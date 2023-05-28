@@ -119,16 +119,11 @@ For instance:
 
 ### Library
 
-In node.js, mammoth can be required in the usual way:
+In node.js and the browser, mammoth can be required in the usual way:
 
 ```javascript
 var mammoth = require("mammoth");
 ```
-
-This also works in the browser if node.js core modules
-such as `Buffer` and `Stream`, are polyfilled.
-Some bundlers, such as Webpack before version 5, will automatically polyfill these modules,
-while others, such as Webpack from version 5, require the polyfills to be explicitly configured.
 
 Alternatively, you may use the standalone JavaScript file `mammoth.browser.js`,
 which includes both mammoth and its dependencies.
