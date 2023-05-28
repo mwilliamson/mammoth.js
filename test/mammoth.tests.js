@@ -122,14 +122,33 @@ test('embedded style maps can be disabled', function() {
     });
 });
 
-test('embedded style map can be written and then read', function() {
+test('embedded style map can be written using toBuffer() and then read', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
     return promises.nfcall(fs.readFile, docxPath)
         .then(function(buffer) {
             return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
         })
         .then(function(docx) {
-            return mammoth.convertToHtml({buffer: docx.toBuffer()});
+            var buffer = docx.toBuffer();
+            assert.ok(Buffer.isBuffer(buffer));
+            return mammoth.convertToHtml({buffer: buffer});
+        })
+        .then(function(result) {
+            assert.equal(result.value, "<h1>Walking on imported air</h1>");
+            assert.deepEqual(result.messages, []);
+        });
+});
+
+test('embedded style map can be written using toArrayBuffer() and then read', function() {
+    var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+    return promises.nfcall(fs.readFile, docxPath)
+        .then(function(buffer) {
+            return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
+        })
+        .then(function(docx) {
+            var arrayBuffer = docx.toArrayBuffer();
+            assert.ok(!Buffer.isBuffer(arrayBuffer));
+            return mammoth.convertToHtml({buffer: Buffer.from(arrayBuffer)});
         })
         .then(function(result) {
             assert.equal(result.value, "<h1>Walking on imported air</h1>");

@@ -444,6 +444,7 @@ it will use the embedded style map.
 * `styleMap`: the style map to embed.
 
 * Returns a promise.
+  Call `toArrayBuffer()` on the value inside the promise to get an `ArrayBuffer` representing the new document.
   Call `toBuffer()` on the value inside the promise to get a `Buffer` representing the new document.
 
 For instance:
