@@ -482,15 +482,18 @@ and has the following properties:
 * `contentType`: the content type of the image, such as `image/png`.
 
 * `readAsArrayBuffer()`: read the image file as an `ArrayBuffer`.
+  Returns a promise of an `ArrayBuffer`.
 
 * `readAsBuffer()`: read the image file as a `Buffer`.
+  Returns a promise of a `Buffer`.
   This is not supported in browsers unless a `Buffer` polyfill has been used.
 
 * `readAsBase64String()`: read the image file as a base64-encoded string.
+  Returns a promise of a `string`.
 
 * `read([encoding])` (deprecated): read the image file with the specified encoding.
-  If an encoding is specified, a `string` is returned.
-  If no encoding is specified, a `Buffer` is returned.
+  If an encoding is specified, a promise of a `string` is returned.
+  If no encoding is specified, a promise of a `Buffer` is returned.
 
 `func` should return an object (or a promise of an object) of attributes for the `<img>` element.
 At a minimum, this should include the `src` attribute.
