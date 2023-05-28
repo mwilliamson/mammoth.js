@@ -275,6 +275,21 @@ test('src of inline images can be changed using read()', function() {
     });
 });
 
+test('src of inline images can be changed using readAsBuffer()', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    var convertImage = mammoth.images.imgElement(function(element) {
+        return element.readAsBuffer().then(function(buffer) {
+            assert.ok(Buffer.isBuffer(buffer));
+            var encodedImage = buffer.toString("base64");
+            return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+        });
+    });
+    return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
+        assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+    });
+});
+
 test('images stored outside of document are included in output', function() {
     var docxPath = path.join(__dirname, "test-data/external-picture.docx");
     return mammoth.convertToHtml({path: docxPath}).then(function(result) {
