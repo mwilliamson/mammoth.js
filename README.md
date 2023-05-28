@@ -479,10 +479,18 @@ This creates an `<img>` element for each image in the original docx.
 This argument is the image element being converted,
 and has the following properties:
 
-* `read([encoding])`: read the image file with the specified encoding.
-  If no encoding is specified, a `Buffer` is returned.
-
 * `contentType`: the content type of the image, such as `image/png`.
+
+* `readAsArrayBuffer()`: read the image file as an `ArrayBuffer`.
+
+* `readAsBuffer()`: read the image file as a `Buffer`.
+  This is not supported in browsers unless a `Buffer` polyfill has been used.
+
+* `readAsBase64String()`: read the image file as a base64-encoded string.
+
+* `read([encoding])` (deprecated): read the image file with the specified encoding.
+  If an encoding is specified, a `string` is returned.
+  If no encoding is specified, a `Buffer` is returned.
 
 `func` should return an object (or a promise of an object) of attributes for the `<img>` element.
 At a minimum, this should include the `src` attribute.
@@ -493,7 +501,7 @@ For instance, the following replicates the default image conversion:
 
 ```javascript
 mammoth.images.imgElement(function(image) {
-    return image.read("base64").then(function(imageBuffer) {
+    return image.readAsBase64String().then(function(imageBuffer) {
         return {
             src: "data:" + image.contentType + ";base64," + imageBuffer
         };
