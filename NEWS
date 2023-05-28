@@ -1,10 +1,16 @@
 # 1.6.0
 
+* Add transformDocument to the TypeScript declarations.
+
 * Support merged paragraphs when revisions are tracked.
 
-# 1.5.2
+* Use xmldom instead of sax to parse XML documents. This should remove the need
+  to polyfill stream in the browser.
 
-* Add transformDocument to the TypeScript declarations.
+* Adjust the internal implementation to remove the use of Buffer on the critical
+  path, and provide APIs to read images and documents with embedded style maps
+  without using Buffer. This should remove the need to polyfill Buffer in the
+  browser.
 
 # 1.5.1
 
