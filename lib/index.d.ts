@@ -42,7 +42,9 @@ interface ImageConverter {
 
 interface Image {
     contentType: string;
+    readAsArrayBuffer: () => Promise<ArrayBuffer>;
     readAsBase64String: () => Promise<string>;
+    readAsBuffer: () => Promise<Buffer>;
     read: ImageRead;
 }
 
