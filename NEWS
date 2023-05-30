@@ -10,7 +10,11 @@
 * Adjust the internal implementation to remove the use of Buffer on the critical
   path, and provide APIs to read images and documents with embedded style maps
   without using Buffer. This should remove the need to polyfill Buffer in the
-  browser.
+  browser. Since TextDecoder is now used, the minimum version of node.js is now
+  v12.
+
+* Remove the use of the util module. This should remove the need to polyfill
+  util in the browser.
 
 # 1.5.1
 
