@@ -22,3 +22,5 @@ jobs:
         - run: npm install
 
         - run: npm test
+
+        - run: npm run check-typescript

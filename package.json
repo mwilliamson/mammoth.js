@@ -29,6 +29,7 @@
     "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
+    "@types/node": "^20.2.5",
     "browserify": "~13.0.1",
     "browserify-prepend-licenses": "~1.0.0",
     "duck": "^0.1.12",
@@ -36,6 +37,7 @@
     "hamjest": "^4.0.1",
     "mocha": "~2.2.5",
     "temp": "^0.9.4",
+    "typescript": "^5.0.4",
     "uglify-js": "~2.4.8"
   },
   "browser": {
@@ -48,6 +50,7 @@
   "scripts": {
     "pretest": "eslint lib test",
     "test": "mocha 'test/**/*.tests.js'",
+    "check-typescript": "tsc --noEmit lib/index.d.ts",
     "prepare": "make mammoth.browser.min.js"
   },
   "license": "BSD-2-Clause",
