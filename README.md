@@ -401,7 +401,7 @@ Converts the source document to Markdown.
 This behaves the same as `convertToHtml`,
 except that the `value` property of the result contains Markdown rather than HTML.
 
-#### `mammoth.extractRawText(input)`
+#### `mammoth.extractRawText(input, options)`
 
 Extract the raw text of the document.
 This will ignore all formatting in the document.
@@ -416,6 +416,11 @@ Each paragraph is followed by two newlines.
   In the browser, the following inputs are supported:
 
     * `{arrayBuffer: arrayBuffer}`, where `arrayBuffer` is an array buffer containing a .docx file.
+
+* `options`: an optional object indicating functionality choices
+  The following options are supported:
+
+    * `allowLineBreaks`, where true will result in line break elements being converted to a newline character
 
 * Returns a promise containing a result.
   This result has the following properties:

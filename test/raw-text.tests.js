@@ -59,3 +59,11 @@ test('non-text element without children is converted to empty string', function(
 
     assert.strictEqual(result, "");
 });
+
+test('line break element is converted to newline character when allowLineBreak option is enabled', function() {
+    var element = documents.lineBreak;
+
+    var result = convertElementToRawText(element, {allowLineBreaks: true});
+
+    assert.strictEqual(result, "\n");
+});
