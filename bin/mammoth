@@ -34,5 +34,9 @@ parser.addArgument(["--style-map"], {
     help: "File containg a style map."
 });
 
+parser.addArgument(["--include-headers-footers"], {
+    type: "string",
+    help: "Include headers and footers from the document."
+});
 
 main(parser.parseArgs());

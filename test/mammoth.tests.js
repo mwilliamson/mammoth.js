@@ -505,3 +505,11 @@ test('should throw error if file is not a valid docx document', function() {
         assert.equal(error.message, "Could not find main document part. Are you sure this is a valid .docx file?");
     });
 });
+
+test('should read docx files with header and footer', function() {
+    var docxPath = path.join(__dirname, "test-data/header-footer.docx");
+    return mammoth.convertToHtml({path: docxPath}, {includeHeadersAndFooters: true}).then(function(result) {
+        assert.equal(result.value, "<header><p>Header text</p></header><footer><p>Footer text</p></footer>");
+        assert.deepEqual(result.messages, []);
+    });
+});

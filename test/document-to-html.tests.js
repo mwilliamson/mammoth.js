@@ -822,3 +822,27 @@ test('when initials are blank then comment author label is blank', function() {
     assert.equal(commentAuthorLabel({authorInitials: undefined}), "");
     assert.equal(commentAuthorLabel({authorInitials: null}), "");
 });
+
+test('docx header is converted to <header>', function() {
+    var headers = [new documents.Header(
+        [paragraphOfText("This is a header")]
+    )];
+    var document = new documents.Document();
+    document.headers = headers;
+    var converter = new DocumentConverter({includeHeadersAndFooters: true});
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value, '<header><p>This is a header</p></header>');
+    });
+});
+
+test('docx footer is converted to <footer>', function() {
+    var footers = [new documents.Footer(
+        [paragraphOfText("This is a footer")]
+    )];
+    var document = new documents.Document();
+    document.footers = footers;
+    var converter = new DocumentConverter({includeHeadersAndFooters: true});
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value, '<footer><p>This is a footer</p></footer>');
+    });
+});
