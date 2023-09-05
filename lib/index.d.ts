@@ -1,7 +1,10 @@
 interface Mammoth {
     convertToHtml: (input: Input, options?: Options) => Promise<Result>;
     extractRawText: (input: Input) => Promise<Result>;
-    embedStyleMap: (input: Input, styleMap: string) => Promise<{toBuffer: () => Buffer}>;
+    embedStyleMap: (input: Input, styleMap: string) => Promise<{
+        toArrayBuffer: () => ArrayBuffer,
+        toBuffer: () => Buffer,
+    }>;
     images: Images;
 }
 
@@ -39,6 +42,9 @@ interface ImageConverter {
 
 interface Image {
     contentType: string;
+    readAsArrayBuffer: () => Promise<ArrayBuffer>;
+    readAsBase64String: () => Promise<string>;
+    readAsBuffer: () => Promise<Buffer>;
     read: ImageRead;
 }
 

@@ -69,6 +69,7 @@
     "exports": true,
     "module": true,
     "require": false,
+    "TextDecoder": false,
     "Uint8Array": false
   }
 }

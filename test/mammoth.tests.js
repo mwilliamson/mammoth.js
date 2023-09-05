@@ -122,14 +122,33 @@ test('embedded style maps can be disabled', function() {
     });
 });
 
-test('embedded style map can be written and then read', function() {
+test('embedded style map can be written using toBuffer() and then read', function() {
     var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
     return promises.nfcall(fs.readFile, docxPath)
         .then(function(buffer) {
             return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
         })
         .then(function(docx) {
-            return mammoth.convertToHtml({buffer: docx.toBuffer()});
+            var buffer = docx.toBuffer();
+            assert.ok(Buffer.isBuffer(buffer));
+            return mammoth.convertToHtml({buffer: buffer});
+        })
+        .then(function(result) {
+            assert.equal(result.value, "<h1>Walking on imported air</h1>");
+            assert.deepEqual(result.messages, []);
+        });
+});
+
+test('embedded style map can be written using toArrayBuffer() and then read', function() {
+    var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+    return promises.nfcall(fs.readFile, docxPath)
+        .then(function(buffer) {
+            return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
+        })
+        .then(function(docx) {
+            var arrayBuffer = docx.toArrayBuffer();
+            assert.ok(!Buffer.isBuffer(arrayBuffer));
+            return mammoth.convertToHtml({buffer: Buffer.from(arrayBuffer)});
         })
         .then(function(result) {
             assert.equal(result.value, "<h1>Walking on imported air</h1>");
@@ -219,7 +238,7 @@ test('inline images referenced by path relative to base are included in output',
     });
 });
 
-test('src of inline images can be changed', function() {
+test('src of inline images can be changed using read("base64")', function() {
     var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
     var convertImage = mammoth.images.imgElement(function(element) {
         return element.read("base64").then(function(encodedImage) {
@@ -227,6 +246,65 @@ test('src of inline images can be changed', function() {
         });
     });
     return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
+        assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+    });
+});
+
+test('src of inline images can be changed using readAsBase64String()', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    var convertImage = mammoth.images.imgElement(function(element) {
+        return element.readAsBase64String().then(function(encodedImage) {
+            return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+        });
+    });
+    return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
+        assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+    });
+});
+
+test('src of inline images can be changed using readAsArrayBuffer()', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    var convertImage = mammoth.images.imgElement(function(element) {
+        return element.readAsArrayBuffer().then(function(arrayBuffer) {
+            assert.ok(!Buffer.isBuffer(arrayBuffer));
+            var encodedImage = Buffer.from(arrayBuffer).toString("base64");
+            return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+        });
+    });
+    return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
+        assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+    });
+});
+
+test('src of inline images can be changed using read()', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    var convertImage = mammoth.images.imgElement(function(element) {
+        return element.read().then(function(buffer) {
+            assert.ok(Buffer.isBuffer(buffer));
+            var encodedImage = buffer.toString("base64");
+            return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+        });
+    });
+    return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
+        assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
+    });
+});
+
+test('src of inline images can be changed using readAsBuffer()', function() {
+    var docxPath = path.join(__dirname, "test-data/tiny-picture.docx");
+    var convertImage = mammoth.images.imgElement(function(element) {
+        return element.readAsBuffer().then(function(buffer) {
+            assert.ok(Buffer.isBuffer(buffer));
+            var encodedImage = buffer.toString("base64");
+            return {src: encodedImage.substring(0, 2) + "," + element.contentType};
+        });
+    });
+    return mammoth.convertToHtml({path: docxPath}, {convertImage: convertImage}).then(function(result) {
+        assert.deepEqual(result.messages, []);
         assert.equal(result.value, '<p><img src="iV,image/png" /></p>');
     });
 });

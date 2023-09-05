@@ -22,7 +22,7 @@ function createFakeDocxFile(files) {
     function exists(path) {
         return !!files[path];
     }
-    
+
     return {
         read: createRead(files),
         exists: exists
@@ -41,13 +41,13 @@ function createRead(files) {
             if (_.isString(buffer)) {
                 buffer = new Buffer(buffer);
             }
-            
+
             if (!Buffer.isBuffer(buffer)) {
                 return promises.reject(new Error("file was not a buffer"));
             } else if (encoding) {
                 return promises.when(buffer.toString(encoding));
             } else {
-                return promises.when(buffer);
+                return promises.when(buffer.buffer);
             }
         });
     }

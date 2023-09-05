@@ -33,15 +33,29 @@ var testing = require("../testing");
 var test = require("../test")(module);
 var createFakeDocxFile = testing.createFakeDocxFile;
 
-function readXmlElement(element, options) {
+function createBodyReaderForTests(options) {
     options = Object.create(options || {});
     options.styles = options.styles || new Styles({}, {});
     options.numbering = options.numbering || defaultNumbering;
-    return createBodyReader(options).readXmlElement(element);
+    return createBodyReader(options);
+}
+
+function readXmlElement(element, options) {
+    return createBodyReaderForTests(options).readXmlElement(element);
+}
+
+function readXmlElements(element, options) {
+    return createBodyReaderForTests(options).readXmlElements(element);
 }
 
 function readXmlElementValue(element, options) {
     var result = readXmlElement(element, options);
+    assert.deepEqual(result.messages, []);
+    return result.value;
+}
+
+function readXmlElementsValue(elements, options) {
+    var result = readXmlElements(elements, options);
     assert.deepEqual(result.messages, []);
     return result.value;
 }
@@ -223,6 +237,57 @@ test("numbering properties are ignored if w:numId is missing", function() {
 
     var numberingLevel = _readNumberingProperties(null, numberingPropertiesXml, numbering);
     assert.equal(numberingLevel, null);
+});
+
+test("content of deleted paragraph is prepended to next paragraph", function() {
+    var styles = new Styles(
+        {
+            "Heading1": {name: "Heading 1"},
+            "Heading2": {name: "Heading 2"}
+        },
+        {}
+    );
+    var bodyXml = [
+        new XmlElement("w:p", {}, [
+            new XmlElement("w:pPr", {}, [
+                new XmlElement("w:pStyle", {"w:val": "Heading1"}, []),
+                new XmlElement("w:rPr", {}, [
+                    new XmlElement("w:del")
+                ])
+            ]),
+            runOfText("One")
+        ]),
+        new XmlElement("w:p", {}, [
+            new XmlElement("w:pPr", {}, [
+                new XmlElement("w:pStyle", {"w:val": "Heading2"}, [])
+            ]),
+            runOfText("Two")
+        ]),
+        // Include a second paragraph that isn't deleted to ensure we only add
+        // the deleted paragraph contents once.
+        new XmlElement("w:p", {}, [
+            runOfText("Three")
+        ])
+    ];
+
+    var result = readXmlElementsValue(bodyXml, {styles: styles});
+
+    assertThat(result, contains(
+        hasProperties({
+            type: documents.types.paragraph,
+            styleId: "Heading2",
+            children: contains(
+                documents.run([documents.text("One")]),
+                documents.run([documents.text("Two")])
+            )
+        }),
+        hasProperties({
+            type: documents.types.paragraph,
+            children: contains(
+                documents.run([documents.text("Three")])
+            )
+        })
+    ));
 });
 
 test("complex fields", (function() {
