@@ -8,7 +8,6 @@ var hasProperties = hamjest.hasProperties;
 
 var mammoth = require("../");
 var documents = require("../lib/documents");
-var promises = require("../lib/promises");
 
 var test = require("./test")(module);
 
@@ -22,7 +21,7 @@ test('mammoth.images.dataUri() encodes images in base64', function() {
     var imageBuffer = new Buffer("abc");
     var image = new documents.Image({
         readImage: function(encoding) {
-            return promises.when(imageBuffer.toString(encoding));
+            return Promise.resolve(imageBuffer.toString(encoding));
         },
         contentType: "image/jpeg"
     });
@@ -40,7 +39,7 @@ test('mammoth.images.imgElement()', {
         var imageBuffer = new Buffer("abc");
         var image = new documents.Image({
             readImage: function(encoding) {
-                return promises.when(imageBuffer.toString(encoding));
+                return Promise.resolve(imageBuffer.toString(encoding));
             },
             contentType: "image/jpeg"
         });
@@ -64,7 +63,7 @@ test('mammoth.images.imgElement()', {
         var imageBuffer = new Buffer("abc");
         var image = new documents.Image({
             readImage: function(encoding) {
-                return promises.when(imageBuffer.toString(encoding));
+                return Promise.resolve(imageBuffer.toString(encoding));
             },
             contentType: "image/jpeg",
             altText: "<alt>"
@@ -89,7 +88,7 @@ test('mammoth.images.imgElement()', {
         var imageBuffer = new Buffer("abc");
         var image = new documents.Image({
             readImage: function(encoding) {
-                return promises.when(imageBuffer.toString(encoding));
+                return Promise.resolve(imageBuffer.toString(encoding));
             },
             contentType: "image/jpeg",
             altText: "<alt>"

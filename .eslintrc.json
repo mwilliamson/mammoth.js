@@ -65,6 +65,7 @@
 
   "globals": {
     "Buffer": false,
+    "Promise": true,
     "console": true,
     "exports": true,
     "module": true,
