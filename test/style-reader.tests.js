@@ -54,6 +54,20 @@ test('styleReader.readHtmlPath', {
         assertHtmlPath("p.tip.help", expected);
     },
 
+    'reads attribute on element': function() {
+        var expected = htmlPaths.elements([
+            htmlPaths.element("p", {"lang": "fr"})
+        ]);
+        assertHtmlPath("p[lang='fr']", expected);
+    },
+
+    'reads multiple attributes on element': function() {
+        var expected = htmlPaths.elements([
+            htmlPaths.element("p", {"lang": "fr", "data-x": "y"})
+        ]);
+        assertHtmlPath("p[lang='fr'][data-x='y']", expected);
+    },
+
     'reads when element must be fresh': function() {
         var expected = htmlPaths.elements([
             htmlPaths.element("p", {}, {"fresh": true})

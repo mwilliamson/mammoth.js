@@ -805,6 +805,12 @@ append a dot followed by the name of the class:
 h1.section-title
 ```
 
+To add an attribute, use square brackets similarly to a CSS attribute selector:
+
+```
+p[lang="fr"]
+```
+
 To require that an element is fresh, use `:fresh`:
 
 ```

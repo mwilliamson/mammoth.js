@@ -1,3 +1,7 @@
+# 1.7.0
+
+* Support attributes in HTML paths in style mappings.
+
 # 1.6.0
 
 * Add transformDocument to the TypeScript declarations.
