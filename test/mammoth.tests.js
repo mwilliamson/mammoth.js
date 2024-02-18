@@ -496,6 +496,13 @@ test('extractRawText can use .docx files represented by a Buffer', function() {
         });
 });
 
+test('can read strict format', function() {
+    var docxPath = path.join(__dirname, "test-data/strict-format.docx");
+    return mammoth.convertToHtml({path: docxPath}).then(function(result) {
+        assert.equal(result.value, "<p>Test</p>");
+        assert.deepEqual(result.messages, []);
+    });
+});
 
 test('should throw error if file is not a valid docx document', function() {
     var docxPath = path.join(__dirname, "test-data/empty.zip");
