@@ -11,7 +11,9 @@ test("when body element is present then body is read", function() {
     var documentXmlReader = new DocumentXmlReader({
         bodyReader: bodyReader
     });
-    var paragraphXml = xml.element("w:p", {}, []);
+    var textXml = xml.element("w:t", {}, [xml.text("Hello!")]);
+    var runXml = xml.element("w:r", {}, [textXml]);
+    var paragraphXml = xml.element("w:p", {}, [runXml]);
     var bodyXml = xml.element("w:body", {}, [paragraphXml]);
     var documentXml = xml.element("w:document", {}, [bodyXml]);
 
@@ -19,7 +21,7 @@ test("when body element is present then body is read", function() {
 
     assert.deepEqual(result.messages, []);
     assert.deepEqual(result.value, documents.document(
-        [documents.paragraph([])],
+        [documents.paragraph([documents.run([documents.text("Hello!")])])],
         {}
     ));
 });
