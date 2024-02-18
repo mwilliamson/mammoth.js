@@ -23,3 +23,17 @@ test("when body element is present then body is read", function() {
         {}
     ));
 });
+
+test("when body element is not present then error is thrown", function() {
+    var bodyReader = createBodyReaderForTests({});
+    var documentXmlReader = new DocumentXmlReader({
+        bodyReader: bodyReader
+    });
+    var paragraphXml = xml.element("w:p", {}, []);
+    var bodyXml = xml.element("w:body2", {}, [paragraphXml]);
+    var documentXml = xml.element("w:document", {}, [bodyXml]);
+
+    assert.throws(function() {
+        documentXmlReader.convertXmlToDocument(documentXml);
+    }, /Could not find the body element: are you sure this is a docx file?/);
+});

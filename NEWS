@@ -2,6 +2,8 @@
 
 * Support attributes in HTML paths in style mappings.
 
+* Improve error message when failing to find the body element in a document.
+
 # 1.6.0
 
 * Add transformDocument to the TypeScript declarations.
