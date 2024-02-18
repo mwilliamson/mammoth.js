@@ -4,6 +4,8 @@
 
 * Improve error message when failing to find the body element in a document.
 
+* Add support for the strict document format.
+
 # 1.6.0
 
 * Add transformDocument to the TypeScript declarations.
