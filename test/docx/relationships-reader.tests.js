@@ -57,9 +57,9 @@ test("when there are no relationships of requested type then empty array is retu
 
 
 function relationshipsElement(children) {
-    return xml.element("{http://schemas.openxmlformats.org/package/2006/relationships}Relationships", {}, children);
+    return xml.element("relationships:Relationships", {}, children);
 }
 
 function relationshipElement(attributes) {
-    return xml.element("{http://schemas.openxmlformats.org/package/2006/relationships}Relationship", attributes, []);
+    return xml.element("relationships:Relationship", attributes, []);
 }
