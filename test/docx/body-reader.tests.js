@@ -19,26 +19,18 @@ var isText = documentMatchers.isText;
 var isTable = documentMatchers.isTable;
 var isRow = documentMatchers.isRow;
 
-var createBodyReader = require("../../lib/docx/body-reader").createBodyReader;
 var _readNumberingProperties = require("../../lib/docx/body-reader")._readNumberingProperties;
 var documents = require("../../lib/documents");
 var xml = require("../../lib/xml");
 var XmlElement = xml.Element;
-var defaultNumbering = require("../../lib/docx/numbering-xml").defaultNumbering;
 var Relationships = require("../../lib/docx/relationships-reader").Relationships;
 var Styles = require("../../lib/docx/styles-reader").Styles;
 var warning = require("../../lib/results").warning;
 
 var testing = require("../testing");
 var test = require("../test")(module);
+var createBodyReaderForTests = require("./testing").createBodyReaderForTests;
 var createFakeDocxFile = testing.createFakeDocxFile;
-
-function createBodyReaderForTests(options) {
-    options = Object.create(options || {});
-    options.styles = options.styles || new Styles({}, {});
-    options.numbering = options.numbering || defaultNumbering;
-    return createBodyReader(options);
-}
 
 function readXmlElement(element, options) {
     return createBodyReaderForTests(options).readXmlElement(element);
