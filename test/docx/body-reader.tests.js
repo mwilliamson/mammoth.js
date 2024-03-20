@@ -171,7 +171,22 @@ test("paragraph has numbering properties from paragraph properties if present", 
     assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
 });
 
-test("numbering on paragraph style takes precedence over numPr", function() {
+test("paragraph has numbering from paragraph style if present", function() {
+    var propertiesXml = new XmlElement("w:pPr", {}, [
+        new XmlElement("w:pStyle", {"w:val": "List"})
+    ]);
+    var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
+
+    var numbering = new NumberingMap({
+        findLevelByParagraphStyleId: {"List": {isOrdered: true, level: "1"}}
+    });
+    var styles = new Styles({"List": {name: "List"}}, {});
+
+    var paragraph = readXmlElementValue(paragraphXml, {numbering: numbering, styles: styles});
+    assert.deepEqual(paragraph.numbering, {level: "1", isOrdered: true});
+});
+
+test("numbering properties in paragraph properties takes precedence over numbering in paragraph style", function() {
     var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
         new XmlElement("w:ilvl", {"w:val": "1"}),
         new XmlElement("w:numId", {"w:val": "42"})
@@ -183,7 +198,8 @@ test("numbering on paragraph style takes precedence over numPr", function() {
     var paragraphXml = new XmlElement("w:p", {}, [propertiesXml]);
 
     var numbering = new NumberingMap({
-        findLevelByParagraphStyleId: {"List": {isOrdered: true, level: "1"}}
+        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}},
+        findLevelByParagraphStyleId: {"List": {isOrdered: true, level: "2"}}
     });
     var styles = new Styles({"List": {name: "List"}}, {});
 
