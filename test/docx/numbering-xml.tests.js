@@ -45,6 +45,23 @@ test('w:num element referencing non-existent w:abstractNumId is ignored', functi
     duck.assertThat(numbering.findLevel("47", "0"), duck.equalTo(null));
 });
 
+test('when level is missing w:numFmt then level is ordered', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
+                new XmlElement("w:lvl", {"w:ilvl": "0"})
+            ]),
+            new XmlElement("w:num", {"w:numId": "47"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "42"})
+            ])
+        ]),
+        {styles: stylesReader.defaultStyles}
+    );
+    duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
+        isOrdered: true
+    }));
+});
+
 
 test('when w:abstractNum has w:numStyleLink then style is used to find w:num', function() {
     var numbering = readNumberingXml(
