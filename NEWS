@@ -1,3 +1,8 @@
+# 1.7.2
+
+* Remove the use of the path module from common code used by browser builds.
+  This should remove the need to polyfill path in the browser.
+
 # 1.7.1
 
 * Handle numbering level definitions without an explicit format.
