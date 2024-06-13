@@ -209,6 +209,20 @@ test("styleReader.readDocumentMatcher", {
         );
     },
 
+    "reads highlight without color": function() {
+        assertDocumentMatcher(
+            "highlight",
+            documentMatchers.highlight()
+        );
+    },
+
+    "reads highlight with color": function() {
+        assertDocumentMatcher(
+            "highlight[color='yellow']",
+            documentMatchers.highlight({color: "yellow"})
+        );
+    },
+
     "reads comment-reference": function() {
         assertDocumentMatcher(
             "comment-reference",

@@ -45,6 +45,26 @@ test("matchers for lists with index 0 do not match elements that are not lists",
     assert.ok(!matcher.matches(new Paragraph()));
 });
 
+test("highlight matcher does not match non-highlight elements", function() {
+    var matcher = documentMatchers.highlight();
+    assert.ok(!matcher.matches(new Paragraph()));
+});
+
+test("highlight matcher without color matches all highlight elements", function() {
+    var matcher = documentMatchers.highlight({});
+    assert.ok(matcher.matches({type: "highlight", color: "yellow"}));
+});
+
+test("highlight matcher with color matches highlight with that color", function() {
+    var matcher = documentMatchers.highlight({color: "yellow"});
+    assert.ok(matcher.matches({type: "highlight", color: "yellow"}));
+});
+
+test("highlight matcher with color does not match highlights with other colors", function() {
+    var matcher = documentMatchers.highlight({color: "yellow"});
+    assert.ok(!matcher.matches({type: "highlight", color: "red"}));
+});
+
 function paragraphWithStyle(styleId, styleName) {
     return new Paragraph([], {styleId: styleId, styleName: styleName});
 }

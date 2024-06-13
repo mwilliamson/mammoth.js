@@ -344,6 +344,52 @@ test('small caps runs can be configured with style mapping', function() {
 });
 
 
+test('highlighted runs are ignored by default', function() {
+    var run = runOfText("Hello.", {highlight: "yellow"});
+    var converter = new DocumentConverter();
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "Hello.");
+    });
+});
+
+test('highlighted runs can be configured with style mapping for all highlights', function() {
+    var run = runOfText("Hello.", {highlight: "yellow"});
+    var converter = new DocumentConverter({
+        styleMap: [
+            {
+                from: documentMatchers.highlight(null),
+                to: htmlPaths.elements([htmlPaths.element("mark")])
+            }
+        ]
+    });
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, "<mark>Hello.</mark>");
+    });
+});
+
+test('highlighted runs can be configured with style mapping for specific highlight color', function() {
+    var paragraph = new documents.Paragraph([
+        runOfText("Yellow", {highlight: "yellow"}),
+        runOfText("Red", {highlight: "red"})
+    ]);
+    var converter = new DocumentConverter({
+        styleMap: [
+            {
+                from: documentMatchers.highlight({color: "yellow"}),
+                to: htmlPaths.elements([htmlPaths.element("mark", {"class": "yellow"})])
+            },
+            {
+                from: documentMatchers.highlight({color: undefined}),
+                to: htmlPaths.elements([htmlPaths.element("mark")])
+            }
+        ]
+    });
+    return converter.convertToHtml(paragraph).then(function(result) {
+        assert.equal(result.value, '<p><mark class="yellow">Yellow</mark><mark>Red</mark></p>');
+    });
+});
+
+
 test('run styles are converted to HTML if mapping exists', function() {
     var run = runOfText("Hello.", {styleId: "Heading1Char", styleName: "Heading 1 Char"});
     var converter = new DocumentConverter({

@@ -778,6 +778,43 @@ small-caps
 Note that this matches text that has had small caps explicitly applied to it.
 It will not match any text that is small caps because of its paragraph or run style.
 
+#### Highlight
+
+Match explicitly highlighted text:
+
+```
+highlight
+```
+
+Note that this matches text that has had a highlight explicitly applied to it.
+It will not match any text that is highlighted because of its paragraph or run style.
+
+It's also possible to match specific colours.
+For instance, to match yellow highlights:
+
+```
+highlight[color='yellow']
+```
+
+The set of colours typically used are:
+
+* `black`
+* `blue`
+* `cyan`
+* `green`
+* `magenta`
+* `red`
+* `yellow`
+* `white`
+* `darkBlue`
+* `darkCyan`
+* `darkGreen`
+* `darkMagenta`
+* `darkRed`
+* `darkYellow`
+* `darkGray`
+* `lightGray`
+
 #### Ignoring document elements
 
 Use `!` to ignore a document element.
