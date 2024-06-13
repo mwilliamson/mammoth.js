@@ -758,11 +758,19 @@ test("run has no highlight by default", function() {
 });
 
 test("run has highlight read from properties", function() {
-    var fontXml = new XmlElement("w:highlight", {"w:val": "yellow"});
-    var runXml = runWithProperties([fontXml]);
+    var highlightXml = new XmlElement("w:highlight", {"w:val": "yellow"});
+    var runXml = runWithProperties([highlightXml]);
 
     var run = readXmlElementValue(runXml);
     assert.deepEqual(run.highlight, "yellow");
+});
+
+test("when highlight is none then run has no highlight", function() {
+    var highlightXml = new XmlElement("w:highlight", {"w:val": "none"});
+    var runXml = runWithProperties([highlightXml]);
+
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.highlight, null);
 });
 
 test("run properties not included as child of run", function() {
