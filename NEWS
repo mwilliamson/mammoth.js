@@ -1,3 +1,7 @@
+# 1.8.0
+
+* Support parsing of run highlights.
+
 # 1.7.2
 
 * Remove the use of the path module from common code used by browser builds.

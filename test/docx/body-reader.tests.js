@@ -750,6 +750,21 @@ test("run with invalid w:sz has null font size", function() {
     assert.deepEqual(run.fontSize, null);
 });
 
+test("run has no highlight by default", function() {
+    var runXml = runWithProperties([]);
+
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.highlight, null);
+});
+
+test("run has highlight read from properties", function() {
+    var fontXml = new XmlElement("w:highlight", {"w:val": "yellow"});
+    var runXml = runWithProperties([fontXml]);
+
+    var run = readXmlElementValue(runXml);
+    assert.deepEqual(run.highlight, "yellow");
+});
+
 test("run properties not included as child of run", function() {
     var runStyleXml = new XmlElement("w:rStyle");
     var runPropertiesXml = new XmlElement("w:rPr", {}, [runStyleXml]);
