@@ -655,12 +655,18 @@ test('breaks can be mapped using style mappings', function() {
             {
                 from: documentMatchers.pageBreak,
                 to: htmlPaths.topLevelElement("hr")
+            },
+            {
+                from: documentMatchers.lineBreak,
+                to: htmlPaths.topLevelElement("br", {class: "line-break"})
             }
         ]
     });
 
-    return converter.convertToHtml(documents.pageBreak).then(function(result) {
-        assert.equal(result.value, "<hr />");
+    var run = documents.run([documents.pageBreak, documents.lineBreak]);
+
+    return converter.convertToHtml(run).then(function(result) {
+        assert.equal(result.value, '<hr /><br class="line-break" />');
     });
 });
 
