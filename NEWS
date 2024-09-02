@@ -1,3 +1,9 @@
+# Unreleased
+
+* Update lop to 0.4.2, which removes the use of the util module when there are
+  errors during parsing. This should remove the need to polyfill util in the
+  browser.
+
 # 1.8.0
 
 * Add style mapping for highlights.
