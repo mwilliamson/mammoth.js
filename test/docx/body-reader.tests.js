@@ -588,6 +588,48 @@ test("checkboxes", {
                 )
             })
         ));
+    },
+
+    "complex field checkbox with w:default=1 and w:checked=0 is unchecked": function() {
+        var paragraphXml = complexFieldCheckboxParagraph([
+            xml.element("w:checkBox", {}, [
+                xml.element("w:default", {"w:val": "1"}),
+                xml.element("w:checked", {"w:val": "0"})
+            ])
+        ]);
+
+        var paragraph = readXmlElementValue(paragraphXml);
+
+        assertThat(paragraph.children, contains(
+            isEmptyRun,
+            isEmptyRun,
+            isRun({
+                children: contains(
+                    isCheckbox({checked: equalTo(false)})
+                )
+            })
+        ));
+    },
+
+    "complex field checkbox with w:default=0 and w:checked=1 is checked": function() {
+        var paragraphXml = complexFieldCheckboxParagraph([
+            xml.element("w:checkBox", {}, [
+                xml.element("w:default", {"w:val": "0"}),
+                xml.element("w:checked", {"w:val": "1"})
+            ])
+        ]);
+
+        var paragraph = readXmlElementValue(paragraphXml);
+
+        assertThat(paragraph.children, contains(
+            isEmptyRun,
+            isEmptyRun,
+            isRun({
+                children: contains(
+                    isCheckbox({checked: equalTo(true)})
+                )
+            })
+        ));
     }
 });
 
