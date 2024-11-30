@@ -532,23 +532,28 @@ test("complex fields", (function() {
 })());
 
 test("checkboxes", {
-    "complex field checkbox without default or checked elements is unchecked": function() {
-        var paragraphXml = xml.element("w:p", {}, [
-            xml.element("w:r", {}, [
-                xml.element("w:fldChar", {"w:fldCharType": "begin"}, [
-                    xml.element("w:ffData", {}, [
-                        xml.element("w:checkBox")
-                    ])
-                ])
-            ]),
-            xml.element("w:instrText", {}, [
-                xml.text(' FORMCHECKBOX ')
-            ]),
-            xml.element("w:r", {}, [
-                xml.element("w:fldChar", {"w:fldCharType": "separate"})
-            ]),
-            xml.element("w:r", {}, [
-                xml.element("w:fldChar", {"w:fldCharType": "end"})
+    "complex field checkbox without w:default nor w:checked is unchecked": function() {
+        var paragraphXml = complexFieldCheckboxParagraph([
+            xml.element("w:checkBox")
+        ]);
+
+        var paragraph = readXmlElementValue(paragraphXml);
+
+        assertThat(paragraph.children, contains(
+            isEmptyRun,
+            isEmptyRun,
+            isRun({
+                children: contains(
+                    isCheckbox({checked: equalTo(false)})
+                )
+            })
+        ));
+    },
+
+    "complex field checkbox with w:default=0 and without w:checked is unchecked": function() {
+        var paragraphXml = complexFieldCheckboxParagraph([
+            xml.element("w:checkBox", {}, [
+                xml.element("w:default", {"w:val": "0"})
             ])
         ]);
 
@@ -563,8 +568,47 @@ test("checkboxes", {
                 )
             })
         ));
+    },
+
+    "complex field checkbox with w:default=1 and without w:checked is checked": function() {
+        var paragraphXml = complexFieldCheckboxParagraph([
+            xml.element("w:checkBox", {}, [
+                xml.element("w:default", {"w:val": "1"})
+            ])
+        ]);
+
+        var paragraph = readXmlElementValue(paragraphXml);
+
+        assertThat(paragraph.children, contains(
+            isEmptyRun,
+            isEmptyRun,
+            isRun({
+                children: contains(
+                    isCheckbox({checked: equalTo(true)})
+                )
+            })
+        ));
     }
 });
+
+function complexFieldCheckboxParagraph(ffDataChildren) {
+    return xml.element("w:p", {}, [
+        xml.element("w:r", {}, [
+            xml.element("w:fldChar", {"w:fldCharType": "begin"}, [
+                xml.element("w:ffData", {}, ffDataChildren)
+            ])
+        ]),
+        xml.element("w:instrText", {}, [
+            xml.text(' FORMCHECKBOX ')
+        ]),
+        xml.element("w:r", {}, [
+            xml.element("w:fldChar", {"w:fldCharType": "separate"})
+        ]),
+        xml.element("w:r", {}, [
+            xml.element("w:fldChar", {"w:fldCharType": "end"})
+        ])
+    ]);
+}
 
 test("run has no style if it has no properties", function() {
     var runXml = runWithProperties([]);
