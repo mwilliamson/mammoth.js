@@ -7,12 +7,14 @@ var assertThat = hamjest.assertThat;
 var promiseThat = hamjest.promiseThat;
 var allOf = hamjest.allOf;
 var contains = hamjest.contains;
+var equalTo = hamjest.equalTo;
 var hasProperties = hamjest.hasProperties;
 var willBe = hamjest.willBe;
 var FeatureMatcher = hamjest.FeatureMatcher;
 
 var documentMatchers = require("./document-matchers");
 var isEmptyRun = documentMatchers.isEmptyRun;
+var isCheckbox = documentMatchers.isCheckbox;
 var isHyperlink = documentMatchers.isHyperlink;
 var isRun = documentMatchers.isRun;
 var isText = documentMatchers.isText;
@@ -528,6 +530,41 @@ test("complex fields", (function() {
         }
     };
 })());
+
+test("checkboxes", {
+    "complex field checkbox without default or checked elements is unchecked": function() {
+        var paragraphXml = xml.element("w:p", {}, [
+            xml.element("w:r", {}, [
+                xml.element("w:fldChar", {"w:fldCharType": "begin"}, [
+                    xml.element("w:ffData", {}, [
+                        xml.element("w:checkBox")
+                    ])
+                ])
+            ]),
+            xml.element("w:instrText", {}, [
+                xml.text(' FORMCHECKBOX ')
+            ]),
+            xml.element("w:r", {}, [
+                xml.element("w:fldChar", {"w:fldCharType": "separate"})
+            ]),
+            xml.element("w:r", {}, [
+                xml.element("w:fldChar", {"w:fldCharType": "end"})
+            ])
+        ]);
+
+        var paragraph = readXmlElementValue(paragraphXml);
+
+        assertThat(paragraph.children, contains(
+            isEmptyRun,
+            isEmptyRun,
+            isRun({
+                children: contains(
+                    isCheckbox({checked: equalTo(false)})
+                )
+            })
+        ));
+    }
+});
 
 test("run has no style if it has no properties", function() {
     var runXml = runWithProperties([]);

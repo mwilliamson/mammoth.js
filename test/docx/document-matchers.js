@@ -7,6 +7,7 @@ var documents = require("../../lib/documents");
 exports.isEmptyRun = isRun({children: []});
 exports.isRun = isRun;
 exports.isText = isText;
+exports.isCheckbox = isCheckbox;
 exports.isHyperlink = isHyperlink;
 exports.isTable = isTable;
 exports.isRow = isRow;
@@ -18,6 +19,10 @@ function isRun(properties) {
 
 function isText(text) {
     return isDocumentElement(documents.types.text, {value: text});
+}
+
+function isCheckbox(properties) {
+    return isDocumentElement(documents.types.checkbox, properties);
 }
 
 function isHyperlink(properties) {
