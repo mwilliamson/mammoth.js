@@ -37,6 +37,13 @@ test("empty children of element are removed", function() {
     );
 });
 
+test("empty void elements are not removed", function() {
+    assert.deepEqual(
+        simplifyNode(nonFreshElement("br", {}, [])),
+        [nonFreshElement("br", {}, [])]
+    );
+});
+
 test("successive fresh elements are not collapsed", function() {
     var path = htmlPaths.elements([
         htmlPaths.element("p", {}, {fresh: true})
