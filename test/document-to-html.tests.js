@@ -465,6 +465,22 @@ test('hyperlink target frame is used as anchor target', function() {
     });
 });
 
+test('unchecked checkbox is converted to unchecked checkbox input', function() {
+    var checkbox = documents.checkbox({checked: false});
+    var converter = new DocumentConverter();
+    return converter.convertToHtml(checkbox).then(function(result) {
+        assert.equal(result.value, '<input type="checkbox" />');
+    });
+});
+
+test('checked checkbox is converted to checked checkbox input', function() {
+    var checkbox = documents.checkbox({checked: true});
+    var converter = new DocumentConverter();
+    return converter.convertToHtml(checkbox).then(function(result) {
+        assert.equal(result.value, '<input type="checkbox" checked="checked" />');
+    });
+});
+
 test('bookmarks are converted to anchors', function() {
     var bookmarkStart = new documents.BookmarkStart({name: "_Peter"});
     var converter = new DocumentConverter({
