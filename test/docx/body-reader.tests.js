@@ -532,6 +532,60 @@ test("complex fields", (function() {
 })());
 
 test("checkboxes", {
+    "complex field checkbox without separate is read": function() {
+        var paragraphXml = xml.element("w:p", {}, [
+            xml.element("w:r", {}, [
+                xml.element("w:fldChar", {"w:fldCharType": "begin"})
+            ]),
+            xml.element("w:instrText", {}, [
+                xml.text(' FORMCHECKBOX ')
+            ]),
+            xml.element("w:r", {}, [
+                xml.element("w:fldChar", {"w:fldCharType": "end"})
+            ])
+        ]);
+
+        var paragraph = readXmlElementValue(paragraphXml);
+
+        assertThat(paragraph.children, contains(
+            isEmptyRun,
+            isRun({
+                children: contains(
+                    isCheckbox()
+                )
+            })
+        ));
+    },
+
+    "complex field checkbox with separate is read": function() {
+        var paragraphXml = xml.element("w:p", {}, [
+            xml.element("w:r", {}, [
+                xml.element("w:fldChar", {"w:fldCharType": "begin"})
+            ]),
+            xml.element("w:instrText", {}, [
+                xml.text(' FORMCHECKBOX ')
+            ]),
+            xml.element("w:r", {}, [
+                xml.element("w:fldChar", {"w:fldCharType": "separate"})
+            ]),
+            xml.element("w:r", {}, [
+                xml.element("w:fldChar", {"w:fldCharType": "end"})
+            ])
+        ]);
+
+        var paragraph = readXmlElementValue(paragraphXml);
+
+        assertThat(paragraph.children, contains(
+            isEmptyRun,
+            isEmptyRun,
+            isRun({
+                children: contains(
+                    isCheckbox()
+                )
+            })
+        ));
+    },
+
     "complex field checkbox without w:default nor w:checked is unchecked": function() {
         var paragraphXml = complexFieldCheckboxParagraph([
             xml.element("w:checkBox")
