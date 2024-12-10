@@ -1,5 +1,6 @@
 interface Mammoth {
     convertToHtml: (input: Input, options?: Options) => Promise<Result>;
+    convertToMarkdown: (input: Input, options?: Options) => Promise<Result>;
     extractRawText: (input: Input) => Promise<Result>;
     embedStyleMap: (input: Input, styleMap: string) => Promise<{
         toArrayBuffer: () => ArrayBuffer,
