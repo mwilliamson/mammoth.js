@@ -30,8 +30,6 @@
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
-    "browserify": "~13.0.1",
-    "browserify-prepend-licenses": "~1.0.0",
     "duck": "^0.1.12",
     "eslint": "2.13.1",
     "hamjest": "^4.0.1",
@@ -40,18 +38,9 @@
     "typescript": "^5.0.4",
     "uglify-js": "~2.4.8"
   },
-  "browser": {
-    "./lib/unzip.js": "./browser/unzip.js",
-    "./lib/docx/files.js": "./browser/docx/files.js"
-  },
-  "bin": {
-    "mammoth": "bin/mammoth"
-  },
   "scripts": {
-    "pretest": "eslint lib test",
-    "test": "mocha 'test/**/*.tests.js'",
-    "check-typescript": "tsc --noEmit lib/index.d.ts",
-    "prepare": "make mammoth.browser.min.js"
+    "test": "mocha 'test/*.tests.js'",
+    "check-typescript": "tsc --noEmit lib/index.d.ts"
   },
   "license": "BSD-2-Clause",
   "engines": {
