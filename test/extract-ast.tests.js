@@ -9,7 +9,7 @@ async function extractAst(input) {
   const extracted = await extractNodeList({
     path: input,
   });
-  console.log(extracted);
+  console.log(JSON.stringify(extracted, null, 2));
 }
 
 const items = fs.readdirSync(fixtures);
