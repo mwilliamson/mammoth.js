@@ -19,7 +19,6 @@
   "dependencies": {
     "@xmldom/xmldom": "^0.8.6",
     "base64-js": "^1.5.1",
-    "bluebird": "~3.4.0",
     "dingbat-to-unicode": "^1.0.1",
     "jszip": "^3.7.1",
     "path-is-absolute": "^1.0.0",
