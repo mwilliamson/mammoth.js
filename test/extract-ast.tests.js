@@ -5,10 +5,9 @@ const {extractNodeList} = require('../lib/index');
 
 const fixtures = path.join(__dirname, "fixtures");
 
-async function extractAst(input) {
-  const extracted = await extractNodeList({
-    path: input,
-  });
+async function extractAst(filepath) {
+  const buffer = fs.readFileSync(filepath);
+  const extracted = await extractNodeList(buffer);
   console.log(JSON.stringify(extracted, null, 2));
 }
 
