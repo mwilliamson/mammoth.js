@@ -18,36 +18,19 @@
   },
   "dependencies": {
     "@xmldom/xmldom": "^0.8.6",
-    "argparse": "~1.0.3",
     "base64-js": "^1.5.1",
     "bluebird": "~3.4.0",
     "dingbat-to-unicode": "^1.0.1",
     "jszip": "^3.7.1",
-    "lop": "^0.4.2",
     "path-is-absolute": "^1.0.0",
     "underscore": "^1.13.1",
     "xmlbuilder": "^10.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
-    "duck": "^0.1.12",
-    "eslint": "2.13.1",
-    "hamjest": "^4.0.1",
-    "mocha": "~2.2.5",
-    "temp": "^0.9.4",
-    "typescript": "^5.0.4",
-    "uglify-js": "~2.4.8"
+    "mocha": "~2.2.5"
   },
   "scripts": {
-    "test": "mocha 'test/*.tests.js'",
-    "check-typescript": "tsc --noEmit lib/index.d.ts"
-  },
-  "license": "BSD-2-Clause",
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "volta": {
-    "node": "16.18.1",
-    "npm": "8.19.2"
+    "test": "mocha 'test/*.tests.js'"
   }
 }
