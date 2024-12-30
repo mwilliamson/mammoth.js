@@ -684,6 +684,46 @@ test("checkboxes", {
                 )
             })
         ));
+    },
+
+    "structured document tag checkbox without checked is not checked": function() {
+        var sdtXml = xml.element("w:sdt", {}, [
+            xml.element("w:sdtPr", {}, [
+                xml.element("wordml:checkbox")
+            ])
+        ]);
+
+        var result = readXmlElementValue(sdtXml);
+
+        assertThat(result, isCheckbox({checked: equalTo(false)}));
+    },
+
+    "structured document tag checkbox with checked=0 is not checked": function() {
+        var sdtXml = xml.element("w:sdt", {}, [
+            xml.element("w:sdtPr", {}, [
+                xml.element("wordml:checkbox", {}, [
+                    xml.element("wordml:checked", {"wordml:val": "0"})
+                ])
+            ])
+        ]);
+
+        var result = readXmlElementValue(sdtXml);
+
+        assertThat(result, isCheckbox({checked: equalTo(false)}));
+    },
+
+    "structured document tag checkbox with checked=1 is checked": function() {
+        var sdtXml = xml.element("w:sdt", {}, [
+            xml.element("w:sdtPr", {}, [
+                xml.element("wordml:checkbox", {}, [
+                    xml.element("wordml:checked", {"wordml:val": "1"})
+                ])
+            ])
+        ]);
+
+        var result = readXmlElementValue(sdtXml);
+
+        assertThat(result, isCheckbox({checked: equalTo(true)}));
     }
 });
 
