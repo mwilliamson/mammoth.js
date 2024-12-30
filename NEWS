@@ -4,6 +4,9 @@
   errors during parsing. This should remove the need to polyfill util in the
   browser.
 
+* Detect checkboxes, both as complex fields and structured document tags, and
+  convert them to checkbox inputs.
+
 # 1.8.0
 
 * Add style mapping for highlights.
