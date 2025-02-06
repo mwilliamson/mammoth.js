@@ -127,7 +127,35 @@ test("styleReader.readDocumentMatcher", {
     "reads p:ordered-list(1) as ordered list with index of 0": function() {
         assertDocumentMatcher(
             "p:ordered-list(1)",
-            documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0}})
+            documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0, listStyleType: 'decimal'}})
+        );
+    },
+
+    "reads p:ordered-lower-letter-list(1) as ordered list with index of 0": function() {
+        assertDocumentMatcher(
+            "p:ordered-lower-letter-list(1)",
+            documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0, listStyleType: 'lowerLetter'}})
+        );
+    },
+
+    "reads p:ordered-upper-letter-list(1) as ordered list with index of 0": function() {
+        assertDocumentMatcher(
+            "p:ordered-upper-letter-list(1)",
+            documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0, listStyleType: 'upperLetter'}})
+        );
+    },
+
+    "reads p:ordered-lower-roman-list(1) as ordered list with index of 0": function() {
+        assertDocumentMatcher(
+            "p:ordered-lower-roman-list(1)",
+            documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0, listStyleType: 'lowerRoman'}})
+        );
+    },
+
+    "reads p:ordered-upper-roman-list(1) as ordered list with index of 0": function() {
+        assertDocumentMatcher(
+            "p:ordered-upper-roman-list(1)",
+            documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 0, listStyleType: 'upperRoman'}})
         );
     },
 

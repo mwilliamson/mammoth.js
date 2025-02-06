@@ -26,9 +26,41 @@ test("paragraph style name only matches paragraphs with that style name", functi
 });
 
 test("ordered-list(index) matches an ordered list with specified level index", function() {
-    var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 1}});
+    var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 1, listStyleType: 'decimal'}});
     assert.ok(!matcher.matches(new Paragraph()));
-    assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true}})));
+    assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true, listStyleType: 'decimal'}})));
+    assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 0, isOrdered: true}})));
+    assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: false}})));
+});
+
+test("ordered-lower-letter-list(index) matches an ordered list with specified level index", function() {
+    var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 1, listStyleType: 'lowerLetter'}});
+    assert.ok(!matcher.matches(new Paragraph()));
+    assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true, listStyleType: 'lowerLetter'}})));
+    assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 0, isOrdered: true}})));
+    assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: false}})));
+});
+
+test("ordered-upper-letter-list(index) matches an ordered list with specified level index", function() {
+    var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 1, listStyleType: 'upperLetter'}});
+    assert.ok(!matcher.matches(new Paragraph()));
+    assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true, listStyleType: 'upperLetter'}})));
+    assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 0, isOrdered: true}})));
+    assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: false}})));
+});
+
+test("ordered-lower-roman-list(index) matches an ordered list with specified level index", function() {
+    var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 1, listStyleType: 'lowerRoman'}});
+    assert.ok(!matcher.matches(new Paragraph()));
+    assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true, listStyleType: 'lowerRoman'}})));
+    assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 0, isOrdered: true}})));
+    assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: false}})));
+});
+
+test("ordered-upper-roman-list(index) matches an ordered list with specified level index", function() {
+    var matcher = documentMatchers.paragraph({list: {isOrdered: true, levelIndex: 1, listStyleType: 'upperRoman'}});
+    assert.ok(!matcher.matches(new Paragraph()));
+    assert.ok(matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: true, listStyleType: 'upperRoman'}})));
     assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 0, isOrdered: true}})));
     assert.ok(!matcher.matches(new Paragraph([], {numbering: {level: 1, isOrdered: false}})));
 });
