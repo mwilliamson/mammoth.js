@@ -11,6 +11,7 @@
     "markdown",
     "md"
   ],
+  "type": "commonjs",
   "main": "./lib/index.js",
   "repository": {
     "type": "git",
