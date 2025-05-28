@@ -68,6 +68,7 @@
     "console": true,
     "exports": true,
     "module": true,
+    "Promise": false,
     "require": false,
     "TextDecoder": false,
     "Uint8Array": false
