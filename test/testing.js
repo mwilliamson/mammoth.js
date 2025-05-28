@@ -43,7 +43,7 @@ function createRead(files) {
             }
 
             if (!Buffer.isBuffer(buffer)) {
-                return promises.reject(new Error("file was not a buffer"));
+                return Promise.reject(new Error("file was not a buffer"));
             } else if (encoding) {
                 return promises.when(buffer.toString(encoding));
             } else {
