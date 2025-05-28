@@ -2,6 +2,9 @@
 
 * Ignore AlternateContent elements when there is no Fallback element.
 
+* Explicitly use commonjs modules. Since the modules should have previously been
+  implicitly treated as commonjs modules, this shouldn't affect behaviour.
+
 # 1.9.0
 
 * Update lop to 0.4.2, which removes the use of the util module when there are
