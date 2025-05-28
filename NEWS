@@ -1,3 +1,7 @@
+# 1.9.1
+
+* Ignore AlternateContent elements when there is no Fallback element.
+
 # 1.9.0
 
 * Update lop to 0.4.2, which removes the use of the util module when there are

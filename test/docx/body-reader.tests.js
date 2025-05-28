@@ -1630,18 +1630,30 @@ test("text boxes have content appended after containing paragraph", function() {
     assert.deepEqual(result.value[1].styleId, "textbox-content");
 });
 
-test("mc:Fallback is used when mc:AlternateContent is read", function() {
-    var styles = new Styles({"first": {name: "First"}, "second": {name: "Second"}}, {});
-    var textbox = new XmlElement("mc:AlternateContent", {}, [
-        new XmlElement("mc:Choice", {"Requires": "wps"}, [
-            paragraphWithStyleId("first")
-        ]),
-        new XmlElement("mc:Fallback", {}, [
-            paragraphWithStyleId("second")
-        ])
-    ]);
-    var result = readXmlElement(textbox, {styles: styles});
-    assert.deepEqual(result.value[0].styleId, "second");
+test("mc:AlternateContent", {
+    "when mc:Fallback is present then mc:Fallback is read": function() {
+        var styles = new Styles({"first": {name: "First"}, "second": {name: "Second"}}, {});
+        var textbox = new XmlElement("mc:AlternateContent", {}, [
+            new XmlElement("mc:Choice", {"Requires": "wps"}, [
+                paragraphWithStyleId("first")
+            ]),
+            new XmlElement("mc:Fallback", {}, [
+                paragraphWithStyleId("second")
+            ])
+        ]);
+        var result = readXmlElement(textbox, {styles: styles});
+        assert.deepEqual(result.value[0].styleId, "second");
+    },
+
+    "when mc:Fallback is not present then element is ignored": function() {
+        var textbox = new XmlElement("mc:AlternateContent", {}, [
+            new XmlElement("mc:Choice", {"Requires": "wps"}, [
+                paragraphWithStyleId("first")
+            ])
+        ]);
+        var result = readXmlElement(textbox);
+        assert.deepEqual(result.value, []);
+    }
 });
 
 test("w:sdtContent is used when w:sdt is read", function() {
