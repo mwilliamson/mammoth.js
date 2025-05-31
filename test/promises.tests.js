@@ -70,6 +70,40 @@ test("extend", {
     }
 });
 
+test("forEachSeries", {
+    "empty array resolves immediately without calling function": function() {
+        return promises.forEachSeries([], function() {
+            throw new Error();
+        }).then(function(result) {
+            assert.deepStrictEqual(result, undefined);
+        });
+    },
+
+    "function is called on element after the previous element has been processed": function() {
+        var log = [];
+
+        return promises.forEachSeries([1, 2, 3], function(element) {
+            return new Promise(function(resolve) {
+                log.push(["start", element]);
+                setTimeout(function() {
+                    log.push(["end", element]);
+                    resolve(element * 2);
+                }, 0);
+            });
+        }).then(function(result) {
+            assert.deepStrictEqual(result, undefined);
+            assert.deepStrictEqual(log, [
+                ["start", 1],
+                ["end", 1],
+                ["start", 2],
+                ["end", 2],
+                ["start", 3],
+                ["end", 3]
+            ]);
+        });
+    }
+});
+
 test("props", {
     "props({}) resolve to {}": function() {
         return promises.props({}).then(function(result) {
