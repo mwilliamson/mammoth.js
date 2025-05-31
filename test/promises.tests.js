@@ -110,5 +110,25 @@ test("props", {
                 b: 2
             });
         });
+    },
+
+    "also can be used multiple times": function() {
+        return promises.props({
+            a: Promise.resolve(1)
+        }).also(function(result) {
+            return {
+                b: result.a + 1
+            };
+        }).also(function(result) {
+            return {
+                c: result.b + 1
+            };
+        }).then(function(result) {
+            assert.deepStrictEqual(result, {
+                a: 1,
+                b: 2,
+                c: 3
+            });
+        });
     }
 });
