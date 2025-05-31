@@ -82,6 +82,21 @@ test("props", {
         });
     },
 
+    "when value is rejected promise then props is rejected promise": function() {
+        return promises.props({
+            a: Promise.resolve(1),
+            b: Promise.reject(new Error("failure")),
+            c: Promise.resolve(3)
+        }).then(
+            function(result) {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+            }
+        );
+    },
+
     "props(...).also(...) can be used to add props": function() {
         return promises.props({
             a: Promise.resolve(1)
