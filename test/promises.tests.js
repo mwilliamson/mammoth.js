@@ -101,6 +101,66 @@ test("forEachSeries", {
                 ["end", 3]
             ]);
         });
+    },
+
+    "processing stops on sync error": function() {
+        var log = [];
+
+        return promises.forEachSeries([1, 2, 3], function(element) {
+            return new Promise(function(resolve) {
+                log.push(["start", element]);
+                if (element === 2) {
+                    throw new Error("failure");
+                } else {
+                    setTimeout(function() {
+                        log.push(["end", element]);
+                        resolve(element * 2);
+                    }, 0);
+                }
+            });
+        }).then(
+            function() {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+                assert.deepStrictEqual(log, [
+                    ["start", 1],
+                    ["end", 1],
+                    ["start", 2]
+                ]);
+            }
+        );
+    },
+
+    "processing stops on async error": function() {
+        var log = [];
+
+        return promises.forEachSeries([1, 2, 3], function(element) {
+            return new Promise(function(resolve, reject) {
+                log.push(["start", element]);
+                setTimeout(function() {
+                    if (element === 2) {
+                        reject(new Error("failure"));
+                    } else {
+                        log.push(["end", element]);
+                        resolve(element * 2);
+                    }
+                }, 0);
+            });
+        }).then(
+            function() {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+                assert.deepStrictEqual(log, [
+                    ["start", 1],
+                    ["end", 1],
+                    ["start", 2]
+                ]);
+            }
+        );
     }
 });
 
