@@ -208,6 +208,50 @@ test("nfcall", {
     }
 });
 
+test("promisify", {
+    "when function throws error then promise is rejected": function() {
+        return promises.promisify(function() {
+            throw new Error("failure");
+        })().then(
+            function() {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+            }
+        );
+    },
+
+    "when function calls callback with error then promise is rejected": function() {
+        return promises.promisify(function(callback) {
+            callback(new Error("failure"));
+        })().then(
+            function() {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+            }
+        );
+    },
+
+    "when function calls callback with value then promise is resolved": function() {
+        return promises.promisify(function(callback) {
+            callback(null, "success");
+        })().then(function(result) {
+            assert.strictEqual(result, "success");
+        });
+    },
+
+    "function is called with passed arguments": function() {
+        return promises.promisify(function(a, b, callback) {
+            callback(null, ["success", a, b]);
+        })("a", "b").then(function(result) {
+            assert.deepStrictEqual(result, ["success", "a", "b"]);
+        });
+    }
+});
+
 test("props", {
     "props({}) resolve to {}": function() {
         return promises.props({}).then(function(result) {
