@@ -165,6 +165,19 @@ test("forEachSeries", {
 });
 
 test("nfcall", {
+    "when function throws error then promise is rejected": function() {
+        return promises.nfcall(function(callback) {
+            throw new Error("failure");
+        }).then(
+            function(result) {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+            }
+        );
+    },
+
     "when function calls callback with error then promise is rejected": function() {
         return promises.nfcall(function(callback) {
             callback(new Error("failure"));
