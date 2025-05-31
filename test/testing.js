@@ -37,7 +37,7 @@ function createFakeFiles(files) {
 
 function createRead(files) {
     function read(path, encoding) {
-        return promises.when(files[path], function(buffer) {
+        return Promise.resolve(files[path], function(buffer) {
             if (_.isString(buffer)) {
                 buffer = new Buffer(buffer);
             }
@@ -45,9 +45,9 @@ function createRead(files) {
             if (!Buffer.isBuffer(buffer)) {
                 return Promise.reject(new Error("file was not a buffer"));
             } else if (encoding) {
-                return promises.when(buffer.toString(encoding));
+                return Promise.resolve(buffer.toString(encoding));
             } else {
-                return promises.when(buffer.buffer);
+                return Promise.resolve(buffer.buffer);
             }
         });
     }
