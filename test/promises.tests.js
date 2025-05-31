@@ -47,6 +47,29 @@ test("attempt", {
     }
 });
 
+test("extend", {
+    "object is extended by extension resolved by props()": function() {
+        return promises.extend({a: 1}, {b: 2, c: Promise.resolve(3)}).then(function(result) {
+            assert.deepStrictEqual(result, {a: 1, b: 2, c: 3});
+        });
+    },
+
+    "when value is rejected promise then result is rejected promise": function() {
+        return promises.extend({}, {
+            a: Promise.resolve(1),
+            b: Promise.reject(new Error("failure")),
+            c: Promise.resolve(3)
+        }).then(
+            function(result) {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+            }
+        );
+    }
+});
+
 test("props", {
     "props({}) resolve to {}": function() {
         return promises.props({}).then(function(result) {
@@ -95,40 +118,5 @@ test("props", {
                 assert.strictEqual(error.message, "failure");
             }
         );
-    },
-
-    "props(...).also(...) can be used to add props": function() {
-        return promises.props({
-            a: Promise.resolve(1)
-        }).also(function(result) {
-            return {
-                b: result.a + 1
-            };
-        }).then(function(result) {
-            assert.deepStrictEqual(result, {
-                a: 1,
-                b: 2
-            });
-        });
-    },
-
-    "also can be used multiple times": function() {
-        return promises.props({
-            a: Promise.resolve(1)
-        }).also(function(result) {
-            return {
-                b: result.a + 1
-            };
-        }).also(function(result) {
-            return {
-                c: result.b + 1
-            };
-        }).then(function(result) {
-            assert.deepStrictEqual(result, {
-                a: 1,
-                b: 2,
-                c: 3
-            });
-        });
     }
 });
