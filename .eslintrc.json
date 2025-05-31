@@ -68,8 +68,10 @@
     "console": true,
     "exports": true,
     "module": true,
+    "process": false,
     "Promise": false,
     "require": false,
+    "setTimeout": false,
     "TextDecoder": false,
     "Uint8Array": false
   }

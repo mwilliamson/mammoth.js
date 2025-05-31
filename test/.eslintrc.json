@@ -2,7 +2,6 @@
   "globals": {
     "__dirname": false,
     "describe": false,
-    "it": false,
-    "setTimeout": false
+    "it": false
   }
 }
