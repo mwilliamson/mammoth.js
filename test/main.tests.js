@@ -67,20 +67,34 @@ test("--output-format=markdown option generate markdown output", function() {
     });
 });
 
+test("when input file does not exist then process exits with error", function() {
+    return tryRunMammoth(testPath("non-existent.docx")).then(function(result) {
+        assert.strictEqual(result.error.code, 2);
+        assert.strictEqual(result.stdout, "");
+        assert.ok(result.stderr.startsWith("Fatal Error: ENOENT"));
+    });
+});
 
 function runMammoth() {
     var args = Array.prototype.slice.call(arguments, 0);
+    return tryRunMammoth(args).then(function(result) {
+        console.log(result.stderr); // eslint-disable-line no-console
+        assert.equal(result.error, null);
+        return {output: result.stdout, stderrOutput: result.stderr};
+    });
+}
+
+
+function tryRunMammoth(args) {
     var deferred = promises.defer();
-    
+
     var processArgs = ["node", "bin/mammoth"].concat(args);
     // TODO: proper escaping of args
     var command = processArgs.join(" ");
     child_process.exec(command, function(error, stdout, stderr) { // eslint-disable-line camelcase
-        console.log(stderr); // eslint-disable-line no-console
-        assert.equal(error, null);
-        deferred.resolve({output: stdout, stderrOutput: stderr});
+        deferred.resolve({error: error, stdout: stdout, stderr: stderr});
     });
-    
+
     return deferred.promise;
 }
 
