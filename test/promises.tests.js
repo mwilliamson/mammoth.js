@@ -46,3 +46,54 @@ test("attempt", {
         );
     }
 });
+
+test("props", {
+    "props({}) resolve to {}": function() {
+        return promises.props({}).then(function(result) {
+            assert.deepStrictEqual(result, {});
+        });
+    },
+
+    "when object has promise values then props returns with all values resolved": function() {
+        return promises.props({
+            a: Promise.resolve(1),
+            b: Promise.resolve(2),
+            c: Promise.resolve(3)
+        }).then(function(result) {
+            assert.deepStrictEqual(result, {
+                a: 1,
+                b: 2,
+                c: 3
+            });
+        });
+    },
+
+    "when object has non-promise values then props returns with same values": function() {
+        return promises.props({
+            a: 1,
+            b: 2,
+            c: 3
+        }).then(function(result) {
+            assert.deepStrictEqual(result, {
+                a: 1,
+                b: 2,
+                c: 3
+            });
+        });
+    },
+
+    "props(...).also(...) can be used to add props": function() {
+        return promises.props({
+            a: Promise.resolve(1)
+        }).also(function(result) {
+            return {
+                b: result.a + 1
+            };
+        }).then(function(result) {
+            assert.deepStrictEqual(result, {
+                a: 1,
+                b: 2
+            });
+        });
+    }
+});
