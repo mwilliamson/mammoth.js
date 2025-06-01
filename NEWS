@@ -1,3 +1,8 @@
+# 1.10.0
+
+* Add "Heading" and "Body" styles, as found in documents created by Apple Pages,
+  to the default style map.
+
 # 1.9.1
 
 * Ignore AlternateContent elements when there is no Fallback element.
