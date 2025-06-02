@@ -724,6 +724,91 @@ test("checkboxes", {
         var result = readXmlElementValue(sdtXml);
 
         assertThat(result, isCheckbox({checked: equalTo(true)}));
+    },
+
+    "when structured document tag checkbox has sdtContent then checkbox replaces single character": function() {
+        var tableXml = new XmlElement("w:tbl", {}, [
+            row(
+                xml.element("w:sdt", {}, [
+                    xml.element("w:sdtPr", {}, [
+                        xml.element("wordml:checkbox", {}, [
+                            xml.element("wordml:checked", {"wordml:val": "1"})
+                        ])
+                    ]),
+                    xml.element("w:sdtContent", {}, [
+                        xml.element("w:tc", {}, [
+                            xml.element("w:p", {}, [
+                                xml.element("w:r", {}, [
+                                    xml.element("w:t", {}, [
+                                        xml.text("☐")
+                                    ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ])
+            )
+        ]);
+
+        var result = readXmlElementValue(tableXml);
+
+        assert.deepEqual(result, new documents.Table([
+            new documents.TableRow([
+                new documents.TableCell([
+                    new documents.Paragraph([
+                        new documents.Run([
+                            new documents.Checkbox({checked: true})
+                        ])
+                    ])
+                ])
+            ])
+        ]));
+    },
+
+    "when structured document tag checkbox has sdtContent then deleted content is ignored": function() {
+        var tableXml = new XmlElement("w:tbl", {}, [
+            row(
+                xml.element("w:sdt", {}, [
+                    xml.element("w:sdtPr", {}, [
+                        xml.element("wordml:checkbox", {}, [
+                            xml.element("wordml:checked", {"wordml:val": "1"})
+                        ])
+                    ]),
+                    xml.element("w:sdtContent", {}, [
+                        xml.element("w:tc", {}, [
+                            xml.element("w:p", {}, [
+                                xml.element("w:r", {}, [
+                                    xml.element("w:t", {}, [
+                                        xml.text("☐")
+                                    ])
+                                ]),
+                                xml.element("w:del", {}, [
+                                    xml.element("w:r", {}, [
+                                        xml.element("w:t", {}, [
+                                            xml.text("☐")
+                                        ])
+                                    ])
+                                ])
+                            ])
+                        ])
+                    ])
+                ])
+            )
+        ]);
+
+        var result = readXmlElementValue(tableXml);
+
+        assert.deepEqual(result, new documents.Table([
+            new documents.TableRow([
+                new documents.TableCell([
+                    new documents.Paragraph([
+                        new documents.Run([
+                            new documents.Checkbox({checked: true})
+                        ])
+                    ])
+                ])
+            ])
+        ]));
     }
 });
 
