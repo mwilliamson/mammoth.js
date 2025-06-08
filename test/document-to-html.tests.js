@@ -11,6 +11,9 @@ var xml = require("../lib/xml");
 var results = require("../lib/results");
 var documentMatchers = require("../lib/styles/document-matchers");
 var Html = require("../lib/html");
+var readOptions = require("../lib/options-reader").readOptions;
+var readStyle = require("../lib/style-reader").readStyle;
+var Result = require("../lib/results").Result;
 
 
 test('should empty document to empty string', function() {
@@ -889,4 +892,174 @@ test('when initials are blank then comment author label is blank', function() {
     assert.equal(commentAuthorLabel({authorInitials: ""}), "");
     assert.equal(commentAuthorLabel({authorInitials: undefined}), "");
     assert.equal(commentAuthorLabel({authorInitials: null}), "");
+});
+
+function parseStyleMap(styleMap) {
+    return Result.combine((styleMap || []).map(readStyle))
+        .map(function(styleMap) {
+            return styleMap.filter(function(styleMapping) {
+                return !!styleMapping;
+            });
+        });
+}
+
+test('simple ordered list converts to ol', function() {
+    var listStyle1 = {isOrdered: true, level: "0"};
+    
+    var document = new documents.Document([
+        new documents.Paragraph([runOfText("Item 1")], {numbering: listStyle1}),
+        new documents.Paragraph([runOfText("Item 2")], {numbering: listStyle1})
+    ]);
+    
+    var options = readOptions({});
+    var styleMapResult = parseStyleMap(options.readStyleMap());
+    var converter = new DocumentConverter({
+        styleMap: styleMapResult.value
+    });
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value, "<ol><li>Item 1</li><li>Item 2</li></ol>");
+    });
+});
+
+test('ordered lists interspersed with paragraphs resume numbering correctly', function() {
+    var listStyle1 = {isOrdered: true, level: "0"};
+    
+    var document = new documents.Document([
+        new documents.Paragraph([runOfText("Item 1")], {numbering: listStyle1}),
+        new documents.Paragraph([runOfText("Item 2")], {numbering: listStyle1}),
+        new documents.Paragraph([runOfText("Regular paragraph")], {}),
+        new documents.Paragraph([runOfText("Item 3")], {numbering: listStyle1}),
+        new documents.Paragraph([runOfText("Item 4")], {numbering: listStyle1})
+    ]);
+    
+    var options = readOptions({});
+    var styleMapResult = parseStyleMap(options.readStyleMap());
+    var converter = new DocumentConverter({
+        styleMap: styleMapResult.value
+    });
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value,
+            "<ol><li>Item 1</li><li>Item 2</li></ol>" +
+            "<p>Regular paragraph</p>" +
+            "<ol start=\"3\"><li>Item 3</li><li>Item 4</li></ol>");
+    });
+});
+
+test('ordered lists interspersed with unordered lists resume numbering correctly', function() {
+    var orderedStyle = {isOrdered: true, level: "0"};
+    var unorderedStyle = {isOrdered: false, level: "0"};
+    
+    var document = new documents.Document([
+        new documents.Paragraph([runOfText("Ordered 1")], {numbering: orderedStyle}),
+        new documents.Paragraph([runOfText("Ordered 2")], {numbering: orderedStyle}),
+        new documents.Paragraph([runOfText("Bullet 1")], {numbering: unorderedStyle}),
+        new documents.Paragraph([runOfText("Bullet 2")], {numbering: unorderedStyle}),
+        new documents.Paragraph([runOfText("Ordered 3")], {numbering: orderedStyle}),
+        new documents.Paragraph([runOfText("Ordered 4")], {numbering: orderedStyle})
+    ]);
+    
+    var options = readOptions({});
+    var styleMapResult = parseStyleMap(options.readStyleMap());
+    var converter = new DocumentConverter({
+        styleMap: styleMapResult.value
+    });
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value,
+            "<ol><li>Ordered 1</li><li>Ordered 2</li></ol>" +
+            "<ul><li>Bullet 1</li><li>Bullet 2</li></ul>" +
+            "<ol start=\"3\"><li>Ordered 3</li><li>Ordered 4</li></ol>");
+    });
+});
+
+test('multiple separate ordered lists start numbering from 1', function() {
+    var listStyle1 = {isOrdered: true, level: "0", numId: "1"};
+    var listStyle2 = {isOrdered: true, level: "0", numId: "2"};
+    
+    var document = new documents.Document([
+        new documents.Paragraph([runOfText("List 1 Item 1")], {numbering: listStyle1}),
+        new documents.Paragraph([runOfText("List 1 Item 2")], {numbering: listStyle1}),
+        new documents.Paragraph([runOfText("List 2 Item 1")], {numbering: listStyle2}),
+        new documents.Paragraph([runOfText("List 2 Item 2")], {numbering: listStyle2})
+    ]);
+    
+    var options = readOptions({});
+    var styleMapResult = parseStyleMap(options.readStyleMap());
+    var converter = new DocumentConverter({
+        styleMap: styleMapResult.value
+    });
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value,
+            "<ol><li>List 1 Item 1</li><li>List 1 Item 2</li></ol>" +
+            "<ol><li>List 2 Item 1</li><li>List 2 Item 2</li></ol>");
+    });
+});
+
+test('multiple unordered lists items', function() {
+    var unorderedStyle1 = {isOrdered: false, level: "0"};
+    var unorderedStyle2 = {isOrdered: false, level: "1"};
+    
+    var document = new documents.Document([
+        new documents.Paragraph([runOfText("List Item 0")], {numbering: unorderedStyle1}),
+        new documents.Paragraph([runOfText("List Item 1")], {numbering: unorderedStyle2}),
+        new documents.Paragraph([runOfText("List Item 2")], {numbering: unorderedStyle2}),
+        new documents.Paragraph([runOfText("List Item 3")], {numbering: unorderedStyle1})
+    ]);
+    
+    var options = readOptions({});
+    var styleMapResult = parseStyleMap(options.readStyleMap());
+    var converter = new DocumentConverter({
+        styleMap: styleMapResult.value
+    });
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value,
+            "<ul><li>List Item 0" +
+            "<ul><li>List Item 1</li><li>List Item 2</li></ul>" +
+            "</li><li>List Item 3</li></ul>");
+    });
+});
+
+test('ordered list with startOverride in numbering starts from specified value', function() {
+    var listStyle1 = {isOrdered: true, level: "0", startOverride: 5};
+    var listStyle2 = {isOrdered: true, level: "0"};
+    
+    var document = new documents.Document([
+        new documents.Paragraph([runOfText("Item 1")], {numbering: listStyle1}),
+        new documents.Paragraph([runOfText("Item 2")], {numbering: listStyle2})
+    ]);
+    
+    var options = readOptions({});
+    var styleMapResult = parseStyleMap(options.readStyleMap());
+    var converter = new DocumentConverter({
+        styleMap: styleMapResult.value
+    });
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value, "<ol start=\"5\"><li>Item 1</li><li>Item 2</li></ol>");
+    });
+});
+
+test('interrupted ordered list with startOverride starts from specified value', function() {
+    var orderedStyle1 = {isOrdered: true, level: "0"};
+    var unorderedStyle = {isOrdered: false, level: "0"};
+    var orderedStyle2 = {isOrdered: true, level: "0", startOverride: 5};
+    
+    var document = new documents.Document([
+        new documents.Paragraph([runOfText("Ordered 1")], {numbering: orderedStyle1}),
+        new documents.Paragraph([runOfText("Ordered 2")], {numbering: orderedStyle1}),
+        new documents.Paragraph([runOfText("Bullet 1")], {numbering: unorderedStyle}),
+        new documents.Paragraph([runOfText("Bullet 2")], {numbering: unorderedStyle}),
+        new documents.Paragraph([runOfText("Ordered 3")], {numbering: orderedStyle2}),
+        new documents.Paragraph([runOfText("Ordered 4")], {numbering: orderedStyle2})
+    ]);
+    
+    var options = readOptions({});
+    var styleMapResult = parseStyleMap(options.readStyleMap());
+    var converter = new DocumentConverter({
+        styleMap: styleMapResult.value
+    });
+    return converter.convertToHtml(document).then(function(result) {
+        assert.equal(result.value,
+            "<ol><li>Ordered 1</li><li>Ordered 2</li></ol>" +
+            "<ul><li>Bullet 1</li><li>Bullet 2</li></ul>" +
+            "<ol start=\"5\"><li>Ordered 3</li><li>Ordered 4</li></ol>");
+    });
 });
