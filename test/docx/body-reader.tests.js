@@ -1267,6 +1267,43 @@ test("no vertical cell merging if merged cells do not line up", function() {
     ]));
 });
 
+test("when row is marked as deleted in row properties then row is ignored", function() {
+    var tableXml = xml.element("w:tbl", {}, [
+        xml.element("w:tr", {}, [
+            xml.element("w:tc", {}, [
+                xml.element("w:p", {}, [
+                    runOfText("Row 1")
+                ])
+            ])
+        ]),
+
+        xml.element("w:tr", {}, [
+            xml.element("w:trPr", {}, [
+                xml.element("w:del")
+            ]),
+            xml.element("w:tc", {}, [
+                xml.element("w:p", {}, [
+                    runOfText("Row 2")
+                ])
+            ])
+        ])
+    ]);
+
+    var result = readXmlElement(tableXml);
+
+    assert.deepEqual(result.value, new documents.Table([
+        new documents.TableRow([
+            new documents.TableCell([
+                new documents.Paragraph([
+                    new documents.Run([
+                        new documents.Text("Row 1")
+                    ])
+                ])
+            ])
+        ])
+    ]));
+});
+
 test("warning if non-row in table", function() {
     var tableXml = new XmlElement("w:tbl", {}, [
         new XmlElement("w:p")

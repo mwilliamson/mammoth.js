@@ -7,6 +7,8 @@
   elements, such as table cells. Previously, the wrapping elements would have
   been ignored.
 
+* Ignore deleted table rows.
+
 # 1.9.1
 
 * Ignore AlternateContent elements when there is no Fallback element.
