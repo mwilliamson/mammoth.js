@@ -1422,13 +1422,15 @@ test("when v:imagedata element has no relationship ID then it is ignored with wa
 test("can read inline pictures", function() {
     var drawing = createInlineImage({
         blip: createEmbeddedBlip(IMAGE_RELATIONSHIP_ID),
-        description: "It's a hat"
+        description: "It's a hat",
+        title: "Sombrero"
     });
 
     var result = readEmbeddedImage(drawing);
 
     return promiseThat(result, isSuccess(contains(isImage({
         altText: "It's a hat",
+        title: "Sombrero",
         contentType: "image/png",
         buffer: IMAGE_BUFFER
     }))));
@@ -1443,6 +1445,7 @@ test("alt text title is used if alt text description is missing", function() {
     var result = readEmbeddedImage(drawing);
 
     return promiseThat(result, isSuccess(contains(isImage({
+        title: "It's a hat",
         altText: "It's a hat"
     }))));
 });
@@ -1457,7 +1460,8 @@ test("alt text title is used if alt text description is blank", function() {
     var result = readEmbeddedImage(drawing);
 
     return promiseThat(result, isSuccess(contains(isImage({
-        altText: "It's a hat"
+        altText: "It's a hat",
+        title: "It's a hat"
     }))));
 });
 
@@ -1471,7 +1475,8 @@ test("alt text description is preferred to alt text title", function() {
     var result = readEmbeddedImage(drawing);
 
     return promiseThat(result, isSuccess(contains(isImage({
-        altText: "It's a hat"
+        altText: "It's a hat",
+        title: "hat"
     }))));
 });
 
