@@ -18,7 +18,7 @@
     "url": "https://github.com/mwilliamson/mammoth.js.git"
   },
   "dependencies": {
-    "@xmldom/xmldom": "^0.8.6",
+    "@xmldom/xmldom": "^0.9.8",
     "argparse": "~1.0.3",
     "base64-js": "^1.5.1",
     "bluebird": "~3.4.0",
