@@ -9,6 +9,8 @@
 
 * Ignore deleted table rows.
 
+* Add notes on security.
+
 # 1.9.1
 
 * Ignore AlternateContent elements when there is no Fallback element.

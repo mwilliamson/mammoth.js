@@ -81,6 +81,10 @@ The output is an HTML fragment, rather than a full HTML document, encoded with U
 Since the encoding is not explicitly set in the fragment,
 opening the output file in a web browser may cause Unicode characters to be rendered incorrectly if the browser doesn't default to UTF-8.
 
+**Mammoth performs no sanitisation of the source document,
+and should therefore be used extremely carefully with untrusted user input.**
+See the [Security](#security) section for more information.
+
 #### Images
 
 By default, images are included inline in the output HTML.
@@ -138,6 +142,10 @@ If no module system is found,
 `mammoth` is set as a window global.
 
 The file can be generated using `make setup` during development.
+
+**Mammoth performs no sanitisation of the source document,
+and should therefore be used extremely carefully with untrusted user input.**
+See the [Security](#security) section for more information.
 
 #### Basic conversion
 
@@ -509,6 +517,24 @@ mammoth.images.imgElement(function(image) {
 ```
 
 `mammoth.images.dataUri` is the default image converter.
+
+### Security
+
+Mammoth performs no sanitisation of the source document,
+and should therefore be used extremely carefully with untrusted user input.
+For instance:
+
+* Source documents can contain links with `javascript:` targets.
+  If, for instance, you allow users to upload source documents,
+  automatically convert the document into HTML,
+  and embed the HTML into your website without sanitisation,
+  this may create links that can execute arbitrary JavaScript when clicked.
+
+* Source documents may reference files outside of the source document.
+  If, for instance, you allow users to upload source documents to a server,
+  automatically convert the document into HTML on the server,
+  and embed the HTML into your website,
+  this may allow arbitrary files on the server to be read and exfiltrated.
 
 ### Document transforms
 
