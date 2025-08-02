@@ -11,6 +11,9 @@
 
 * Add notes on security.
 
+* Revert the change to explicitly use commonjs modules. This appeared to cause
+  issues with some bundlers such as webpack when using mammoth.browser.js.
+
 # 1.9.1
 
 * Ignore AlternateContent elements when there is no Fallback element.
