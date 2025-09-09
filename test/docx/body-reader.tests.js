@@ -1305,10 +1305,46 @@ test("when row is marked as deleted in row properties then row is ignored", func
 });
 
 test("warning if non-row in table", function() {
+    // Include normal rows to ensure they're still read correctly.
     var tableXml = new XmlElement("w:tbl", {}, [
-        new XmlElement("w:p")
+        xml.element("w:tr", {}, [
+            xml.element("w:tc", {}, [
+                xml.element("w:p", {}, [
+                    runOfText("Row 1")
+                ])
+            ])
+        ]),
+        new XmlElement("w:p"),
+        xml.element("w:tr", {}, [
+            xml.element("w:tc", {}, [
+                xml.element("w:p", {}, [
+                    runOfText("Row 2")
+                ])
+            ])
+        ])
     ]);
     var result = readXmlElement(tableXml);
+    assert.deepEqual(result.value, new documents.Table([
+        new documents.TableRow([
+            new documents.TableCell([
+                new documents.Paragraph([
+                    new documents.Run([
+                        new documents.Text("Row 1")
+                    ])
+                ])
+            ])
+        ]),
+        new documents.Paragraph([]),
+        new documents.TableRow([
+            new documents.TableCell([
+                new documents.Paragraph([
+                    new documents.Run([
+                        new documents.Text("Row 2")
+                    ])
+                ])
+            ])
+        ])
+    ]));
     assert.deepEqual(result.messages, [warning("unexpected non-row element in table, cell merging may be incorrect")]);
 });
 
