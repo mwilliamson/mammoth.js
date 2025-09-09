@@ -1323,7 +1323,9 @@ test("warning if non-row in table", function() {
             ])
         ])
     ]);
+
     var result = readXmlElement(tableXml);
+
     assert.deepEqual(result.value, new documents.Table([
         new documents.TableRow([
             new documents.TableCell([
@@ -1349,10 +1351,44 @@ test("warning if non-row in table", function() {
 });
 
 test("warning if non-cell in table row", function() {
+    // Include normal cells to ensure they're still read correctly.
     var tableXml = new XmlElement("w:tbl", {}, [
-        row(new XmlElement("w:p"))
+        row(
+            xml.element("w:tc", {}, [
+                xml.element("w:p", {}, [
+                    runOfText("Cell 1")
+                ])
+            ]),
+            new XmlElement("w:p"),
+            xml.element("w:tc", {}, [
+                xml.element("w:p", {}, [
+                    runOfText("Cell 2")
+                ])
+            ])
+        )
     ]);
+
     var result = readXmlElement(tableXml);
+
+    assert.deepEqual(result.value, new documents.Table([
+        new documents.TableRow([
+            new documents.TableCell([
+                new documents.Paragraph([
+                    new documents.Run([
+                        new documents.Text("Cell 1")
+                    ])
+                ])
+            ]),
+            new documents.Paragraph([]),
+            new documents.TableCell([
+                new documents.Paragraph([
+                    new documents.Run([
+                        new documents.Text("Cell 2")
+                    ])
+                ])
+            ])
+        ])
+    ]));
     assert.deepEqual(result.messages, [warning("unexpected non-cell element in table row, cell merging may be incorrect")]);
 });
 
