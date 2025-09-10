@@ -230,18 +230,6 @@ var options = {
 };
 ```
 
-#### External file access
-
-Source documents may reference files outside of the source document.
-To disable access to any such external files during the conversion process,
-set `options.externalFileAccess` to `false`:
-
-```javascript
-var options = {
-    externalFileAccess: false
-};
-```
-
 #### Custom image handlers
 
 By default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
@@ -387,6 +375,10 @@ Converts the source document to HTML.
      the style map passed in `styleMap` is combined with the default style map.
      To stop using the default style map altogether,
      set `options.includeDefaultStyleMap` to `false`.
+
+  * `externalFileAccess`: Source documents may reference files outside of the source document.
+    To disable access to any such external files during the conversion process,
+    set `options.externalFileAccess` to `false`.
 
   * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
     Set this option to an [image converter](#image-converters) to override the default behaviour.
