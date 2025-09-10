@@ -379,6 +379,7 @@ Converts the source document to HTML.
   * `externalFileAccess`: Source documents may reference files outside of the source document.
     To disable access to any such external files during the conversion process,
     set `options.externalFileAccess` to `false`.
+    This is highly recommended when converting untrusted user input.
 
   * `convertImage`: by default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
     Set this option to an [image converter](#image-converters) to override the default behaviour.
