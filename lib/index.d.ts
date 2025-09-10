@@ -33,6 +33,7 @@ interface Options {
     convertImage?: ImageConverter;
     ignoreEmptyParagraphs?: boolean;
     idPrefix?: string;
+    externalFileAccess?: boolean;
     transformDocument?: (element: any) => any;
 }
 

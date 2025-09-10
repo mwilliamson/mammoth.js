@@ -327,6 +327,15 @@ test('error if images stored outside of document are specified when passing file
     });
 });
 
+test('error if images stored outside of document are specified when external file access is disabled', function() {
+    var docxPath = path.join(__dirname, "test-data/external-picture.docx");
+    return mammoth.convertToHtml({path: docxPath}, {externalFileAccess: false}).then(function(result) {
+        assert.equal(result.value, '');
+        assert.equal(result.messages[0].message, "could not read external image 'tiny-picture.png', external file access is disabled");
+        assert.equal(result.messages[0].type, "error");
+    });
+});
+
 test('simple list is converted to list elements', function() {
     var docxPath = path.join(__dirname, "test-data/simple-list.docx");
     return mammoth.convertToHtml({path: docxPath}).then(function(result) {

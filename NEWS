@@ -2,6 +2,8 @@
 
 * Ignore style definitions using a style ID that has already been used.
 
+* Support disabling external file accesses using the externalFileAccess option.
+
 # 1.10.0
 
 * Add "Heading" and "Body" styles, as found in documents created by Apple Pages,

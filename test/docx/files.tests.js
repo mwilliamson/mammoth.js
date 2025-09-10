@@ -13,9 +13,16 @@ var readFile = promises.promisify(fs.readFile.bind(fs));
 
 
 test("Files", {
+    "when external file access is disabled then reading file raises error": function() {
+        var files = new Files({externalFileAccess: false});
+        return assertError(files.read("/tmp/image.png", "base64"), function(err) {
+            assert.strictEqual(err.message, "could not read external image '/tmp/image.png', external file access is disabled");
+        });
+    },
+
     "can open files with file URI": function() {
         var filePath = path.resolve(testing.testPath("tiny-picture.png"));
-        var files = new Files({});
+        var files = new Files({externalFileAccess: true});
         return files.read("file:///" + filePath.replace(/^\//, ""), "base64").then(function(contents) {
             return readFile(filePath, "base64").then(function(expectedContents) {
                 assert.deepEqual(contents, expectedContents);
@@ -25,7 +32,10 @@ test("Files", {
 
     "can open files with relative URI": function() {
         var filePath = path.resolve(testing.testPath("tiny-picture.png"));
-        var files = new Files({relativeToFile: testing.testPath("./document.docx")});
+        var files = new Files({
+            externalFileAccess: true,
+            relativeToFile: testing.testPath("./document.docx")
+        });
         return files.read("tiny-picture.png", "base64").then(function(contents) {
             return readFile(filePath, "base64").then(function(expectedContents) {
                 assert.deepEqual(contents, expectedContents);
@@ -34,14 +44,17 @@ test("Files", {
     },
 
     "given base is not set when opening relative uri then error is raised": function() {
-        var files = new Files({});
+        var files = new Files({externalFileAccess: true});
         return assertError(files.read("not-a-real-file.png", "base64"), function(err) {
             assert.equal(err.message, "could not find external image 'not-a-real-file.png', path of input document is unknown");
         });
     },
 
     "error if relative uri cannot be opened": function() {
-        var files = new Files({relativeToFile: "/tmp/document.docx"});
+        var files = new Files({
+            externalFileAccess: true,
+            relativeToFile: "/tmp/document.docx"
+        });
         return assertError(files.read("not-a-real-file.png", "base64"), function(err) {
             assertRegex(err.message, /could not open external image: 'not-a-real-file.png' \(document directory: '\/tmp'\)\nENOENT.*\/tmp\/not-a-real-file.png.*/);
         });

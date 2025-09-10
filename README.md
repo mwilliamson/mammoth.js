@@ -230,6 +230,18 @@ var options = {
 };
 ```
 
+#### External file access
+
+Source documents may reference files outside of the source document.
+To disable access to any such external files during the conversion process,
+set `options.externalFileAccess` to `false`:
+
+```javascript
+var options = {
+    externalFileAccess: false
+};
+```
+
 #### Custom image handlers
 
 By default, images are converted to `<img>` elements with the source included inline in the `src` attribute.
@@ -535,6 +547,9 @@ For instance:
   automatically convert the document into HTML on the server,
   and embed the HTML into your website,
   this may allow arbitrary files on the server to be read and exfiltrated.
+
+  To disable access to any such external files during the conversion process,
+  set `options.externalFileAccess` to `false`.
 
 ### Document transforms
 
