@@ -223,17 +223,17 @@ test("numbering properties are converted to numbering at specified level", funct
     assert.deepEqual(numberingLevel, {level: "1", isOrdered: true});
 });
 
-test("numbering properties are ignored if w:ilvl is missing", function() {
+test("when numbering properties are missing w:ilvl then level of 0 is assumed", function() {
     var numberingPropertiesXml = new XmlElement("w:numPr", {}, [
         new XmlElement("w:numId", {"w:val": "42"})
     ]);
 
     var numbering = new NumberingMap({
-        findLevel: {"42": {"1": {isOrdered: true, level: "1"}}}
+        findLevel: {"42": {"0": {isOrdered: true, level: "0"}}}
     });
 
     var numberingLevel = _readNumberingProperties(null, numberingPropertiesXml, numbering);
-    assert.equal(numberingLevel, null);
+    assert.deepEqual(numberingLevel, {level: "0", isOrdered: true});
 });
 
 test("numbering properties are ignored if w:numId is missing", function() {

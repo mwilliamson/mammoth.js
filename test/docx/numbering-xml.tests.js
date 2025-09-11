@@ -45,6 +45,69 @@ test('w:num element referencing non-existent w:abstractNumId is ignored', functi
     duck.assertThat(numbering.findLevel("47", "0"), duck.equalTo(null));
 });
 
+test('given no other levels with index of 0 when level is missing w:ilvl then level index is 0', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
+                new XmlElement("w:lvl", {}, [
+                    new XmlElement("w:numFmt", {"w:val": "decimal"})
+                ])
+            ]),
+            new XmlElement("w:num", {"w:numId": "47"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "42"})
+            ])
+        ]),
+        {styles: stylesReader.defaultStyles}
+    );
+    duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
+        isOrdered: true
+    }));
+});
+
+test('given previous other level with index of 0 when level is missing w:ilvl then level is ignored', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
+                new XmlElement("w:lvl", {"w:ilvl": "0"}, [
+                    new XmlElement("w:numFmt", {"w:val": "bullet"})
+                ]),
+                new XmlElement("w:lvl", {}, [
+                    new XmlElement("w:numFmt", {"w:val": "decimal"})
+                ])
+            ]),
+            new XmlElement("w:num", {"w:numId": "47"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "42"})
+            ])
+        ]),
+        {styles: stylesReader.defaultStyles}
+    );
+    duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
+        isOrdered: false
+    }));
+});
+
+test('given subsequent other level with index of 0 when level is missing w:ilvl then level is ignored', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
+                new XmlElement("w:lvl", {}, [
+                    new XmlElement("w:numFmt", {"w:val": "decimal"})
+                ]),
+                new XmlElement("w:lvl", {"w:ilvl": "0"}, [
+                    new XmlElement("w:numFmt", {"w:val": "bullet"})
+                ])
+            ]),
+            new XmlElement("w:num", {"w:numId": "47"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "42"})
+            ])
+        ]),
+        {styles: stylesReader.defaultStyles}
+    );
+    duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
+        isOrdered: false
+    }));
+});
+
 test('when level is missing w:numFmt then level is ordered', function() {
     var numbering = readNumberingXml(
         new XmlElement("w:numbering", {}, [
