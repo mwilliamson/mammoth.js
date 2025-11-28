@@ -26,14 +26,15 @@
     "lop": "^0.4.2",
     "path-is-absolute": "^1.0.0",
     "underscore": "^1.13.1",
-    "xmlbuilder": "^10.0.0"
+    "xmlbuilder": "^10.0.0",
+    "xmldom": "^0.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.2.5",
     "browserify": "~13.0.1",
     "browserify-prepend-licenses": "~1.0.0",
     "duck": "^0.1.12",
-    "eslint": "2.13.1",
+    "eslint": "^2.13.1",
     "hamjest": "^4.0.1",
     "mocha": "~2.2.5",
     "temp": "^0.9.4",
