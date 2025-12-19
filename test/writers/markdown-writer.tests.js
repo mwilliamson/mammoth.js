@@ -179,6 +179,60 @@ test('can generate a nested ordered list with correct numbering', function() {
     return assert.equal(writer.asString(), "1. Outer One\n\t1. Nested One\n\t2. Nested Two\n2. Outer Two\n\n");
 });
 
+test('can generate a simple table', function() {
+    var writer = mdWriter.writer();
+    writer.open("table");
+    writer.open("tr");
+    writer.open("th");
+    writer.text("Header 1");
+    writer.close("th");
+    writer.open("th");
+    writer.text("Header 2");
+    writer.close("th");
+    writer.close("tr");
+    writer.open("tr");
+    writer.open("td");
+    writer.text("Cell 1");
+    writer.close("td");
+    writer.open("td");
+    writer.text("Cell 2");
+    writer.close("td");
+    writer.close("tr");
+    writer.close("table");
+    return assert.equal(writer.asString(), "\n| Header 1 | Header 2 |\n| --- | --- |\n| Cell 1 | Cell 2 |\n\n");
+});
+
+test('can generate a table with multiple rows', function() {
+    var writer = mdWriter.writer();
+    writer.open("table");
+    writer.open("tr");
+    writer.open("th");
+    writer.text("Name");
+    writer.close("th");
+    writer.open("th");
+    writer.text("Age");
+    writer.close("th");
+    writer.close("tr");
+    writer.open("tr");
+    writer.open("td");
+    writer.text("Alice");
+    writer.close("td");
+    writer.open("td");
+    writer.text("30");
+    writer.close("td");
+    writer.close("tr");
+    writer.open("tr");
+    writer.open("td");
+    writer.text("Bob");
+    writer.close("td");
+    writer.open("td");
+    writer.text("25");
+    writer.close("td");
+    writer.close("tr");
+    writer.close("table");
+    return assert.equal(writer.asString(), "\n| Name | Age |\n| --- | --- |\n| Alice | 30 |\n| Bob | 25 |\n\n");
+});
+
 test('can generate a multi-level nested ordered list', function() {
     var writer = mdWriter.writer();
     writer.open("ol");
