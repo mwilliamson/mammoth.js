@@ -262,3 +262,103 @@ test("documents.Deletion", {
         assert.deepEqual(deletion.children, []);
     }
 });
+
+// ============================================================================
+// Comment Ranges (w:commentRangeStart and w:commentRangeEnd)
+// ============================================================================
+
+test("tracked changes: comment ranges", {
+    "w:commentRangeStart is ignored when includeTrackedChanges is false (default)": function() {
+        var commentRangeStartXml = xml.element("w:commentRangeStart", {"w:id": "1"});
+        var runXml = xml.element("w:r", {}, [
+            xml.element("w:t", {}, [xml.text("Hello")])
+        ]);
+        var paragraphXml = xml.element("w:p", {}, [commentRangeStartXml, runXml]);
+
+        var paragraph = readXmlElementValue(paragraphXml, {includeTrackedChanges: false});
+
+        // Should only contain the run, comment range is ignored
+        assert.equal(paragraph.children.length, 1);
+        assert.equal(paragraph.children[0].type, "run");
+    },
+
+    "w:commentRangeStart is included when includeTrackedChanges is true": function() {
+        var commentRangeStartXml = xml.element("w:commentRangeStart", {"w:id": "1"});
+        var runXml = xml.element("w:r", {}, [
+            xml.element("w:t", {}, [xml.text("Hello")])
+        ]);
+        var paragraphXml = xml.element("w:p", {}, [commentRangeStartXml, runXml]);
+
+        var paragraph = readXmlElementValue(paragraphXml, {includeTrackedChanges: true});
+
+        assert.equal(paragraph.children.length, 2);
+        assert.equal(paragraph.children[0].type, "commentRangeStart");
+        assert.equal(paragraph.children[0].commentId, "1");
+        assert.equal(paragraph.children[1].type, "run");
+    },
+
+    "w:commentRangeEnd is ignored when includeTrackedChanges is false (default)": function() {
+        var runXml = xml.element("w:r", {}, [
+            xml.element("w:t", {}, [xml.text("Hello")])
+        ]);
+        var commentRangeEndXml = xml.element("w:commentRangeEnd", {"w:id": "1"});
+        var paragraphXml = xml.element("w:p", {}, [runXml, commentRangeEndXml]);
+
+        var paragraph = readXmlElementValue(paragraphXml, {includeTrackedChanges: false});
+
+        // Should only contain the run, comment range is ignored
+        assert.equal(paragraph.children.length, 1);
+        assert.equal(paragraph.children[0].type, "run");
+    },
+
+    "w:commentRangeEnd is included when includeTrackedChanges is true": function() {
+        var runXml = xml.element("w:r", {}, [
+            xml.element("w:t", {}, [xml.text("Hello")])
+        ]);
+        var commentRangeEndXml = xml.element("w:commentRangeEnd", {"w:id": "1"});
+        var paragraphXml = xml.element("w:p", {}, [runXml, commentRangeEndXml]);
+
+        var paragraph = readXmlElementValue(paragraphXml, {includeTrackedChanges: true});
+
+        assert.equal(paragraph.children.length, 2);
+        assert.equal(paragraph.children[0].type, "run");
+        assert.equal(paragraph.children[1].type, "commentRangeEnd");
+        assert.equal(paragraph.children[1].commentId, "1");
+    },
+
+    "comment range pair wraps text when includeTrackedChanges is true": function() {
+        var commentRangeStartXml = xml.element("w:commentRangeStart", {"w:id": "1"});
+        var runXml = xml.element("w:r", {}, [
+            xml.element("w:t", {}, [xml.text("commented text")])
+        ]);
+        var commentRangeEndXml = xml.element("w:commentRangeEnd", {"w:id": "1"});
+        var paragraphXml = xml.element("w:p", {}, [commentRangeStartXml, runXml, commentRangeEndXml]);
+
+        var paragraph = readXmlElementValue(paragraphXml, {includeTrackedChanges: true});
+
+        assert.equal(paragraph.children.length, 3);
+        assert.equal(paragraph.children[0].type, "commentRangeStart");
+        assert.equal(paragraph.children[0].commentId, "1");
+        assert.equal(paragraph.children[1].type, "run");
+        assert.equal(paragraph.children[2].type, "commentRangeEnd");
+        assert.equal(paragraph.children[2].commentId, "1");
+    }
+});
+
+test("documents.CommentRangeStart", {
+    "creates comment range start with commentId": function() {
+        var commentRangeStart = documents.CommentRangeStart({commentId: "1"});
+
+        assert.equal(commentRangeStart.type, "commentRangeStart");
+        assert.equal(commentRangeStart.commentId, "1");
+    }
+});
+
+test("documents.CommentRangeEnd", {
+    "creates comment range end with commentId": function() {
+        var commentRangeEnd = documents.CommentRangeEnd({commentId: "2"});
+
+        assert.equal(commentRangeEnd.type, "commentRangeEnd");
+        assert.equal(commentRangeEnd.commentId, "2");
+    }
+});

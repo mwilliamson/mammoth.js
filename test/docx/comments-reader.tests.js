@@ -51,3 +51,27 @@ test('when optional attributes of comment are not blank then they are read', fun
     assert.strictEqual(comment.authorName, "The Piemaker");
     assert.strictEqual(comment.authorInitials, "TP");
 });
+
+
+test('when date attribute of comment is missing then it is read as null', function() {
+    var comment = readComment(xml.element("w:comments", {}, [
+        xml.element("w:comment", {"w:id": "1"})
+    ]));
+    assert.strictEqual(comment.date, null);
+});
+
+
+test('when date attribute of comment is blank then it is read as null', function() {
+    var comment = readComment(xml.element("w:comments", {}, [
+        xml.element("w:comment", {"w:id": "1", "w:date": " "})
+    ]));
+    assert.strictEqual(comment.date, null);
+});
+
+
+test('when date attribute of comment is not blank then it is read', function() {
+    var comment = readComment(xml.element("w:comments", {}, [
+        xml.element("w:comment", {"w:id": "1", "w:date": "2024-01-15T10:30:00Z"})
+    ]));
+    assert.strictEqual(comment.date, "2024-01-15T10:30:00Z");
+});

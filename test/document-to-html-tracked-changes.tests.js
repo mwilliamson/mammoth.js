@@ -218,3 +218,63 @@ test("tracked changes HTML conversion: edge cases", {
         });
     }
 });
+
+// ============================================================================
+// Comment Ranges
+// ============================================================================
+
+test("tracked changes HTML conversion: comment ranges", {
+    "commentRangeStart is converted to span with class and data-comment-id": function() {
+        var commentRangeStart = documents.CommentRangeStart({commentId: "1"});
+        var run = documents.Run([documents.Text("commented text")]);
+        var paragraph = documents.Paragraph([commentRangeStart, run]);
+        var document = documents.Document([paragraph]);
+
+        return convertToHtml(document).then(function(result) {
+            assertHtmlContains(result, '<span class="comment-range-start" data-comment-id="1"></span>');
+            assertHtmlContains(result, 'commented text');
+        });
+    },
+
+    "commentRangeEnd is converted to span with class and data-comment-id": function() {
+        var run = documents.Run([documents.Text("commented text")]);
+        var commentRangeEnd = documents.CommentRangeEnd({commentId: "1"});
+        var paragraph = documents.Paragraph([run, commentRangeEnd]);
+        var document = documents.Document([paragraph]);
+
+        return convertToHtml(document).then(function(result) {
+            assertHtmlContains(result, 'commented text');
+            assertHtmlContains(result, '<span class="comment-range-end" data-comment-id="1"></span>');
+        });
+    },
+
+    "comment range pair surrounds content in HTML": function() {
+        var commentRangeStart = documents.CommentRangeStart({commentId: "1"});
+        var run = documents.Run([documents.Text("highlighted")]);
+        var commentRangeEnd = documents.CommentRangeEnd({commentId: "1"});
+        var paragraph = documents.Paragraph([commentRangeStart, run, commentRangeEnd]);
+        var document = documents.Document([paragraph]);
+
+        return convertToHtml(document).then(function(result) {
+            assertHtmlContains(result, '<span class="comment-range-start" data-comment-id="1"></span>highlighted<span class="comment-range-end" data-comment-id="1"></span>');
+        });
+    },
+
+    "multiple comment ranges with different IDs": function() {
+        var start1 = documents.CommentRangeStart({commentId: "1"});
+        var run1 = documents.Run([documents.Text("first")]);
+        var end1 = documents.CommentRangeEnd({commentId: "1"});
+        var start2 = documents.CommentRangeStart({commentId: "2"});
+        var run2 = documents.Run([documents.Text("second")]);
+        var end2 = documents.CommentRangeEnd({commentId: "2"});
+        var paragraph = documents.Paragraph([start1, run1, end1, start2, run2, end2]);
+        var document = documents.Document([paragraph]);
+
+        return convertToHtml(document).then(function(result) {
+            assertHtmlContains(result, 'data-comment-id="1"');
+            assertHtmlContains(result, 'data-comment-id="2"');
+            assertHtmlContains(result, 'first');
+            assertHtmlContains(result, 'second');
+        });
+    }
+});
