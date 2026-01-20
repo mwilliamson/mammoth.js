@@ -35,6 +35,14 @@ interface Options {
     idPrefix?: string;
     externalFileAccess?: boolean;
     transformDocument?: (element: any) => any;
+    /**
+     * When true, tracked changes (insertions and deletions) are included in the output.
+     * Insertions are wrapped in <ins> tags, deletions in <del> tags.
+     * Both include data-change-id, data-author, and data-date attributes when available.
+     * When false (default), deletions are ignored and insertions are treated as normal content.
+     * @default false
+     */
+    includeTrackedChanges?: boolean;
 }
 
 interface ImageConverter {
