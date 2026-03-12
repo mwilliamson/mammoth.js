@@ -332,7 +332,7 @@ test("complex fields", (function() {
             assert.deepEqual(instrText, []);
         },
 
-        "runs in a complex field for hyperlink without switch with quoted target are read as external hyperlinks": function() {
+        "runs in a complex field for hyperlink without switch with quoted location are read as external hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
@@ -358,7 +358,7 @@ test("complex fields", (function() {
             ));
         },
 
-        "runs in a complex field for hyperlink without switch with unquoted target are read as external hyperlinks": function() {
+        "runs in a complex field for hyperlink without switch with unquoted location are read as external hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
@@ -384,7 +384,7 @@ test("complex fields", (function() {
             ));
         },
 
-        "runs in a complex field for hyperlink with l switch with quoted target are read as internal hyperlinks": function() {
+        "runs in a complex field for hyperlink with l switch with quoted location are read as internal hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
@@ -410,7 +410,7 @@ test("complex fields", (function() {
             ));
         },
 
-        "runs in a complex field for hyperlink with l switch with unquoted target are read as internal hyperlinks": function() {
+        "runs in a complex field for hyperlink with l switch with unquoted location are read as internal hyperlinks": function() {
             var hyperlinkRunXml = runOfText("this is a hyperlink");
             var paragraphXml = new XmlElement("w:p", {}, [
                 beginXml,
