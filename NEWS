@@ -2,6 +2,8 @@
 
 * Handle hyperlinked wp:anchor and wp:inline elements.
 
+* Handle hyperlink complex fields with unquoted hrefs.
+
 # 1.11.0
 
 * Ignore style definitions using a style ID that has already been used.
