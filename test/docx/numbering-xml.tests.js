@@ -181,3 +181,80 @@ test('when styles is missing then error is thrown', function() {
         readNumberingXml(new XmlElement("w:numbering", {}, []));
     }, /styles is missing/);
 });
+
+test('w:startOverride in w:lvlOverride overrides start value', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
+                new XmlElement("w:lvl", {"w:ilvl": "0"}, [
+                    new XmlElement("w:numFmt", {"w:val": "decimal"})
+                ])
+            ]),
+            new XmlElement("w:num", {"w:numId": "47"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "42"}),
+                new XmlElement("w:lvlOverride", {"w:ilvl": "0"}, [
+                    new XmlElement("w:startOverride", {"w:val": "5"})
+                ])
+            ])
+        ]),
+        {styles: stylesReader.defaultStyles}
+    );
+    duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
+        isOrdered: true,
+        startOverride: 5
+    }));
+});
+
+test('levels without startOverride do not have the property', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
+                new XmlElement("w:lvl", {"w:ilvl": "0"}, [
+                    new XmlElement("w:numFmt", {"w:val": "decimal"})
+                ])
+            ]),
+            new XmlElement("w:num", {"w:numId": "47"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "42"})
+            ])
+        ]),
+        {styles: stylesReader.defaultStyles}
+    );
+    var level = numbering.findLevel("47", "0");
+    duck.assertThat(level, duck.hasProperties({
+        isOrdered: true
+    }));
+    assert.equal(level.startOverride, undefined);
+});
+
+test('multiple levels can have different startOverride values', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "42"}, [
+                new XmlElement("w:lvl", {"w:ilvl": "0"}, [
+                    new XmlElement("w:numFmt", {"w:val": "decimal"})
+                ]),
+                new XmlElement("w:lvl", {"w:ilvl": "1"}, [
+                    new XmlElement("w:numFmt", {"w:val": "decimal"})
+                ])
+            ]),
+            new XmlElement("w:num", {"w:numId": "47"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "42"}),
+                new XmlElement("w:lvlOverride", {"w:ilvl": "0"}, [
+                    new XmlElement("w:startOverride", {"w:val": "10"})
+                ]),
+                new XmlElement("w:lvlOverride", {"w:ilvl": "1"}, [
+                    new XmlElement("w:startOverride", {"w:val": "20"})
+                ])
+            ])
+        ]),
+        {styles: stylesReader.defaultStyles}
+    );
+    duck.assertThat(numbering.findLevel("47", "0"), duck.hasProperties({
+        isOrdered: true,
+        startOverride: 10
+    }));
+    duck.assertThat(numbering.findLevel("47", "1"), duck.hasProperties({
+        isOrdered: true,
+        startOverride: 20
+    }));
+});
