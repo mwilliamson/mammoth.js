@@ -152,6 +152,25 @@ test('when w:abstractNum has w:numStyleLink then style is used to find w:num', f
 });
 
 
+test('findLevel returns null when w:numStyleLink forms a cycle', function() {
+    // num 201 -> abstractNum 101 -> numStyleLink "List1" -> num 201 -> ...
+    // Without cycle detection this recurses until the call stack is exhausted;
+    // findLevel should instead return null.
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "101"}, [
+                new XmlElement("w:numStyleLink", {"w:val": "List1"})
+            ]),
+            new XmlElement("w:num", {"w:numId": "201"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "101"})
+            ])
+        ]),
+        {styles: new stylesReader.Styles({}, {}, {}, {"List1": {numId: "201"}})}
+    );
+    duck.assertThat(numbering.findLevel("201", "0"), duck.equalTo(null));
+});
+
+
 // See: 17.9.23 pStyle (Paragraph Style's Associated Numbering Level) in ECMA-376, 4th Edition
 test('numbering level can be found by paragraph style ID', function() {
     var numbering = readNumberingXml(
