@@ -1,3 +1,8 @@
+# 1.12.1
+
+* Fix: on Windows, when an image's content type includes a backslash in the
+  subpart, files may be written outside of the directory set by --output-dir.
+
 # 1.12.0
 
 * Handle hyperlinked wp:anchor and wp:inline elements.

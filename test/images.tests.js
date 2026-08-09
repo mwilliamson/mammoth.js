@@ -110,3 +110,45 @@ test('mammoth.images.imgElement()', {
         });
     }
 });
+
+test("imageFilenameExtension", {
+    "extension is derived from subtype of content type": function() {
+        var image = new documents.Image({
+            contentType: "image/gif"
+        });
+
+        var result = mammoth.images.imageFilenameExtension(image);
+
+        assertThat(result, equalTo("gif"));
+    },
+
+    "data after second slash is ignored": function() {
+        var image = new documents.Image({
+            contentType: "image/gif/jpeg"
+        });
+
+        var result = mammoth.images.imageFilenameExtension(image);
+
+        assertThat(result, equalTo("gif"));
+    },
+
+    "backslashes are treated as forward slashes": function() {
+        var image = new documents.Image({
+            contentType: "image\\gif\\..\\"
+        });
+
+        var result = mammoth.images.imageFilenameExtension(image);
+
+        assertThat(result, equalTo("gif"));
+    },
+
+    "when there is no subtype then null is returned": function() {
+        var image = new documents.Image({
+            contentType: "image"
+        });
+
+        var result = mammoth.images.imageFilenameExtension(image);
+
+        assertThat(result, equalTo(undefined));
+    }
+});
