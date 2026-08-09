@@ -152,6 +152,22 @@ test('when w:abstractNum has w:numStyleLink then style is used to find w:num', f
 });
 
 
+test('when w:abstractNum has self-recursive w:numStyleLink then level is not found', function() {
+    var numbering = readNumberingXml(
+        new XmlElement("w:numbering", {}, [
+            new XmlElement("w:abstractNum", {"w:abstractNumId": "100"}, [
+                new XmlElement("w:numStyleLink", {"w:val": "List1"})
+            ]),
+            new XmlElement("w:num", {"w:numId": "200"}, [
+                new XmlElement("w:abstractNumId", {"w:val": "100"})
+            ])
+        ]),
+        {styles: new stylesReader.Styles({}, {}, {}, {"List1": {numId: "200"}})}
+    );
+    duck.assertThat(numbering.findLevel("200", "0"), duck.equalTo(null));
+});
+
+
 // See: 17.9.23 pStyle (Paragraph Style's Associated Numbering Level) in ECMA-376, 4th Edition
 test('numbering level can be found by paragraph style ID', function() {
     var numbering = readNumberingXml(
