@@ -7,6 +7,9 @@
   Note that it is still strongly recommended to process untrusted documents in
   a separate thread with a timeout to avoid potential similar issues.
 
+* Handle complex field separator and end characters without corresponding start
+  characters.
+
 # 1.12.2
 
 * Avoid prototype pollution when reading the styles defined in a document. This

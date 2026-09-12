@@ -581,6 +581,32 @@ test("complex fields", (function() {
                 }),
                 isEmptyRun
             ));
+        },
+
+        "separator character without corresponding start character is ignored": function() {
+            var paragraphXml = new XmlElement("w:p", {}, [
+                separateXml
+            ]);
+
+            var result = readXmlElement(paragraphXml);
+
+            assertThat(result.value.children, contains(
+                isEmptyRun
+            ));
+            assert.deepEqual(result.messages, [warning("ignoring complex field separator character without corresponding start character")]);
+        },
+
+        "end character without corresponding start character is ignored": function() {
+            var paragraphXml = new XmlElement("w:p", {}, [
+                endXml
+            ]);
+
+            var result = readXmlElement(paragraphXml);
+
+            assertThat(result.value.children, contains(
+                isEmptyRun
+            ));
+            assert.deepEqual(result.messages, [warning("ignoring complex field end character without corresponding start character")]);
         }
     };
 })());
