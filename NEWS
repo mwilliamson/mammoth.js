@@ -1,3 +1,12 @@
+# 1.12.3
+
+* Avoid excessive backtracking when parsing an unterminated string with many
+  escape sequences. The previous behaviour would allow maliciously crafted
+  documents to cause a denial of service.
+
+  Note that it is still strongly recommended to process untrusted documents in
+  a separate thread with a timeout to avoid potential similar issues.
+
 # 1.12.2
 
 * Avoid prototype pollution when reading the styles defined in a document. This
