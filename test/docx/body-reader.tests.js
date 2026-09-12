@@ -593,7 +593,7 @@ test("complex fields", (function() {
             assertThat(result.value.children, contains(
                 isEmptyRun
             ));
-            assert.deepEqual(result.messages, [warning("ignoring complex field separator character without corresponding start character")]);
+            assert.deepEqual(result.messages, [warning("Ignoring complex field separator character without corresponding start character")]);
         },
 
         "end character without corresponding start character is ignored": function() {
@@ -606,7 +606,7 @@ test("complex fields", (function() {
             assertThat(result.value.children, contains(
                 isEmptyRun
             ));
-            assert.deepEqual(result.messages, [warning("ignoring complex field end character without corresponding start character")]);
+            assert.deepEqual(result.messages, [warning("Ignoring complex field end character without corresponding start character")]);
         }
     };
 })());
