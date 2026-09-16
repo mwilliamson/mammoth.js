@@ -3,6 +3,100 @@ var assert = require("assert");
 var promises = require("../lib/promises");
 var test = require("./test")(module);
 
+test("forEachSeries", {
+    "empty array resolves immediately without calling function": function() {
+        return promises.forEachSeries([], function() {
+            throw new Error();
+        }).then(function(result) {
+            assert.deepStrictEqual(result, undefined);
+        });
+    },
+
+    "function is called on element after the previous element has been processed": function() {
+        var log = [];
+
+        return promises.forEachSeries([1, 2, 3], function(element) {
+            return new promises.Promise(function(resolve) {
+                log.push(["start", element]);
+                setTimeout(function() {
+                    log.push(["end", element]);
+                    resolve();
+                }, 0);
+            });
+        }).then(function(result) {
+            assert.deepStrictEqual(result, undefined);
+            assert.deepStrictEqual(log, [
+                ["start", 1],
+                ["end", 1],
+                ["start", 2],
+                ["end", 2],
+                ["start", 3],
+                ["end", 3]
+            ]);
+        });
+    },
+
+    "processing stops on sync error": function() {
+        var log = [];
+
+        return promises.forEachSeries([1, 2, 3], function(element) {
+            return new promises.Promise(function(resolve) {
+                log.push(["start", element]);
+                if (element === 2) {
+                    throw new Error("failure");
+                } else {
+                    setTimeout(function() {
+                        log.push(["end", element]);
+                        resolve();
+                    }, 0);
+                }
+            });
+        }).then(
+            function() {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+                assert.deepStrictEqual(log, [
+                    ["start", 1],
+                    ["end", 1],
+                    ["start", 2]
+                ]);
+            }
+        );
+    },
+
+    "processing stops on async error": function() {
+        var log = [];
+
+        return promises.forEachSeries([1, 2, 3], function(element) {
+            return new promises.Promise(function(resolve, reject) {
+                log.push(["start", element]);
+                setTimeout(function() {
+                    if (element === 2) {
+                        reject(new Error("failure"));
+                    } else {
+                        log.push(["end", element]);
+                        resolve();
+                    }
+                }, 0);
+            });
+        }).then(
+            function() {
+                assert.fail("Expected rejection");
+            },
+            function(error) {
+                assert.strictEqual(error.message, "failure");
+                assert.deepStrictEqual(log, [
+                    ["start", 1],
+                    ["end", 1],
+                    ["start", 2]
+                ]);
+            }
+        );
+    }
+});
+
 test("try", {
     "when function succeeds with non-promise then promise is resolved": function() {
         return promises.try(function() {
