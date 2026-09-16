@@ -99,5 +99,5 @@ function tryRunMammoth(args) {
 }
 
 function createTempDir() {
-    return promises.nfcall(temp.mkdir, null);
+    return temp.mkdir();
 }
