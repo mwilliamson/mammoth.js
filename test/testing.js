@@ -1,7 +1,8 @@
 var path = require("path");
-var fs = require("fs");
-var promises = require("../lib/promises");
 var _ = require("underscore");
+
+var fs = require("../lib/fs");
+var promises = require("../lib/promises");
 
 exports.testPath = testPath;
 exports.testData = testData;
@@ -15,7 +16,7 @@ function testPath(filename) {
 
 function testData(testDataPath) {
     var fullPath = testPath(testDataPath);
-    return promises.nfcall(fs.readFile, fullPath, "utf-8");
+    return fs.readFile(fullPath, "utf-8");
 }
 
 function createFakeDocxFile(files) {

@@ -1,15 +1,12 @@
 var path = require("path");
-var fs = require("fs");
 var assert = require("assert");
 
-var promises = require("../../lib/promises");
 var Files = require("../../lib/docx/files").Files;
 var uriToPath = require("../../lib/docx/files").uriToPath;
+var fs = require("../../lib/fs");
 
 var testing = require("../testing");
 var test = require("../test")(module);
-
-var readFile = promises.promisify(fs.readFile.bind(fs));
 
 
 test("Files", {
@@ -24,7 +21,7 @@ test("Files", {
         var filePath = path.resolve(testing.testPath("tiny-picture.png"));
         var files = new Files({externalFileAccess: true});
         return files.read("file:///" + filePath.replace(/^\//, ""), "base64").then(function(contents) {
-            return readFile(filePath, "base64").then(function(expectedContents) {
+            return fs.readFile(filePath, "base64").then(function(expectedContents) {
                 assert.deepEqual(contents, expectedContents);
             });
         });
@@ -37,7 +34,7 @@ test("Files", {
             relativeToFile: testing.testPath("./document.docx")
         });
         return files.read("tiny-picture.png", "base64").then(function(contents) {
-            return readFile(filePath, "base64").then(function(expectedContents) {
+            return fs.readFile(filePath, "base64").then(function(expectedContents) {
                 assert.deepEqual(contents, expectedContents);
             });
         });
