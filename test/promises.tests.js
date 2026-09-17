@@ -226,3 +226,13 @@ test("props", {
         });
     }
 });
+
+test("toExternalPromise() returns promise with .done()", function() {
+    var nativePromise = Promise.resolve("hello");
+
+    var externalPromise = promises.toExternalPromise(nativePromise);
+
+    externalPromise.done();
+
+    externalPromise.then().done();
+});
