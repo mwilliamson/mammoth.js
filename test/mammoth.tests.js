@@ -520,3 +520,38 @@ test('should throw error if file is not a valid docx document', function() {
         assert.equal(error.message, "Could not find main document part. Are you sure this is a valid .docx file?");
     });
 });
+
+test("Promise.done() is available", {
+    "on convertToHtml()": function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return mammoth.convertToHtml({path: docxPath}).done();
+    },
+
+    "on convertToMarkdown()": function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return mammoth.convertToMarkdown({path: docxPath}).done();
+    },
+
+    "on extractRawText()": function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return mammoth.extractRawText({path: docxPath}).done();
+    },
+
+    "on embedStyleMap()": function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return fs.readFile(docxPath).then(function(buffer) {
+            return mammoth.embedStyleMap({buffer: buffer}, "p => h1").done();
+        });
+    },
+
+    "on readEmbeddedStyleMap()": function() {
+        var docxPath = path.join(__dirname, "test-data/single-paragraph.docx");
+        return fs.readFile(docxPath)
+            .then(function(buffer) {
+                return mammoth.embedStyleMap({buffer: buffer}, "p => h1");
+            })
+            .then(function(docx) {
+                return mammoth.readEmbeddedStyleMap({buffer: docx.toBuffer()}).done();
+            });
+    }
+});
