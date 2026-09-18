@@ -936,6 +936,12 @@ You can nest elements to any depth.
 
 ## Upgrading to later versions
 
+### 1.13.0
+
+The use of bluebird promises has been replaced with native promises. Any callers
+that rely on bluebird promises can convert the returned promise into a bluebird
+promise using bluebird.Promise.resolve().
+
 ### 1.0.0
 
 The `convertUnderline` option is no longer supported.

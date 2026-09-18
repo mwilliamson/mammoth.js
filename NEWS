@@ -1,3 +1,18 @@
+# 1.13.0
+
+* Replace the use of bluebird with native promises.
+
+  This is arguably a breaking change: however, the return value of functions
+  such as convertToHtml() was only documented as a promise, rather than as a
+  bluebird promise.
+
+  The only exception is that the docs previously used .done(): therefore,
+  when returning promises from the API to external users, a done method is
+  added.
+
+  Any callers that rely on bluebird promises can convert the returned promise
+  into a bluebird promise using bluebird.Promise.resolve().
+
 # 1.12.3
 
 * Avoid excessive backtracking when parsing an unterminated string with many
