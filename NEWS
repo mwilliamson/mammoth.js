@@ -13,6 +13,8 @@
   Any callers that rely on bluebird promises can convert the returned promise
   into a bluebird promise using bluebird.Promise.resolve().
 
+* Read the children of w:customXml elements.
+
 # 1.12.3
 
 * Avoid excessive backtracking when parsing an unterminated string with many

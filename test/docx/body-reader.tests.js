@@ -1750,6 +1750,10 @@ test("can read pictures with hyperlink specified in document properties", functi
     )));
 });
 
+test("children of w:customXml are converted normally", function() {
+    assertChildrenAreConvertedNormally("w:customXml");
+});
+
 test("children of w:ins are converted normally", function() {
     assertChildrenAreConvertedNormally("w:ins");
 });
