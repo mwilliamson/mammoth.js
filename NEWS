@@ -17,7 +17,7 @@
 
 * Handle paragraphs and runs that have been moved and tracked as a revision.
 
-* Escape HTML IDs in Markdown writer.
+* Improve escaping in Markdown writer.
 
 # 1.12.3
 

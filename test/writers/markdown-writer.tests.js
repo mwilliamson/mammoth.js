@@ -3,7 +3,7 @@ var test = require("../test")(module);
 
 var mdWriter = require("../../lib/writers/markdown-writer");
 
-test('special markdown characters are escaped', function() {
+test('special markdown characters in text are escaped', function() {
     var writer = mdWriter.writer();
     writer.text("\\*");
     return assert.equal(writer.asString(), "\\\\\\*");
@@ -71,7 +71,15 @@ test('anchor tags are written as hyperlinks', function() {
     writer.open("a", {"href": "http://example.com"});
     writer.text("Hello");
     writer.close("a");
-    return assert.equal(writer.asString(), "[Hello](http://example.com)");
+    return assert.equal(writer.asString(), "[Hello](http://example\\.com)");
+});
+
+test('special markdown characters in anchor href are escaped', function() {
+    var writer = mdWriter.writer();
+    writer.open("a", {"href": "http://example.com)Oops"});
+    writer.text("Hello");
+    writer.close("a");
+    return assert.equal(writer.asString(), "[Hello](http://example\\.com\\)Oops)");
 });
 
 test('anchor tags without href attribute are treated as ordinary text', function() {
@@ -103,7 +111,7 @@ test('links have anchors before opening square bracket', function() {
     writer.open("a", {href: "http://example.com", id: "start"});
     writer.text("Hello");
     writer.close("a");
-    return assert.equal(writer.asString(), '<a id="start"></a>[Hello](http://example.com)');
+    return assert.equal(writer.asString(), '<a id="start"></a>[Hello](http://example\\.com)');
 });
 
 test('can generate images', function() {
