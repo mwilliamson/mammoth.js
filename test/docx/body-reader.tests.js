@@ -1758,6 +1758,26 @@ test("children of w:ins are converted normally", function() {
     assertChildrenAreConvertedNormally("w:ins");
 });
 
+test("children of w:moveFromRangeEnd are converted normally", function() {
+    assertChildrenAreConvertedNormally("w:moveFromRangeEnd");
+});
+
+test("children of w:moveFromRangeStart are converted normally", function() {
+    assertChildrenAreConvertedNormally("w:moveFromRangeStart");
+});
+
+test("children of w:moveTo are converted normally", function() {
+    assertChildrenAreConvertedNormally("w:moveTo");
+});
+
+test("children of w:moveToRangeEnd are converted normally", function() {
+    assertChildrenAreConvertedNormally("w:moveToRangeEnd");
+});
+
+test("children of w:moveToRangeStart are converted normally", function() {
+    assertChildrenAreConvertedNormally("w:moveToRangeStart");
+});
+
 test("children of w:object are converted normally", function() {
     assertChildrenAreConvertedNormally("w:object");
 });
@@ -1977,6 +1997,19 @@ test("text nodes are ignored when reading children", function() {
     var run = readXmlElementValue(runXml);
     assert.deepEqual(run, new documents.Run([]));
 });
+
+test("w:moveFrom elements are ignored", function() {
+    assertElementIsIgnored("w:moveFrom");
+});
+
+function assertElementIsIgnored(tagName) {
+    var runXml = new XmlElement("w:r", {}, [
+        xml.element("w:t", {}, [xml.text("Blackdown")])
+    ]);
+    var result = readXmlElement(new XmlElement(tagName, {}, [runXml]));
+    assert.deepEqual(result.messages, []);
+    assert.deepEqual(result.value, []);
+}
 
 function paragraphWithStyleId(styleId) {
     return new XmlElement("w:p", {}, [

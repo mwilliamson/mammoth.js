@@ -15,6 +15,8 @@
 
 * Read the children of w:customXml elements.
 
+* Handle paragraphs and runs that have been moved and tracked as a revision.
+
 # 1.12.3
 
 * Avoid excessive backtracking when parsing an unterminated string with many
