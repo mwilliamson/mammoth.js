@@ -90,6 +90,14 @@ test('elements with IDs have anchor tags with IDs appended to start of markdown 
     return assert.equal(writer.asString(), '# <a id="start"></a>Hello\n\n');
 });
 
+test('anchor tag IDs are escaped', function() {
+    var writer = mdWriter.writer();
+    writer.open("h1", {id: "\"start\""});
+    writer.text("Hello");
+    writer.close("h1");
+    return assert.equal(writer.asString(), '# <a id="&quot;start&quot;"></a>Hello\n\n');
+});
+
 test('links have anchors before opening square bracket', function() {
     var writer = mdWriter.writer();
     writer.open("a", {href: "http://example.com", id: "start"});

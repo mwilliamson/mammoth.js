@@ -17,6 +17,8 @@
 
 * Handle paragraphs and runs that have been moved and tracked as a revision.
 
+* Escape HTML IDs in Markdown writer.
+
 # 1.12.3
 
 * Avoid excessive backtracking when parsing an unterminated string with many
