@@ -117,13 +117,25 @@ test('links have anchors before opening square bracket', function() {
 test('can generate images', function() {
     var writer = mdWriter.writer();
     writer.selfClosing("img", {"src": "http://example.com/image.jpg", "alt": "Alt Text"});
-    return assert.equal(writer.asString(), "![Alt Text](http://example.com/image.jpg)");
+    return assert.equal(writer.asString(), "![Alt Text](http://example\\.com/image\\.jpg)");
+});
+
+test('image alt text is escaped', function() {
+    var writer = mdWriter.writer();
+    writer.selfClosing("img", {"src": "http://example.com/image.jpg", "alt": "Alt Text]Oops"});
+    return assert.equal(writer.asString(), "![Alt Text\\]Oops](http://example\\.com/image\\.jpg)");
+});
+
+test('image src is escaped', function() {
+    var writer = mdWriter.writer();
+    writer.selfClosing("img", {"src": "http://example.com/image.jpg)Oops", "alt": "Alt Text"});
+    return assert.equal(writer.asString(), "![Alt Text](http://example\\.com/image\\.jpg\\)Oops)");
 });
 
 test('can generate images with missing alt attribute', function() {
     var writer = mdWriter.writer();
     writer.selfClosing("img", {"src": "http://example.com/image.jpg"});
-    return assert.equal(writer.asString(), "![](http://example.com/image.jpg)");
+    return assert.equal(writer.asString(), "![](http://example\\.com/image\\.jpg)");
 });
 
 test('can generate images with missing src attribute', function() {
