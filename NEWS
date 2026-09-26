@@ -17,7 +17,8 @@
 
 * Handle paragraphs and runs that have been moved and tracked as a revision.
 
-* Improve escaping in Markdown writer.
+* Improve escaping in Markdown writer. This avoids some cases where source
+  documents could inject arbitrary HTML into the converted document.
 
 # 1.12.3
 
