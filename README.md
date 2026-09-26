@@ -940,7 +940,7 @@ You can nest elements to any depth.
 
 The use of bluebird promises has been replaced with native promises. Any callers
 that rely on bluebird promises can convert the returned promise into a bluebird
-promise using bluebird.Promise.resolve().
+promise using `bluebird.Promise.resolve()`.
 
 ### 1.0.0
 
