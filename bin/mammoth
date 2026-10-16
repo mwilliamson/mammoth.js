@@ -4,35 +4,35 @@ var ArgumentParser = require("argparse").ArgumentParser;
 var main = require("../lib/main");
 
 var parser = new ArgumentParser({
-    addHelp: true
+    add_help: true
 });
 
-parser.addArgument(["docx-path"], {
-    type: "string",
+parser.add_argument("docx-path", {
+    type: "str",
     help: "Path to the .docx file to convert."
 });
 
-var outputGroup = parser.addMutuallyExclusiveGroup();
-outputGroup.addArgument(["output-path"], {
-    type: "string",
+var outputGroup = parser.add_mutually_exclusive_group();
+outputGroup.add_argument("output-path", {
+    type: "str",
     nargs: "?",
     help: "Output path for the generated document. Images will be stored inline in the output document. Output is written to stdout if not set."
 });
-outputGroup.addArgument(["--output-dir"], {
-    type: "string",
+outputGroup.add_argument("--output-dir", {
+    type: "str",
     help: "Output directory for generated HTML and images. Images will be stored in separate files. Mutually exclusive with output-path."
 });
 
-parser.addArgument(["--output-format"], {
-    defaultValue: "html",
+parser.add_argument("--output-format", {
+    default: "html",
     choices: ["html", "markdown"],
     help: "Output format."
 });
 
-parser.addArgument(["--style-map"], {
-    type: "string",
+parser.add_argument("--style-map", {
+    type: "str",
     help: "File containg a style map."
 });
 
 
-main(parser.parseArgs());
+main(parser.parse_args());
